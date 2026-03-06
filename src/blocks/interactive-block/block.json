@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "plugin-skeleton-d/interactive-block",
+	"version": "0.1.0",
+	"title": "Interactive Block Example",
+	"category": "design",
+	"icon": "media-interactive",
+	"description": "An interactive block with the Interactivity API using TypeScript.",
+	"example": {},
+	"attributes": {},
+	"supports": {
+		"interactivity": true
+	},
+	"textdomain": "plugin-skeleton-d",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.ts"
+}

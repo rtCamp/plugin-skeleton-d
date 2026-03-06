@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "plugin-skeleton-d/static-block",
+	"version": "0.1.0",
+	"title": "Static Block Example",
+	"category": "text",
+	"icon": "smiley",
+	"description": "Example block scaffolded with Create Block tool.",
+	"example": {},
+	"attributes": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "plugin-skeleton-d",
+	"editorScript": "file:./index.ts",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.ts"
+}

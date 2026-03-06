@@ -1,0 +1,27 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig.json",
+	// Point this to your TS ruleset.
+	"extends": "./tsconfig.base.json",
+
+	// Project-specific config.
+	"compilerOptions": {
+		"noEmit": true,
+		"rootDir": ".",
+		"baseUrl": ".",
+		"outDir": "./build",
+		"paths": {
+			"@/*": [ "src/*" ]
+		},
+		"typeRoots": [ "./node_modules/@types" ]
+	},
+	"include": [
+		"**/*.cjs",
+		"**/*.mjs",
+		"**/*.ts",
+		"**/*.tsx",
+		"**/*.json",
+		"tests/**/*.ts",
+		"tests/**/*.tsx"
+	],
+	"exclude": [ "**/build/*", "vendor/*", "node_modules/*" ]
+}

@@ -1,0 +1,14 @@
+/**
+ * WordPress dependencies
+ */
+import domReady from '@wordpress/dom-ready';
+
+/**
+ * Example `frontend` entrypoint.
+ *
+ * In real projects, you will likely have multiple entrypoints for different admin screens, and not a single entrypoint.
+ */
+domReady( () => {
+	// eslint-disable-next-line no-console -- @todo Remove this console log and add your own code here.
+	console.log( 'Remove or replace this frontend script before shipping!' );
+} );
