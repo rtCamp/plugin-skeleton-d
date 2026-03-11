@@ -53,7 +53,7 @@ jobs:
           coverage: ${{ inputs.coverage && 'xdebug' || 'none' }}
 
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # v3.1.1
+        uses: ramsey/composer-install@a35c6ebd3d08125aaf8852dff361e686a1a67947 # v3.2.0
 
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
@@ -74,15 +74,15 @@ jobs:
           max_attempts: 3
           command: |
             if [ "${{ inputs.coverage }}" == "true" ]; then
-              npm run wp-env start -- --xdebug=coverage
+              npm run wp-env:test start -- --xdebug=coverage
             else
-              npm run wp-env start
+              npm run wp-env:test start
             fi
 
       - name: Log versions
         run: |
-          npm run wp-env -- run cli php -- -v
-          npm run wp-env -- run cli wp core version
+          npm run wp-env:test -- run cli php -- -v
+          npm run wp-env:test -- run cli wp core version
 
       - name: Run PHPUnit tests${{ inputs.coverage && ' with coverage report' || '' }}
         run: npm run test:php ${{ !inputs.coverage && '-- --no-coverage' || '' }}

@@ -51,14 +51,14 @@ jobs:
               - 'composer.*'
             phpcs:
               - '.phpcs.xml.dist'
-              - '.github/reusable-phpcs.yml'
+              - '.github/workflows/reusable-phpcs.yml'
             phpstan:
               - 'phpstan.neon.dist'
-              - '.github/reusable-phpstan.yml'
+              - '.github/workflows/reusable-phpstan.yml'
             phpunit:
               - 'tests/**/*.php'
               - 'phpunit.xml.dist'
-              - '.github/reusable-phpunit.yml'
+              - '.github/workflows/reusable-phpunit.yml'
               - 'package*.json'
             js:
               - '**.cjs'
@@ -79,7 +79,7 @@ jobs:
               - '.stylelintrc*'
             e2e:
               - 'tests/e2e/**/*'
-              - '.github/reusable-e2e.yml'
+              - '.github/workflows/reusable-e2e.yml'
             jest:
               - 'tests/js/**/*'
               - 'src/**/__tests__/**/*'
