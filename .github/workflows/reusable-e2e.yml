@@ -30,7 +30,7 @@ jobs:
           coverage: none
 
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # v3.1.1
+        uses: ramsey/composer-install@a35c6ebd3d08125aaf8852dff361e686a1a67947 # v3.2.0
 
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
@@ -49,7 +49,7 @@ jobs:
         with:
           timeout_minutes: 10
           max_attempts: 3
-          command: npm run wp-env start
+          command: WP_ENV_PORT=8889 WP_ENV_TESTS_PORT=8891 npm run wp-env:test start
 
       - name: Run E2E tests
         run: npm run test:e2e

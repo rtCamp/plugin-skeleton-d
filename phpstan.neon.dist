@@ -20,14 +20,14 @@ parameters:
 		min: 80200
 		max: 80500
 	bootstrapFiles:
-			- plugin-skeleton-d.php
+		- plugin-skeleton-d.php
 	paths:
-			- plugin-skeleton-d.php
-			- uninstall.php
-			- framework/
-			- inc/
-			- src/blocks/
-			- templates/
+		- plugin-skeleton-d.php
+		- uninstall.php
+		- framework/
+		- inc/
+		- src/blocks/
+		- templates/
 	excludePaths:
 		analyse:
 			- tests/

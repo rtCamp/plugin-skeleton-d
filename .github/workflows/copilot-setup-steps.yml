@@ -12,7 +12,7 @@ on:
       - '.github/workflows/copilot-setup-steps.yml'
   pull_request:
     paths:
-      - .github/workflows/copilot-setup-steps.yml
+      - '.github/workflows/copilot-setup-steps.yml'
 
 permissions:
   contents: read
