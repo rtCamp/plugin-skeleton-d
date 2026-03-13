@@ -100,7 +100,9 @@ jobs:
         run: |
           set -xe
           whoami
-          sudo -u wpuser 'ls -la; pwd'
+          sudo -u wpuser ls -la
+          sudo -u wpuser pwd
+          sudo -u wpuser env "PATH=$PATH" printenv
           id
           pwd
           ls -la
