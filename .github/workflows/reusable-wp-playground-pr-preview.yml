@@ -23,18 +23,29 @@ on:
         type: string
         default: '2'
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   playground-preview:
     name: Post Playground Preview
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, high-performance, X64, Linux]
+    container:
+      image: ubuntu:24.04
     permissions:
       actions: read
       contents: write
       pull-requests: write
 
     steps:
+      - name: Install system dependencies
+        run: |
+          apt-get update
+          apt-get install -y git curl
+
+      # - name: Configure Git for Safe Directory
+      #   run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+
       - name: Extract PR metadata and artifact info
         id: pr-metadata
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0

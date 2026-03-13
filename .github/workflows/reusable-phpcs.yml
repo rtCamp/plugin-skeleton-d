@@ -8,20 +8,30 @@ on:
         required: true
         type: string
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   phpcs:
     name: PHPCS Coding Standards
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, high-performance, X64, Linux]
+    container:
+      image: ubuntu:24.04
     timeout-minutes: 20
 
     steps:
+      - name: Install system dependencies
+        run: |
+          apt-get update
+          apt-get install -y git curl sudo unzip
+
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           show-progress: ${{ runner.debug == '1' && 'true' || 'false' }}
-          persist-credentials: false
+
+      - name: Configure Git for Safe Directory
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
 
       - name: Set up PHP
         uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
