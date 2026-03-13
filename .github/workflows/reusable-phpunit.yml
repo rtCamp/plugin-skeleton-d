@@ -96,6 +96,15 @@ jobs:
       - name: Build development assets
         run: npm run build:dev
 
+      - name: debug
+        run: |
+          set -xe
+          whoami
+          sudo -u wpuser 'ls -la; pwd'
+          id
+          pwd
+          ls -la
+
       - name: Start the Docker testing environment
         uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
         with:
