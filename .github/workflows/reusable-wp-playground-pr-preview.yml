@@ -29,7 +29,7 @@ permissions:
 jobs:
   playground-preview:
     name: Post Playground Preview
-    runs-on: [self-hosted, high-performance, X64, Linux]
+    runs-on: [public-repo]
     container:
       image: ubuntu:24.04
     permissions:

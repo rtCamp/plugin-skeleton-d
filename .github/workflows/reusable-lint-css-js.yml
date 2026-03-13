@@ -9,7 +9,7 @@ permissions:
 jobs:
   lint-js:
     name: JS Lint & TypeScript
-    runs-on: [self-hosted, high-performance, X64, Linux]
+    runs-on: [public-repo]
     container:
       image: node:22
     timeout-minutes: 20

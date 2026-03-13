@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted, high-performance, X64, Linux]
+    runs-on: [public-repo]
     container:
       image: ubuntu:24.04
       options: --user root -v /var/run/docker.sock:/var/run/docker.sock

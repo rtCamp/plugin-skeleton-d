@@ -15,7 +15,7 @@ permissions:
 jobs:
   jest:
     name: Jest Unit Tests${{ inputs.coverage && ' with coverage' || '' }}
-    runs-on: [self-hosted, high-performance, X64, Linux]
+    runs-on: [public-repo]
     container:
       image: node:22
     timeout-minutes: 10

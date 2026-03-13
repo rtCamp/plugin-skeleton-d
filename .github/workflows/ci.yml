@@ -21,7 +21,7 @@ permissions:
 jobs:
   detect:
     name: Detect Changes
-    runs-on: [self-hosted, high-performance, X64, Linux]
+    runs-on: [public-repo]
     container:
       image: ubuntu:24.04
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false

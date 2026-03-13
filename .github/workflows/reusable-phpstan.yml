@@ -14,7 +14,7 @@ permissions:
 jobs:
   phpstan:
     name: PHPStan Static Analysis
-    runs-on: [self-hosted, high-performance, X64, Linux]
+    runs-on: [public-repo]
     container:
       image: ubuntu:24.04
     timeout-minutes: 20
