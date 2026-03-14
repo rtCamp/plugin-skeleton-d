@@ -15,12 +15,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
   cancel-in-progress: true
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   detect:
     name: Detect Changes
-    runs-on: ubuntu-24.04
+    runs-on: [public-repo]
+    container:
+      image: ubuntu:24.04
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     permissions:
       contents: read
@@ -36,10 +39,16 @@ jobs:
       jest: ${{ steps.filter.outputs.jest }}
 
     steps:
+      - name: Install system dependencies
+        run: |
+          apt-get update
+          apt-get install -y git
+
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          persist-credentials: false
+
+      - name: Configure Git for Safe Directory
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
 
       - name: Detect file changes
         uses: dorny/paths-filter@9d7afb8d214ad99e78fbd4247752c4caed2b6e4c # v4.0.0
@@ -138,6 +147,7 @@ jobs:
       contents: read
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         php: ['8.4', '8.3', '8.2']
         wp: ['latest']
@@ -153,8 +163,8 @@ jobs:
 
   e2e:
     name: E2E Tests
-    needs: detect
-    if: needs.detect.outputs.php == 'true' || needs.detect.outputs.e2e == 'true' || needs.detect.outputs.js == 'true' || needs.detect.outputs.css == 'true'
+    needs: [detect, phpunit]
+    if: needs.detect.result == 'success' && (needs.phpunit.result == 'success' || needs.phpunit.result == 'skipped') && (needs.detect.outputs.php == 'true' || needs.detect.outputs.e2e == 'true' || needs.detect.outputs.js == 'true' || needs.detect.outputs.css == 'true')
     uses: ./.github/workflows/reusable-e2e.yml
     permissions:
       contents: read
@@ -163,6 +173,8 @@ jobs:
 
   build-plugin-zip:
     name: Build Plugin Zip
+    needs: [e2e]
+    if: needs.e2e.result == 'success' || needs.e2e.result == 'skipped'
     permissions:
       contents: read
     uses: ./.github/workflows/reusable-build.yml

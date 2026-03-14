@@ -23,18 +23,39 @@ on:
         type: boolean
         default: false
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   phpunit:
     name: PHPUnit (PHP ${{ inputs.php-version }}, WP ${{ inputs.wp-version }})${{ inputs.coverage && ' with coverage' || '' }}${{ inputs.multisite && ' multisite' || '' }}
-    runs-on: ubuntu-24.04
+    runs-on: [public-repo]
+    container:
+      image: ubuntu:24.04
+      options: --user root -v /var/run/docker.sock:/var/run/docker.sock
     timeout-minutes: 20
     env:
       WP_ENV_PHP_VERSION: ${{ inputs.php-version }}
       WP_ENV_CORE: ${{ inputs.wp-version == 'trunk' && 'WordPress/WordPress' || format('https://wordpress.org/wordpress-{0}.zip', inputs.wp-version) }}
 
     steps:
+      - name: Install system dependencies
+        run: |
+          apt update
+          apt-get install -y git curl sudo unzip
+
+      - name: setup Docker
+        run: |
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sh get-docker.sh
+
+      - name: Configure Docker group permissions
+        run: |
+          useradd -m wpuser
+          SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
+          groupmod -g $SOCK_GID -o docker
+          usermod -aG docker wpuser
+
       - name: Configure environment variables
         run: |
           echo "PHP_FPM_UID=$(id -u)" >> "$GITHUB_ENV"
@@ -44,7 +65,15 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           show-progress: ${{ runner.debug == '1' && 'true' || 'false' }}
-          persist-credentials: false
+
+      - name: Configure Git for Safe Directory
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+
+      - name: Configure environment variables
+        run: |
+          # Unique variables for wp-env to prevent conflicts on shared self-hosted runners
+          UNIQUE_ID=$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')
+          echo "COMPOSE_PROJECT_NAME=wpenv_${UNIQUE_ID}" >> "$GITHUB_ENV"
 
       - name: Set up PHP
         uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
@@ -67,6 +96,17 @@ jobs:
       - name: Build development assets
         run: npm run build:dev
 
+      - name: debug
+        run: |
+          set -xe
+          whoami
+          sudo -u wpuser ls -la
+          sudo -u wpuser pwd
+          sudo -u wpuser env "PATH=$PATH" printenv
+          id
+          pwd
+          ls -la
+
       - name: Start the Docker testing environment
         uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
         with:
@@ -74,18 +114,18 @@ jobs:
           max_attempts: 3
           command: |
             if [ "${{ inputs.coverage }}" == "true" ]; then
-              npm run wp-env:test start -- --xdebug=coverage
+              sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test start -- --xdebug=coverage
             else
-              npm run wp-env:test start
+              sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test start
             fi
 
       - name: Log versions
         run: |
-          npm run wp-env:test -- run cli php -- -v
-          npm run wp-env:test -- run cli wp core version
+          sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test -- run cli php -- -v
+          sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test -- run cli wp core version
 
       - name: Run PHPUnit tests${{ inputs.coverage && ' with coverage report' || '' }}
-        run: npm run test:php ${{ !inputs.coverage && '-- --no-coverage' || '' }}
+        run: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run test:php ${{ !inputs.coverage && '-- --no-coverage' || '' }}
 
       - name: Upload code coverage report
         if: ${{ inputs.coverage }}

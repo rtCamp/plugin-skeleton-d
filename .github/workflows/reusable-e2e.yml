@@ -8,20 +8,49 @@ on:
         required: true
         type: string
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   e2e:
     name: Playwright E2E Tests
-    runs-on: ubuntu-24.04
+    runs-on: [public-repo]
+    container:
+      image: ubuntu:24.04
+      options: --user root -v /var/run/docker.sock:/var/run/docker.sock
     timeout-minutes: 20
 
     steps:
+      - name: Install system dependencies
+        run: |
+          apt-get update
+          apt-get install -y git curl sudo unzip
+
+      - name: setup Docker
+        run: |
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sh get-docker.sh
+
+      - name: Configure Docker group permissions
+        run: |
+          useradd -m wpuser
+          SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
+          groupmod -g $SOCK_GID -o docker
+          usermod -aG docker wpuser
+
+      - name: Configure environment variables
+        run: |
+          # Unique variables for wp-env to prevent conflicts on shared self-hosted runners
+          UNIQUE_ID=$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')
+          echo "COMPOSE_PROJECT_NAME=wpenv_${UNIQUE_ID}" >> "$GITHUB_ENV"
+
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           show-progress: ${{ runner.debug == '1' && 'true' || 'false' }}
-          persist-credentials: false
+
+      - name: Configure Git for Safe Directory
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
 
       - name: Set up PHP
         uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
@@ -49,10 +78,10 @@ jobs:
         with:
           timeout_minutes: 10
           max_attempts: 3
-          command: WP_ENV_PORT=8889 WP_ENV_TESTS_PORT=8891 npm run wp-env:test start
+          command: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" "WP_ENV_PORT=8889" "WP_ENV_TESTS_PORT=8891" npm run wp-env:test start
 
       - name: Run E2E tests
-        run: npm run test:e2e
+        run: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run test:e2e
 
       - name: Upload E2E test results as artifact
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
