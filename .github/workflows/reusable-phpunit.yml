@@ -157,4 +157,4 @@ jobs:
 
       - name: Stop the Docker testing environment
         if: always()
-        run: sudo -u wpuser env "PATH=$PATH" npm run wp-env:test destroy --yes
+        run: sudo -u wpuser env "PATH=$PATH" npm run wp-env:test destroy -- --force
