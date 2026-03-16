@@ -12,15 +12,43 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: [public-repo]
+    container:
+      image: ubuntu:24.04
+      options: --user root -v /var/run/docker.sock:/var/run/docker.sock
     permissions:
       contents: read
     steps:
+      - name: Install system dependencies
+        run: |
+          apt-get update
+          apt-get install -y git curl sudo unzip jq
+
+      - name: setup Docker
+        run: |
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sh get-docker.sh
+
+      - name: Configure Docker group permissions
+        run: |
+          useradd -m wpuser
+          SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
+          groupmod -g $SOCK_GID -o docker
+          usermod -aG docker wpuser
+
+      - name: Configure environment variables
+        run: |
+          # Unique variables for wp-env to prevent conflicts on shared self-hosted runners
+          UNIQUE_ID=$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')
+          echo "COMPOSE_PROJECT_NAME=wpenv_reusable_build_${UNIQUE_ID}" >> "$GITHUB_ENV"
+
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           show-progress: ${{ runner.debug == '1' && 'true' || 'false' }}
-          persist-credentials: false
+
+      - name: Configure Git for Safe Directory
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
 
       - name: Set up PHP
         uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
@@ -45,15 +73,34 @@ jobs:
       - name: Build plugin for release
         run: npm run build:prod
 
+      - name: Fix wp-env host mapping
+        run: |
+          # Get the host path for the workspace by inspecting the container's own mounts
+          HOST_WORKSPACE_PATH=$(docker inspect $(hostname) --format '{{ range .Mounts }}{{ if eq .Destination "/__w" }}{{ .Source }}{{ end }}{{ end }}')
+          
+          # Construct the full host path for the current plugin directory
+          RELATIVE_PATH=$(pwd | sed 's|^/__w||')
+          PLUGIN_HOST_PATH="${HOST_WORKSPACE_PATH}${RELATIVE_PATH}"
+          
+          echo "Host Workspace: $HOST_WORKSPACE_PATH"
+          echo "Plugin Host Path: $PLUGIN_HOST_PATH"
+          
+          # Update .wp-env.json (default env)
+          jq --arg path "$PLUGIN_HOST_PATH" \
+             'del(.plugins) | .mappings["wp-content/plugins/plugin-skeleton-d"] = $path' \
+             .wp-env.json > .wp-env.json.tmp && mv .wp-env.json.tmp .wp-env.json
+          
+          cat .wp-env.json
+
       - name: Start the Docker testing environment
         uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
         with:
           timeout_minutes: 10
           max_attempts: 3
-          command: npm run wp-env start
+          command: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env start -- --update
 
       - name: Generate Translation files
-        run: npm run i18n:make-pot
+        run: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run i18n:make-pot
 
       - name: Create plugin zip
         run: npm run plugin-zip
@@ -64,3 +111,7 @@ jobs:
           name: ${{ inputs.artifact-name }}
           path: plugin-skeleton-d.zip
           if-no-files-found: error
+
+      - name: Stop the Docker testing environment
+        if: always()
+        run: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env destroy
