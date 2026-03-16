@@ -33,10 +33,12 @@ jobs:
     container:
       image: ubuntu:24.04
       options: --user root -v /var/run/docker.sock:/var/run/docker.sock
-    # timeout-minutes: 20
+    timeout-minutes: 20
     env:
       WP_ENV_PHP_VERSION: ${{ inputs.php-version }}
       WP_ENV_CORE: ${{ inputs.wp-version == 'trunk' && 'WordPress/WordPress' || format('https://wordpress.org/wordpress-{0}.zip', inputs.wp-version) }}
+      WP_ENV_PORT: 8889
+      WP_ENV_TESTS_PORT: 8891
 
     steps:
       - name: Install system dependencies
@@ -68,12 +70,6 @@ jobs:
 
       - name: Configure Git for Safe Directory
         run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
-
-      - name: Configure environment variables
-        run: |
-          # Unique variables for wp-env to prevent conflicts on shared self-hosted runners
-          UNIQUE_ID=$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')
-          echo "COMPOSE_PROJECT_NAME=wpenv_${UNIQUE_ID}" >> "$GITHUB_ENV"
 
       - name: Set up PHP
         uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
@@ -124,23 +120,23 @@ jobs:
           max_attempts: 3
           command: |
             if [ "${{ inputs.coverage }}" == "true" ]; then
-              sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test start -- --xdebug=coverage --update --debug
+              sudo -u wpuser env "PATH=$PATH" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --xdebug=coverage --update --debug
             else
-              sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test start -- --update
+              sudo -u wpuser env "PATH=$PATH" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --update
             fi
 
       - name: Activate plugin
         run: |
-          sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
-          sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test run tests-cli -- wp plugin activate plugin-skeleton-d
+          sudo -u wpuser env "PATH=$PATH" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
+          sudo -u wpuser env "PATH=$PATH" npm run wp-env:test run tests-cli -- wp plugin activate plugin-skeleton-d
 
       - name: Log versions
         run: |
-          sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test -- run tests-cli php -- -v
-          sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test -- run tests-cli wp core version
+          sudo -u wpuser env "PATH=$PATH" npm run wp-env:test -- run tests-cli php -- -v
+          sudo -u wpuser env "PATH=$PATH" npm run wp-env:test -- run tests-cli wp core version
 
       - name: Run PHPUnit tests${{ inputs.coverage && ' with coverage report' || '' }}
-        run: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run test:php ${{ !inputs.coverage && '-- --no-coverage' || '' }}
+        run: sudo -u wpuser env "PATH=$PATH" npm run test:php ${{ !inputs.coverage && '-- --no-coverage' || '' }}
 
       - name: Upload code coverage report
         if: ${{ inputs.coverage }}
@@ -161,4 +157,4 @@ jobs:
 
       - name: Stop the Docker testing environment
         if: always()
-        run: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test destroy
+        run: sudo -u wpuser env "PATH=$PATH" npm run wp-env:test destroy

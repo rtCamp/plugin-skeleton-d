@@ -18,6 +18,11 @@ jobs:
       options: --user root -v /var/run/docker.sock:/var/run/docker.sock
     permissions:
       contents: read
+
+    env:
+      WP_ENV_PORT: 8889
+      WP_ENV_TESTS_PORT: 8891
+
     steps:
       - name: Install system dependencies
         run: |
@@ -35,12 +40,6 @@ jobs:
           SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
           groupmod -g $SOCK_GID -o docker
           usermod -aG docker wpuser
-
-      - name: Configure environment variables
-        run: |
-          # Unique variables for wp-env to prevent conflicts on shared self-hosted runners
-          UNIQUE_ID=$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')
-          echo "COMPOSE_PROJECT_NAME=wpenv_reusable_build_${UNIQUE_ID}" >> "$GITHUB_ENV"
 
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -77,19 +76,19 @@ jobs:
         run: |
           # Get the host path for the workspace by inspecting the container's own mounts
           HOST_WORKSPACE_PATH=$(docker inspect $(hostname) --format '{{ range .Mounts }}{{ if eq .Destination "/__w" }}{{ .Source }}{{ end }}{{ end }}')
-          
+
           # Construct the full host path for the current plugin directory
           RELATIVE_PATH=$(pwd | sed 's|^/__w||')
           PLUGIN_HOST_PATH="${HOST_WORKSPACE_PATH}${RELATIVE_PATH}"
-          
+
           echo "Host Workspace: $HOST_WORKSPACE_PATH"
           echo "Plugin Host Path: $PLUGIN_HOST_PATH"
-          
+
           # Update .wp-env.json (default env)
           jq --arg path "$PLUGIN_HOST_PATH" \
              'del(.plugins) | .mappings["wp-content/plugins/plugin-skeleton-d"] = $path' \
              .wp-env.json > .wp-env.json.tmp && mv .wp-env.json.tmp .wp-env.json
-          
+
           cat .wp-env.json
 
       - name: Start the Docker testing environment
@@ -97,10 +96,10 @@ jobs:
         with:
           timeout_minutes: 10
           max_attempts: 3
-          command: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env start -- --update
+          command: sudo -u wpuser env "PATH=$PATH" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env start -- --update
 
       - name: Generate Translation files
-        run: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run i18n:make-pot
+        run: sudo -u wpuser env "PATH=$PATH" npm run i18n:make-pot
 
       - name: Create plugin zip
         run: npm run plugin-zip
@@ -114,4 +113,4 @@ jobs:
 
       - name: Stop the Docker testing environment
         if: always()
-        run: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env destroy
+        run: sudo -u wpuser env "PATH=$PATH" npm run wp-env destroy

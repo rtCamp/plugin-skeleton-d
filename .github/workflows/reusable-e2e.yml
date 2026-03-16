@@ -18,7 +18,12 @@ jobs:
     container:
       image: ubuntu:24.04
       options: --user root -v /var/run/docker.sock:/var/run/docker.sock
+
     timeout-minutes: 20
+
+    env:
+      WP_ENV_PORT: 8889
+      WP_ENV_TESTS_PORT: 8891
 
     steps:
       - name: Install system dependencies
@@ -37,12 +42,6 @@ jobs:
           SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
           groupmod -g $SOCK_GID -o docker
           usermod -aG docker wpuser
-
-      - name: Configure environment variables
-        run: |
-          # Unique variables for wp-env to prevent conflicts on shared self-hosted runners
-          UNIQUE_ID=$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')
-          echo "COMPOSE_PROJECT_NAME=wpenv_${UNIQUE_ID}" >> "$GITHUB_ENV"
 
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -77,19 +76,19 @@ jobs:
         run: |
           # Get the host path for the workspace by inspecting the container's own mounts
           HOST_WORKSPACE_PATH=$(docker inspect $(hostname) --format '{{ range .Mounts }}{{ if eq .Destination "/__w" }}{{ .Source }}{{ end }}{{ end }}')
-          
+
           # Construct the full host path for the current plugin directory
           RELATIVE_PATH=$(pwd | sed 's|^/__w||')
           PLUGIN_HOST_PATH="${HOST_WORKSPACE_PATH}${RELATIVE_PATH}"
-          
+
           echo "Host Workspace: $HOST_WORKSPACE_PATH"
           echo "Plugin Host Path: $PLUGIN_HOST_PATH"
-          
+
           # Update .wp-env.test.json
           jq --arg path "$PLUGIN_HOST_PATH" \
              'del(.plugins) | .mappings["wp-content/plugins/plugin-skeleton-d"] = $path' \
              .wp-env.test.json > .wp-env.test.json.tmp && mv .wp-env.test.json.tmp .wp-env.test.json
-          
+
           cat .wp-env.test.json
 
       - name: Start the Docker testing environment
@@ -97,14 +96,14 @@ jobs:
         with:
           timeout_minutes: 10
           max_attempts: 3
-          command: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" "WP_ENV_PORT=8889" "WP_ENV_TESTS_PORT=8891" npm run wp-env:test start -- --update
+          command: sudo -u wpuser env "PATH=$PATH" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --update
 
       - name: Activate plugin
         run: |
-          sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
+          sudo -u wpuser env "PATH=$PATH" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
 
       - name: Run E2E tests
-        run: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run test:e2e
+        run: sudo -u wpuser env "PATH=$PATH" npm run test:e2e
 
       - name: Upload E2E test results as artifact
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -117,4 +116,4 @@ jobs:
 
       - name: Stop the Docker testing environment
         if: always()
-        run: sudo -u wpuser env "PATH=$PATH" "COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME" npm run wp-env:test destroy
+        run: sudo -u wpuser env "PATH=$PATH" npm run wp-env:test destroy
