@@ -19,7 +19,7 @@ jobs:
       image: ubuntu:24.04
       options: --user root -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env
 
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     env:
       WP_ENV_PORT: 8889
@@ -97,16 +97,18 @@ jobs:
       - name: Start the Docker testing environment
         uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
         with:
-          timeout_minutes: 10
+          timeout_minutes: 15
           max_attempts: 3
-          command: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --update
+          command: |
+            sudo -u wpuser git config --global --add safe.directory '/tmp/wp-env/*'
+            sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --update
 
       - name: Activate plugin
         run: |
           sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
 
       - name: Run E2E tests
-        run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run test:e2e
+        run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run test:e2e -- --debug
 
       - name: Upload E2E test results as artifact
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0

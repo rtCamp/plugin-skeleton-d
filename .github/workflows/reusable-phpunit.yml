@@ -33,7 +33,9 @@ jobs:
     container:
       image: ubuntu:24.04
       options: --user root -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env
-    timeout-minutes: 20
+
+    timeout-minutes: 30
+
     env:
       WP_ENV_PHP_VERSION: ${{ inputs.php-version }}
       WP_ENV_CORE: ${{ inputs.wp-version == 'trunk' && 'WordPress/WordPress' || format('https://wordpress.org/wordpress-{0}.zip', inputs.wp-version) }}
@@ -118,9 +120,10 @@ jobs:
       - name: Start the Docker testing environment
         uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
         with:
-          timeout_minutes: 10
+          timeout_minutes: 15
           max_attempts: 3
           command: |
+            sudo -u wpuser git config --global --add safe.directory '/tmp/wp-env/*'
             if [ "${{ inputs.coverage }}" == "true" ]; then
               sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --xdebug=coverage --update --debug
             else

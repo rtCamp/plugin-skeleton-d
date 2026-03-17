@@ -24,6 +24,8 @@ jobs:
       WP_ENV_TESTS_PORT: 8891
       WP_ENV_HOME: /tmp/wp-env
 
+    timeout-minutes: 30
+
     steps:
       - name: Install system dependencies
         run: |
@@ -99,7 +101,9 @@ jobs:
         with:
           timeout_minutes: 10
           max_attempts: 3
-          command: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env start -- --update
+          command: |
+            sudo -u wpuser git config --global --add safe.directory '/tmp/wp-env/*'
+            sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env start -- --update
 
       - name: Generate Translation files
         run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run i18n:make-pot
