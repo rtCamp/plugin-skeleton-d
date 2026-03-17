@@ -17,13 +17,14 @@ jobs:
     runs-on: [public-repo]
     container:
       image: ubuntu:24.04
-      options: --user root -v /var/run/docker.sock:/var/run/docker.sock
+      options: --user root -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env
 
     timeout-minutes: 20
 
     env:
       WP_ENV_PORT: 8889
       WP_ENV_TESTS_PORT: 8891
+      WP_ENV_HOME: /tmp/wp-env
 
     steps:
       - name: Install system dependencies
@@ -42,6 +43,8 @@ jobs:
           SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
           groupmod -g $SOCK_GID -o docker
           usermod -aG docker wpuser
+          mkdir -p /tmp/wp-env
+          chown -R wpuser:wpuser /tmp/wp-env
 
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -96,14 +99,14 @@ jobs:
         with:
           timeout_minutes: 10
           max_attempts: 3
-          command: sudo -u wpuser env "PATH=$PATH" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --update
+          command: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --update
 
       - name: Activate plugin
         run: |
-          sudo -u wpuser env "PATH=$PATH" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
+          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
 
       - name: Run E2E tests
-        run: sudo -u wpuser env "PATH=$PATH" npm run test:e2e
+        run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run test:e2e
 
       - name: Upload E2E test results as artifact
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -116,4 +119,4 @@ jobs:
 
       - name: Stop the Docker testing environment
         if: always()
-        run: sudo -u wpuser env "PATH=$PATH" npm run wp-env:test destroy -- --force
+        run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test destroy -- --force

@@ -32,13 +32,14 @@ jobs:
     runs-on: [public-repo]
     container:
       image: ubuntu:24.04
-      options: --user root -v /var/run/docker.sock:/var/run/docker.sock
-    # timeout-minutes: 20
+      options: --user root -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env
+    timeout-minutes: 20
     env:
       WP_ENV_PHP_VERSION: ${{ inputs.php-version }}
       WP_ENV_CORE: ${{ inputs.wp-version == 'trunk' && 'WordPress/WordPress' || format('https://wordpress.org/wordpress-{0}.zip', inputs.wp-version) }}
       WP_ENV_PORT: 8889
       WP_ENV_TESTS_PORT: 8891
+      WP_ENV_HOME: /tmp/wp-env
 
     steps:
       - name: Install system dependencies
@@ -57,6 +58,7 @@ jobs:
           SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
           groupmod -g $SOCK_GID -o docker
           usermod -aG docker wpuser
+          chown -R wpuser:wpuser /tmp/wp-env
 
       - name: Configure environment variables
         run: |
@@ -120,30 +122,23 @@ jobs:
           max_attempts: 3
           command: |
             if [ "${{ inputs.coverage }}" == "true" ]; then
-              sudo -u wpuser env "PATH=$PATH" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --xdebug=coverage --update --debug
+              sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --xdebug=coverage --update --debug
             else
-              sudo -u wpuser env "PATH=$PATH" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --update
+              sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --update
             fi
 
       - name: Activate plugin
         run: |
-          sudo -u wpuser env "PATH=$PATH" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
-          sudo -u wpuser env "PATH=$PATH" npm run wp-env:test run tests-cli -- wp plugin activate plugin-skeleton-d
+          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
+          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test run tests-cli -- wp plugin activate plugin-skeleton-d
 
       - name: Log versions
         run: |
-          sudo -u wpuser env "PATH=$PATH" npm run wp-env:test -- run tests-cli php -- -v
-          sudo -u wpuser env "PATH=$PATH" npm run wp-env:test -- run tests-cli wp core version
-
-      - name: Pause before PhpUnit test (dbg mode)
-        run: |
-          while [ ! -f /tmp/resume ]; do
-            echo "Waiting for wp-env to be ready..."
-            sleep 60
-          done
+          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test -- run tests-cli php -- -v
+          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test -- run tests-cli wp core version
 
       - name: Run PHPUnit tests${{ inputs.coverage && ' with coverage report' || '' }}
-        run: sudo -u wpuser env "PATH=$PATH" npm run test:php ${{ !inputs.coverage && '-- --no-coverage' || '' }}
+        run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run test:php ${{ !inputs.coverage && '-- --no-coverage' || '' }}
 
       - name: Upload code coverage report
         if: ${{ inputs.coverage }}
@@ -164,4 +159,4 @@ jobs:
 
       - name: Stop the Docker testing environment
         if: always()
-        run: sudo -u wpuser env "PATH=$PATH" npm run wp-env:test destroy -- --force
+        run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test destroy -- --force
