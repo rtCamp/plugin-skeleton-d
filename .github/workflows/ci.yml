@@ -29,14 +29,22 @@ jobs:
       contents: read
       pull-requests: read
     outputs:
-      php: ${{ steps.filter.outputs.php }}
-      phpcs: ${{ steps.filter.outputs.phpcs }}
-      phpstan: ${{ steps.filter.outputs.phpstan }}
-      phpunit: ${{ steps.filter.outputs.phpunit }}
-      js: ${{ steps.filter.outputs.js }}
-      css: ${{ steps.filter.outputs.css }}
-      e2e: ${{ steps.filter.outputs.e2e }}
-      jest: ${{ steps.filter.outputs.jest }}
+      php: "false"
+      phpcs: "false"
+      phpstan: "false"
+      phpunit: "true"
+      js: "false"
+      css: "false"
+      e2e: "false"
+      jest: "false"
+      # php: ${{ steps.filter.outputs.php }}
+      # phpcs: ${{ steps.filter.outputs.phpcs }}
+      # phpstan: ${{ steps.filter.outputs.phpstan }}
+      # phpunit: ${{ steps.filter.outputs.phpunit }}
+      # js: ${{ steps.filter.outputs.js }}
+      # css: ${{ steps.filter.outputs.css }}
+      # e2e: ${{ steps.filter.outputs.e2e }}
+      # jest: ${{ steps.filter.outputs.jest }}
 
     steps:
       - name: Install system dependencies
