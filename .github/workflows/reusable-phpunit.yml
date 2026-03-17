@@ -33,7 +33,7 @@ jobs:
     container:
       image: ubuntu:24.04
       options: --user root -v /var/run/docker.sock:/var/run/docker.sock
-    timeout-minutes: 20
+    # timeout-minutes: 20
     env:
       WP_ENV_PHP_VERSION: ${{ inputs.php-version }}
       WP_ENV_CORE: ${{ inputs.wp-version == 'trunk' && 'WordPress/WordPress' || format('https://wordpress.org/wordpress-{0}.zip', inputs.wp-version) }}
@@ -134,6 +134,13 @@ jobs:
         run: |
           sudo -u wpuser env "PATH=$PATH" npm run wp-env:test -- run tests-cli php -- -v
           sudo -u wpuser env "PATH=$PATH" npm run wp-env:test -- run tests-cli wp core version
+
+      - name: Pause before PhpUnit test (dbg mode)
+        run: |
+          while [ ! -f /tmp/resume ]; do
+            echo "Waiting for wp-env to be ready..."
+            sleep 60
+          done
 
       - name: Run PHPUnit tests${{ inputs.coverage && ' with coverage report' || '' }}
         run: sudo -u wpuser env "PATH=$PATH" npm run test:php ${{ !inputs.coverage && '-- --no-coverage' || '' }}
