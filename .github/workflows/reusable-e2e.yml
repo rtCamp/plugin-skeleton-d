@@ -94,6 +94,9 @@ jobs:
 
           cat .wp-env.test.json
 
+      - name: Fix workspace permissions
+        run: chown -R wpuser:wpuser .
+
       - name: Start the Docker testing environment
         uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
         with:
