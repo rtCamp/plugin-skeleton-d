@@ -29,23 +29,14 @@ jobs:
       contents: read
       pull-requests: read
     outputs:
-      php: "false"
-      phpcs: "false"
-      phpstan: "false"
-      phpunit: "false"
-      js: "false"
-      css: "false"
-      e2e: "true"
-      jest: "false"
-
-      # php: ${{ steps.filter.outputs.php }}
-      # phpcs: ${{ steps.filter.outputs.phpcs }}
-      # phpstan: ${{ steps.filter.outputs.phpstan }}
-      # phpunit: ${{ steps.filter.outputs.phpunit }}
-      # js: ${{ steps.filter.outputs.js }}
-      # css: ${{ steps.filter.outputs.css }}
-      # e2e: ${{ steps.filter.outputs.e2e }}
-      # jest: ${{ steps.filter.outputs.jest }}
+      php: ${{ steps.filter.outputs.php }}
+      phpcs: ${{ steps.filter.outputs.phpcs }}
+      phpstan: ${{ steps.filter.outputs.phpstan }}
+      phpunit: ${{ steps.filter.outputs.phpunit }}
+      js: ${{ steps.filter.outputs.js }}
+      css: ${{ steps.filter.outputs.css }}
+      e2e: ${{ steps.filter.outputs.e2e }}
+      jest: ${{ steps.filter.outputs.jest }}
     steps:
       - name: Install system dependencies
         run: |
@@ -171,9 +162,8 @@ jobs:
 
   e2e:
     name: E2E Tests
-    # TODO(@dipankardas011): please remove this comment
-    # needs: [detect, phpunit]
-    # if: needs.detect.result == 'success' && (needs.phpunit.result == 'success' || needs.phpunit.result == 'skipped') && (needs.detect.outputs.php == 'true' || needs.detect.outputs.e2e == 'true' || needs.detect.outputs.js == 'true' || needs.detect.outputs.css == 'true')
+    needs: [detect, phpunit]
+    if: needs.detect.result == 'success' && (needs.phpunit.result == 'success' || needs.phpunit.result == 'skipped') && (needs.detect.outputs.php == 'true' || needs.detect.outputs.e2e == 'true' || needs.detect.outputs.js == 'true' || needs.detect.outputs.css == 'true')
     uses: ./.github/workflows/reusable-e2e.yml
     permissions:
       contents: read
