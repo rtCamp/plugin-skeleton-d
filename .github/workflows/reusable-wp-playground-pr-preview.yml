@@ -43,8 +43,6 @@ jobs:
           apt-get update
           apt-get install -y git curl
 
-      # - name: Configure Git for Safe Directory
-      #   run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
 
       - name: Extract PR metadata and artifact info
         id: pr-metadata
