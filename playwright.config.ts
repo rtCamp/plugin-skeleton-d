@@ -22,6 +22,10 @@ const config = defineConfig( {
 	...baseConfig,
 	testDir: './tests/e2e',
 	outputDir: './tests/_output/e2e',
+
+	// Disable Playwright's automatic webServer orchestration to prevent port
+	// conflicts, as the CI workflow/local scripts manually manage the wp-env lifecycle.
+	webServer: undefined,
 } );
 
 export default config;
