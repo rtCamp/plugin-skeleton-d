@@ -27,6 +27,7 @@ const config = defineConfig( {
 	// conflicts, as the CI workflow/local scripts manually manage the wp-env lifecycle.
 	webServer: undefined,
 	use: {
+		...baseConfig.use,
 		headless: true,
 	},
 } );
