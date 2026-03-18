@@ -26,6 +26,9 @@ const config = defineConfig( {
 	// Disable Playwright's automatic webServer orchestration to prevent port
 	// conflicts, as the CI workflow/local scripts manually manage the wp-env lifecycle.
 	webServer: undefined,
+	use: {
+		headless: true,
+	},
 } );
 
 export default config;
