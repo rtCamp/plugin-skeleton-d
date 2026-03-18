@@ -17,7 +17,11 @@ jobs:
     runs-on: [public-repo]
     container:
       image: ubuntu:24.04
-      options: --user root --add-host=host.docker.internal:host-gateway -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env -v /tmp/playwright-cache:/tmp/playwright-cache
+      # We use --network=host to ensure Playwright (running inside this CI container)
+      # shares the exact same network as the host Docker daemon. This prevents
+      # "ECONNREFUSED" errors when WordPress issues 302 redirects back to "localhost",
+      # which would otherwise trap Playwright inside the CI container's loopback.
+      options: --user root --network=host -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env -v /tmp/playwright-cache:/tmp/playwright-cache
 
     timeout-minutes: 30
 
@@ -119,7 +123,7 @@ jobs:
           sudo -u wpuser env "PATH=$PATH" "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" npx playwright install
 
       - name: Run E2E tests
-        run: sudo -u wpuser env "PATH=$PATH" "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" "WP_BASE_URL=http://host.docker.internal:8889" npm run test:e2e -- --debug
+        run: sudo -u wpuser env "PATH=$PATH" "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" npm run test:e2e -- --debug
 
       - name: Upload E2E test results as artifact
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
