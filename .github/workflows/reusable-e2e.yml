@@ -17,11 +17,9 @@ jobs:
     runs-on: [public-repo]
     container:
       image: ubuntu:24.04
-      # We use --network=host to ensure Playwright (running inside this CI container)
-      # shares the exact same network as the host Docker daemon. This prevents
-      # "ECONNREFUSED" errors when WordPress issues 302 redirects back to "localhost",
-      # which would otherwise trap Playwright inside the CI container's loopback.
-      options: --user root --network=host -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env -v /tmp/playwright-cache:/tmp/playwright-cache
+      # We use --add-host to get the host IP, and we will use socat to forward
+      # localhost:8889 to the host so Playwright and WordPress agree on "localhost".
+      options: --user root --add-host=host.docker.internal:host-gateway -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env -v /tmp/playwright-cache:/tmp/playwright-cache
 
     timeout-minutes: 30
 
@@ -35,7 +33,7 @@ jobs:
       - name: Install system dependencies
         run: |
           apt-get update
-          apt-get install -y git curl sudo unzip jq
+          apt-get install -y git curl sudo unzip jq socat
 
       - name: setup Docker
         run: |
@@ -123,7 +121,13 @@ jobs:
           sudo -u wpuser env "PATH=$PATH" "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" npx playwright install
 
       - name: Run E2E tests
-        run: sudo -u wpuser env "PATH=$PATH" "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" npm run test:e2e -- --debug
+        run: |
+          # Forward localhost traffic from the CI container to the Host machine 
+          # where the WordPress Docker container is actually listening.
+          # This ensures Playwright and WordPress both agree the domain is "localhost:8889".
+          socat TCP4-LISTEN:8889,fork,bind=127.0.0.1 TCP4:host.docker.internal:8889 &
+          
+          sudo -u wpuser env "PATH=$PATH" "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" npm run test:e2e -- --debug
 
       - name: Upload E2E test results as artifact
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
