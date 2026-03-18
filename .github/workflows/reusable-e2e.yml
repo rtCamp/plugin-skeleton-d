@@ -116,7 +116,7 @@ jobs:
       - name: Install Playwright dependencies
         run: |
           npx playwright install-deps
-          sudo -u wpuser env "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" npx playwright install
+          sudo -u wpuser env "PATH=$PATH" "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" npx playwright install
 
       - name: Run E2E tests
         run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" npm run test:e2e -- --debug
