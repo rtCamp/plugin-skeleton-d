@@ -90,9 +90,6 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
 
-      - name: Add npm to PATH for wpuser
-        run: echo "export PATH=${PATH}" >> /home/wpuser/.bashrc
-
       - name: Install npm dependencies
         run: npm ci
 
@@ -132,23 +129,23 @@ jobs:
           max_attempts: 3
           command: |
             if [ "${{ inputs.coverage }}" == "true" ]; then
-              sudo -E -u wpuser npm run wp-env:test start -- --xdebug=coverage --update --debug
+              sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --xdebug=coverage --update --debug
             else
-              sudo -E -u wpuser npm run wp-env:test start -- --update
+              sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --update
             fi
 
       - name: Activate plugin
         run: |
-          sudo -E -u wpuser npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
-          sudo -E -u wpuser npm run wp-env:test run tests-cli -- wp plugin activate plugin-skeleton-d
+          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
+          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test run tests-cli -- wp plugin activate plugin-skeleton-d
 
       - name: Log versions
         run: |
-          sudo -E -u wpuser npm run wp-env:test -- run tests-cli php -- -v
-          sudo -E -u wpuser npm run wp-env:test -- run tests-cli wp core version
+          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test -- run tests-cli php -- -v
+          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test -- run tests-cli wp core version
 
       - name: Run PHPUnit tests${{ inputs.coverage && ' with coverage report' || '' }}
-        run: sudo -E -u wpuser npm run test:php ${{ !inputs.coverage && '-- --no-coverage' || '' }}
+        run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run test:php ${{ !inputs.coverage && '-- --no-coverage' || '' }}
 
       - name: Upload code coverage report
         if: ${{ inputs.coverage }}
@@ -169,4 +166,4 @@ jobs:
 
       - name: Stop the Docker testing environment
         if: always()
-        run: sudo -E -u wpuser npm run wp-env:test destroy -- --force
+        run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test destroy -- --force
