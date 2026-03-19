@@ -21,9 +21,7 @@ permissions:
 jobs:
   detect:
     name: Detect Changes
-    runs-on: [public-repo]
-    container:
-      image: ubuntu:24.04
+    runs-on: ubuntu-latest
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     permissions:
       contents: read
@@ -38,16 +36,8 @@ jobs:
       e2e: ${{ steps.filter.outputs.e2e }}
       jest: ${{ steps.filter.outputs.jest }}
     steps:
-      - name: Install system dependencies
-        run: |
-          apt-get update
-          apt-get install -y git
-
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Configure Git for Safe Directory
-        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
 
       - name: Detect file changes
         uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
