@@ -45,7 +45,7 @@ jobs:
             const run = await github.rest.actions.getWorkflowRun({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: ${{ inputs.run-id }},
+              run_id: '${{ inputs.run-id }}',
             });
 
             const pulls = run.data.pull_requests;
@@ -59,7 +59,7 @@ jobs:
             const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: ${{ inputs.run-id }},
+              run_id: '${{ inputs.run-id }}',
             });
 
             const artifact = artifacts.data.artifacts.find(a =>

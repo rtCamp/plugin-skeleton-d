@@ -156,7 +156,7 @@ jobs:
     uses: ./.github/workflows/reusable-build-public.yml
     with:
       php-version: '8.2'
-      artifact-name: plugin-skeleton-d-pr${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
+      artifact-name: plugin-skeleton-d-pr-public${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
     secrets: inherit
 
   playground-preview:
