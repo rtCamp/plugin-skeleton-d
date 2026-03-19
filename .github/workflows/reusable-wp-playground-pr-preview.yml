@@ -41,7 +41,7 @@ jobs:
       - name: Install system dependencies
         run: |
           apt-get update
-          apt-get install -y git curl
+          apt-get install -y git curl jq
 
 
       - name: Extract PR metadata and artifact info
@@ -104,22 +104,12 @@ jobs:
       - name: Generate Playground blueprint JSON
         id: blueprint
         run: |
-          node - <<'NODE' >> "$GITHUB_OUTPUT"
-          const fs = require('fs');
-          const url = process.env.ARTIFACT_URL;
-          if (!url) {
-            throw new Error('ARTIFACT_URL is required');
-          }
-
-          // Load the base blueprint and update the plugin URL
-          const blueprint = JSON.parse(fs.readFileSync('blueprint.json', 'utf8'));
-          const installStep = blueprint.steps.find(s => s.step === 'installPlugin');
-          if (installStep) {
-            installStep.pluginData.url = url;
-          }
-
-          console.log(`blueprint=${JSON.stringify(blueprint)}`);
-          NODE
+          if [ -z "$ARTIFACT_URL" ]; then
+            echo "::error::ARTIFACT_URL is required"
+            exit 1
+          fi
+          BLUEPRINT=$(jq --arg url "$ARTIFACT_URL" '(.steps[] | select(.step == "installPlugin") | .pluginData.url) = $url' blueprint.json)
+          echo "blueprint=$(echo $BLUEPRINT | jq -c .)" >> "$GITHUB_OUTPUT"
         env:
           ARTIFACT_URL: ${{ steps.expose.outputs.artifact-url }}
 
