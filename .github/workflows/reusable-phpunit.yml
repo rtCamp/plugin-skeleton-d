@@ -40,7 +40,6 @@ jobs:
       WP_ENV_PHP_VERSION: ${{ inputs.php-version }}
       WP_ENV_CORE: ${{ inputs.wp-version == 'trunk' && 'WordPress/WordPress' || format('https://wordpress.org/wordpress-{0}.zip', inputs.wp-version) }}
       WP_ENV_PORT: 8889
-      WP_ENV_TESTS_PORT: 8891
       WP_ENV_HOME: /tmp/wp-env
 
     steps:
@@ -129,10 +128,10 @@ jobs:
           max_attempts: 3
           command: |
             if [ "${{ inputs.coverage }}" == "true" ]; then
-              sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --xdebug=coverage --update --debug
+              sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" npm run wp-env:test start -- --xdebug=coverage --update --debug
             else
-              sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --update
-            fi
+              sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" npm run wp-env:test start -- --update
+            fi`
 
       - name: Activate plugin
         run: |

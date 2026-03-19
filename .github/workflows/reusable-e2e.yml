@@ -25,7 +25,6 @@ jobs:
 
     env:
       WP_ENV_PORT: 8889
-      WP_ENV_TESTS_PORT: 8891
       WP_ENV_HOME: /tmp/wp-env
       PLAYWRIGHT_BROWSERS_PATH: /tmp/playwright-cache
 
@@ -109,11 +108,11 @@ jobs:
         with:
           timeout_minutes: 15
           max_attempts: 3
-          command: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test start -- --update
+          command: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" npm run wp-env:test start -- --update
 
       - name: Activate plugin
         run: |
-          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
+          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
 
       - name: Install Playwright dependencies
         run: |

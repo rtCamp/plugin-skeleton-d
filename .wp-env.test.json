@@ -1,7 +1,8 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
 	"core": null,
-	"testsEnvironment": true,
+	"port": 8889,
+	"testsEnvironment": false,
 	"plugins": [ "." ],
 	"config": {
 		"FS_METHOD": "direct",
