@@ -109,16 +109,16 @@ jobs:
         with:
           timeout_minutes: 15
           max_attempts: 3
-          command: sudo -E PATH=$PATH -u wpuser npm run wp-env:test start -- --update
+          command: sudo -E -u wpuser npm run wp-env:test start -- --update
 
       - name: Activate plugin
         run: |
-          sudo -E PATH=$PATH -u wpuser npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
+          sudo -E -u wpuser npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
 
       - name: Install Playwright dependencies
         run: |
           npx playwright install-deps
-          sudo -E PATH=$PATH -u wpuser npx playwright install
+          sudo -E -u wpuser npx playwright install
 
       - name: Run E2E tests
         run: |
@@ -127,7 +127,7 @@ jobs:
           # This ensures Playwright and WordPress both agree the domain is "localhost:8889".
           socat TCP4-LISTEN:8889,fork,bind=127.0.0.1 TCP4:host.docker.internal:8889 &
 
-          sudo -E PATH=$PATH -u wpuser npm run test:e2e
+          sudo -E -u wpuser npm run test:e2e
 
       - name: Upload E2E test results as artifact
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -140,4 +140,4 @@ jobs:
 
       - name: Stop the Docker testing environment
         if: always()
-        run: sudo -E PATH=$PATH -u wpuser npm run wp-env:test destroy -- --force
+        run: sudo -E -u wpuser npm run wp-env:test destroy -- --force

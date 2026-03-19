@@ -106,10 +106,10 @@ jobs:
         with:
           timeout_minutes: 10
           max_attempts: 3
-          command: sudo -E PATH=$PATH -u wpuser npm run wp-env start -- --update
+          command: sudo -E -u wpuser npm run wp-env start -- --update
 
       - name: Generate Translation files
-        run: sudo -E PATH=$PATH -u wpuser npm run i18n:make-pot
+        run: sudo -E -u wpuser npm run i18n:make-pot
 
       - name: Create plugin zip
         run: npm run plugin-zip
@@ -123,4 +123,4 @@ jobs:
 
       - name: Stop the Docker testing environment
         if: always()
-        run: sudo -E PATH=$PATH -u wpuser npm run wp-env destroy -- --force
+        run: sudo -E -u wpuser npm run wp-env destroy -- --force
