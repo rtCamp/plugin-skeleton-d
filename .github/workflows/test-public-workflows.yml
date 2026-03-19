@@ -169,6 +169,6 @@ jobs:
       contents: write
       pull-requests: write
     with:
-      run-id: ${{ github.run_id }}-public
+      run-id: ${{ github.run_id }}
       artifact-prefix: 'plugin-skeleton-d-pr-public'
       artifact-filename: 'plugin-skeleton-d.zip'
