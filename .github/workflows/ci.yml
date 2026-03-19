@@ -53,17 +53,24 @@ jobs:
               - '**.php'
               - 'composer.*'
             phpcs:
-              - '.phpcs.xml.dist'
+              - '.github/workflows/ci.yml'
               - '.github/workflows/reusable-phpcs.yml'
+              - '.phpcs.xml.dist'
             phpstan:
-              - 'phpstan.neon.dist'
+              - '.github/workflows/ci.yml'
               - '.github/workflows/reusable-phpstan.yml'
+              - 'phpstan.neon.dist'
             phpunit:
+              - '.github/workflows/ci.yml'
+              - '.github/workflows/reusable-phpunit.yml'
               - 'tests/**/*.php'
               - 'phpunit.xml.dist'
-              - '.github/workflows/reusable-phpunit.yml'
               - 'package*.json'
+              - '.wp-env.test.json'
             js:
+              - '.github/workflows/ci.yml'
+              - '.github/workflows/reusable-lint-css-js.yml'
+              - '.nvmrc'
               - '**.cjs'
               - '**.js'
               - '**.jsx'
@@ -73,18 +80,22 @@ jobs:
               - '**.ts'
               - '**.tsx'
               - 'package*.json'
-              - '.eslintrc*'
               - 'tsconfig*.json'
             css:
               - '**.css'
               - '**.scss'
+              - '.editorconfig'
+              - '.browserslistrc'
               - '.stylelintignore'
-              - '.stylelint.config.js*'
+              - '.stylelint.config.js'
             e2e:
+              - '.github/workflows/ci.yml'
+              - '.github/workflows/reusable-e2e.yml'
               - 'tests/e2e/**/*'
               - 'playwright.config.ts'
-              - '.github/workflows/reusable-e2e.yml'
             jest:
+              - '.github/workflows/ci.yml'
+              - '.github/workflows/reusable-jest.yml'
               - 'tests/js/**/*'
               - 'src/**/__tests__/**/*'
               - 'src/**/*.test.ts'
@@ -92,8 +103,8 @@ jobs:
               - 'src/**/*.spec.ts'
               - 'src/**/*.spec.tsx'
               - 'jest.config.js'
-              - '.github/workflows/reusable-jest.yml'
               - 'package*.json'
+              - '.wp-env.test.json'
 
   phpcs:
     name: PHPCS

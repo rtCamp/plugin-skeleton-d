@@ -52,16 +52,21 @@ jobs:
             php:
               - 'composer.*'
             phpcs:
-              - '.phpcs.xml.dist'
               - '.github/workflows/reusable-phpcs-public.yml'
+              - '.github/workflows/test-public-workflows.yml'
+              - '.phpcs.xml.dist'
             phpstan:
-              - 'phpstan.neon.dist'
               - '.github/workflows/reusable-phpstan-public.yml'
+              - '.github/workflows/test-public-workflows.yml'
+              - 'phpstan.neon.dist'
             phpunit:
-              - 'phpunit.xml.dist'
               - '.github/workflows/reusable-phpunit-public.yml'
+              - '.github/workflows/test-public-workflows.yml'
+              - 'phpunit.xml.dist'
               - 'package*.json'
             js:
+              - '.github/workflows/reusable-lint-css-js-public.yml'
+              - '.github/workflows/test-public-workflows.yml'
               - '.eslintrc.js'
               - '.nvmrc'
               - '.prettierrc.js'
@@ -72,11 +77,13 @@ jobs:
               - '.stylelintignore'
               - '.stylelint.config.js*'
             e2e:
-              - 'playwright.config.ts'
               - '.github/workflows/reusable-e2e-public.yml'
+              - '.github/workflows/test-public-workflows.yml'
+              - 'playwright.config.ts'
             jest:
-              - 'jest.config.js'
               - '.github/workflows/reusable-jest-public.yml'
+              - '.github/workflows/test-public-workflows.yml'
+              - 'jest.config.js'
               - 'package*.json'
 
   phpcs:
