@@ -131,12 +131,7 @@ jobs:
               sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" npm run wp-env:test start -- --xdebug=coverage --update --debug
             else
               sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" npm run wp-env:test start -- --update
-            fi`
-
-      - name: Activate plugin
-        run: |
-          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
-          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test run tests-cli -- wp plugin activate plugin-skeleton-d
+            fi
 
       - name: Log versions
         run: |

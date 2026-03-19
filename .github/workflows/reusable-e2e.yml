@@ -110,10 +110,6 @@ jobs:
           max_attempts: 3
           command: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" npm run wp-env:test start -- --update
 
-      - name: Activate plugin
-        run: |
-          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" npm run wp-env:test run cli -- wp plugin activate plugin-skeleton-d
-
       - name: Install Playwright dependencies
         run: |
           npx playwright install-deps
