@@ -97,16 +97,16 @@ jobs:
           cat .wp-env.json
 
       - name: Fix workspace permissions
-        run: chown -R wpuser:wpuser .
+        run: |
+          chown -R wpuser:wpuser .
+          sudo -u wpuser git config --global --add safe.directory '/tmp/wp-env/*'
 
       - name: Start the Docker testing environment
         uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
         with:
           timeout_minutes: 10
           max_attempts: 3
-          command: |
-            sudo -u wpuser git config --global --add safe.directory '/tmp/wp-env/*'
-            sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env start -- --update
+          command: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run wp-env start -- --update
 
       - name: Generate Translation files
         run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run i18n:make-pot

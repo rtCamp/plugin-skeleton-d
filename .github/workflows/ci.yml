@@ -139,7 +139,7 @@ jobs:
 
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
-    needs: detect
+    needs: [detect, build-plugin-zip]
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpunit == 'true'
     uses: ./.github/workflows/reusable-phpunit.yml
     permissions:
@@ -162,8 +162,8 @@ jobs:
 
   e2e:
     name: E2E Tests
-    needs: [detect, phpunit]
-    if: needs.detect.result == 'success' && (needs.phpunit.result == 'success' || needs.phpunit.result == 'skipped') && (needs.detect.outputs.php == 'true' || needs.detect.outputs.e2e == 'true' || needs.detect.outputs.js == 'true' || needs.detect.outputs.css == 'true')
+    needs: phpunit
+    if: needs.detect.outputs.php == 'true' || needs.detect.outputs.e2e == 'true' || needs.detect.outputs.js == 'true' || needs.detect.outputs.css == 'true'
     uses: ./.github/workflows/reusable-e2e.yml
     permissions:
       contents: read
@@ -172,8 +172,6 @@ jobs:
 
   build-plugin-zip:
     name: Build Plugin Zip
-    needs: [e2e]
-    if: needs.e2e.result == 'success' || needs.e2e.result == 'skipped'
     permissions:
       contents: read
     uses: ./.github/workflows/reusable-build.yml
