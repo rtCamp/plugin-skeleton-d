@@ -16,11 +16,8 @@ test.describe( 'plugin activation', () => {
 		await expect( pluginRow ).toBeVisible();
 
 		const activateLink = pluginRow.locator( 'a', { hasText: 'Activate' } );
-
-		await Promise.all( [
-			page.waitForURL( /plugins.php/ ),
-			activateLink.click(),
-		] );
+		await activateLink.click();
+		await page.waitForLoadState( 'domcontentloaded' );
 
 		await expect(
 			pluginRow.locator( 'a', { hasText: 'Deactivate' } )
@@ -29,10 +26,8 @@ test.describe( 'plugin activation', () => {
 		const deactivateLink = pluginRow.locator( 'a', {
 			hasText: 'Deactivate',
 		} );
-		await Promise.all( [
-			page.waitForURL( /plugins.php/ ),
-			deactivateLink.click(),
-		] );
+		await deactivateLink.click();
+		await page.waitForLoadState( 'domcontentloaded' );
 
 		await expect(
 			pluginRow.locator( 'a', { hasText: 'Activate' } )
