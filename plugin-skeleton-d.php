@@ -52,11 +52,6 @@ function constants(): void {
 	 * Root URL to the plugin directory.
 	 */
 	define( 'PLUGIN_SKELETON_D_URL', plugin_dir_url( PLUGIN_SKELETON_D_FILE ) );
-
-	/**
-	 * The plugin basename.
-	 */
-	define( 'PLUGIN_SKELETON_D_BASENAME', plugin_basename( PLUGIN_SKELETON_D_FILE ) );
 }
 
 constants();

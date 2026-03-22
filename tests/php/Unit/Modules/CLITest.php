@@ -2,12 +2,12 @@
 /**
  * Unit tests for the CLI module.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;

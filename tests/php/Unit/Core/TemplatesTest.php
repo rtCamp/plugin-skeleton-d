@@ -2,12 +2,12 @@
 /**
  * Unit tests for Templates class.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Core
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Core;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;

@@ -2,12 +2,12 @@
 /**
  * Unit tests for Assets.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Core
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Core;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
@@ -31,6 +31,8 @@ class AssetsTest extends TestCase {
 
 		$assets->register_hooks();
 		$assets->register_assets();
+		$assets->register_admin_assets();
+		$assets->register_editor_assets();
 
 		$this->setExpectedIncorrectUsage( 'WP_Block_Type_Registry::register' );
 		$assets->register_blocks();
