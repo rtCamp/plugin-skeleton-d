@@ -110,7 +110,7 @@ jobs:
     name: CSS/JS Lint
     needs: detect
     if: needs.detect.outputs.css == 'true' || needs.detect.outputs.js == 'true'
-    uses: ./.github/workflows/reusable-lint-css-js.yml
+    uses: ./.github/workflows/reusable-lint-css-js-public.yml
     permissions:
       contents: read
 
@@ -118,7 +118,7 @@ jobs:
     name: Jest Unit Tests
     needs: detect
     if: needs.detect.outputs.js == 'true' || needs.detect.outputs.jest == 'true'
-    uses: ./.github/workflows/reusable-jest.yml
+    uses: ./.github/workflows/reusable-jest-public.yml
     permissions:
       contents: read
     with:
@@ -128,7 +128,7 @@ jobs:
     name: PHPUnit (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
     needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpunit == 'true'
-    uses: ./.github/workflows/reusable-phpunit.yml
+    uses: ./.github/workflows/reusable-phpunit-public.yml
     permissions:
       contents: read
     strategy:
