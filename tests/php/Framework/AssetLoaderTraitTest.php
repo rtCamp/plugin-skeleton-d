@@ -10,8 +10,6 @@ declare( strict_types = 1 );
 namespace rtCamp\Plugin_Skeleton_D\Tests\Framework;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
 /**
@@ -60,7 +58,6 @@ final class AssetLoaderTraitTestDouble {
 	}
 }
 
-
 /**
  * Class - AssetLoaderTraitTest
  */
@@ -69,8 +66,6 @@ class AssetLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_asset_file returns null and logs an incorrect usage when the asset file is missing.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_asset_file_returns_null_and_logs_when_missing(): void {
 		$loader = new AssetLoaderTraitTestDouble();
 		$this->setExpectedIncorrectUsage( $loader::class );
@@ -96,8 +91,6 @@ class AssetLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_asset_file returns null and logs an incorrect usage when the asset file is invalid.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_asset_file_returns_null_for_invalid_asset_payload(): void {
 		$loader = new AssetLoaderTraitTestDouble();
 		$this->setExpectedIncorrectUsage( $loader::class );
@@ -137,8 +130,6 @@ class AssetLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_asset_file returns the expected array when the asset file is valid.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_asset_file_falls_back_to_filemtime_version(): void {
 		$loader    = new AssetLoaderTraitTestDouble();
 		$asset_dir = sys_get_temp_dir() . '/build';
@@ -165,8 +156,6 @@ class AssetLoaderTraitTest extends TestCase {
 	/**
 	 * Test register_script fails with no file.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_register_script_fails_without_asset_file(): void {
 		$loader = new AssetLoaderTraitTestDouble();
 		$this->setExpectedIncorrectUsage( $loader::class );
@@ -176,8 +165,6 @@ class AssetLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that register_script uses dependencies and version from the asset file.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_register_script_uses_asset_dependencies_and_version(): void {
 		$loader    = new AssetLoaderTraitTestDouble();
 		$asset_dir = sys_get_temp_dir() . '/build';
@@ -207,8 +194,6 @@ class AssetLoaderTraitTest extends TestCase {
 	/**
 	 * Tests the scripts can have their deps overloaded.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_register_script_allows_overriding_dependencies_and_version(): void {
 		$loader    = new AssetLoaderTraitTestDouble();
 		$asset_dir = sys_get_temp_dir() . '/build';
@@ -242,8 +227,6 @@ class AssetLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that register_style fails with no file.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_register_style_fails_without_asset_file(): void {
 		$loader = new AssetLoaderTraitTestDouble();
 		$this->setExpectedIncorrectUsage( $loader::class );
@@ -253,8 +236,6 @@ class AssetLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that register_style uses dependencies and version from the asset file.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_register_style_uses_asset_dependencies_and_version(): void {
 		$loader    = new AssetLoaderTraitTestDouble();
 		$asset_dir = sys_get_temp_dir() . '/build';
@@ -285,8 +266,6 @@ class AssetLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that register style allows overriding dependencies and version.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_register_style_allows_overriding_dependencies_and_version(): void {
 		$loader    = new AssetLoaderTraitTestDouble();
 		$asset_dir = sys_get_temp_dir() . '/build';
@@ -322,8 +301,6 @@ class AssetLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that register_block_manifest logs an incorrect usage when the manifest file is missing.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_register_block_manifest_logs_incorrect_usage_when_manifest_file_is_missing(): void {
 		$loader = new AssetLoaderTraitTestDouble();
 		$this->setExpectedIncorrectUsage( $loader::class );
@@ -347,8 +324,6 @@ class AssetLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that register_block_manifest logs an incorrect usage when the manifest file is invalid.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_register_block_manifest_logs_incorrect_usage_when_manifest_file_is_invalid(): void {
 		$loader = new AssetLoaderTraitTestDouble();
 
@@ -380,8 +355,6 @@ class AssetLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that register_block_manifest registers blocks when the manifest file is valid.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_register_block_manifest_registers_blocks_with_valid_manifest(): void {
 		$loader       = new AssetLoaderTraitTestDouble();
 		$manifest_dir = sys_get_temp_dir() . '/build';

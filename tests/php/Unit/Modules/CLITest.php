@@ -23,8 +23,6 @@ class CLITest extends TestCase {
 	/**
 	 * Tests that register_hooks() does not attempt to register commands when WP_CLI is not defined or false.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_cli_register_hooks_safe_without_wp_cli(): void {
 		$cli = new CLI();
 

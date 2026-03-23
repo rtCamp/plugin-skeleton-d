@@ -23,8 +23,6 @@ class HealthcheckTest extends TestCase {
 	/**
 	 * Test that get_name() returns the expected command name.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_healthcheck_get_name(): void {
 		$this->assertSame( 'health-check', Healthcheck::get_name() );
 	}
@@ -32,8 +30,6 @@ class HealthcheckTest extends TestCase {
 	/**
 	 * Test that get_description() returns a non-empty string.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_healthcheck_get_description(): void {
 		$this->assertNotEmpty( Healthcheck::get_description() );
 	}

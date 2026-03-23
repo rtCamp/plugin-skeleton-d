@@ -2,16 +2,14 @@
 /**
  * Unit tests for Singleton trait.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Framework\Traits
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Framework;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Framework\Traits;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use rtCamp\Plugin_Skeleton_D\Framework\Contracts\Traits\Singleton;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
@@ -49,8 +47,6 @@ class SingletonTraitTest extends TestCase {
 	/**
 	 * Tests that cloning triggers an incorrect usage notice.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_clone_triggers_doing_it_wrong(): void {
 		$this->setExpectedIncorrectUsage( '__clone' );
 
@@ -75,8 +71,6 @@ class SingletonTraitTest extends TestCase {
 	/**
 	 * Tests that unserializing triggers an incorrect usage notice via __wakeup().
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_wakeup_triggers_doing_it_wrong(): void {
 		$this->setExpectedIncorrectUsage( '__wakeup' );
 

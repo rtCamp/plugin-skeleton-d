@@ -10,8 +10,6 @@ declare( strict_types = 1 );
 namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Core;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use rtCamp\Plugin_Skeleton_D\Core\Templates;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
@@ -53,8 +51,6 @@ class TemplatesTest extends TestCase {
 	/**
 	 * Test that static get_template_part returns false for nonexistent template.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_static_get_template_part_returns_false_for_nonexistent(): void {
 		$this->reset_templates_instance();
 
@@ -67,8 +63,6 @@ class TemplatesTest extends TestCase {
 	/**
 	 * Test that static get_template_part passes correct arguments.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_static_get_template_part_passes_correct_arguments(): void {
 		$this->reset_templates_instance();
 
@@ -96,8 +90,6 @@ class TemplatesTest extends TestCase {
 	/**
 	 * Test that get_template_part outputs content correctly.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_part_outputs_content(): void {
 		$this->reset_templates_instance();
 		// Create a temporary template file.

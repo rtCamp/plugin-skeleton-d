@@ -24,8 +24,6 @@ class EncryptorTest extends TestCase {
 	/**
 	 * Test that encrypting and then decrypting returns the original value.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_encrypt_and_decrypt(): void {
 		$raw       = 'Sensitive data: ' . uniqid();
 		$encrypted = Encryptor::encrypt( $raw );
@@ -39,8 +37,6 @@ class EncryptorTest extends TestCase {
 	/**
 	 * Test that decrypting invalid base64 data returns false.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_decrypt_returns_false_on_invalid_base64(): void {
 		$this->setExpectedIncorrectUsage( Encryptor::class . '::decrypt' );
 		$invalid_base64 = '!!!not-valid-base64!!!';
@@ -53,8 +49,6 @@ class EncryptorTest extends TestCase {
 	 * @param string $tamper_type Which component to tamper with.
 	 */
 	#[DataProvider( 'tamper_data_provider' )]
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_decrypt_returns_false_on_tampered_data( string $tamper_type ): void {
 		$raw       = 'test data';
 		$encrypted = Encryptor::encrypt( $raw );
@@ -133,8 +127,6 @@ class EncryptorTest extends TestCase {
 	/**
 	 * Test encryption of unicode/multibyte string.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_encrypt_and_decrypt_unicode(): void {
 		$raw       = '日本語テスト 🎉 émoji and àccënts';
 		$encrypted = Encryptor::encrypt( $raw );

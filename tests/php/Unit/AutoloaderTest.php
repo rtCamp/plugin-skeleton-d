@@ -46,8 +46,6 @@ class AutoloaderTest extends TestCase {
 	 * This tests the actual autoloader with the real plugin path,
 	 * which should have vendor/autoload.php available in the test environment.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_autoload_returns_true_when_autoloader_exists(): void {
 		// The real autoloader should exist in our test environment.
 		$this->assertTrue( Autoloader::autoload() );
@@ -56,8 +54,6 @@ class AutoloaderTest extends TestCase {
 	/**
 	 * Tests that autoload uses the correct path constant.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_autoload_uses_correct_path(): void {
 		// Verify the autoloader path is constructed correctly.
 		$expected_path = PLUGIN_SKELETON_D_PATH . 'vendor/autoload.php';
@@ -68,8 +64,6 @@ class AutoloaderTest extends TestCase {
 	/**
 	 * Tests that get_autoloader_error_message returns a string with the plugin name.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_autoloader_error_message_contains_plugin_name(): void {
 		$method = new \ReflectionMethod( Autoloader::class, 'get_autoloader_error_message' );
 		$method->setAccessible( true );
