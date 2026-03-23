@@ -42,7 +42,7 @@ final class Templates {
 	protected function __construct() {
 		$this->hook_prefix        = self::HOOK_PREFIX;
 		$this->template_theme_dir = self::TEMPLATE_THEME_DIR;
-		$this->template_dir       = self::TEMPLATE_DIR;
+		$this->template_dir       = PLUGIN_SKELETON_D_PATH . self::TEMPLATE_DIR;
 	}
 
 	/**

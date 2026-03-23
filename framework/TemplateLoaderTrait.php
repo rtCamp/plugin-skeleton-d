@@ -48,9 +48,7 @@ trait TemplateLoaderTrait {
 	private string $hook_separator = '/';
 
 	/**
-	 * Relative path to the plugin's own template directory.
-	 *
-	 * E.g., 'templates' means plugin templates are at: wp-content/plugins/my-plugin/templates/*
+	 * Absolute path to the plugin's own template directory.
 	 *
 	 * @var non-empty-string
 	 */

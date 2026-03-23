@@ -2,12 +2,12 @@
 /**
  * Unit tests for the Healthcheck CLI command.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\CLI
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\CLI
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\CLI;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\CLI;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
@@ -23,8 +23,6 @@ class HealthcheckTest extends TestCase {
 	/**
 	 * Test that get_name() returns the expected command name.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_healthcheck_get_name(): void {
 		$this->assertSame( 'health-check', Healthcheck::get_name() );
 	}
@@ -32,8 +30,6 @@ class HealthcheckTest extends TestCase {
 	/**
 	 * Test that get_description() returns a non-empty string.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_healthcheck_get_description(): void {
 		$this->assertNotEmpty( Healthcheck::get_description() );
 	}

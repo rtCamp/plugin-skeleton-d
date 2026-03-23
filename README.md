@@ -30,7 +30,7 @@
 
 ### Getting Started
 
-- [Scaffolding Instructions](#setup-steps)
+- [Scaffolding Steps](#scaffold-steps)
 
 ### Contributing
 
@@ -46,11 +46,10 @@
 - [Constants](./docs/reference/constants.md)
 - [WP-CLI Commands](./docs/reference/cli.md)
 
-## To do:
+## To do
 
 - [ ] GitHub workflows for private runners.
 - [ ] docs/ARCHITECTURE.md
-- [ ] Example modules.
 - [ ] Scaffold scripts (search/replace strings, delete examples and unused deps etc)
 
 ## Scaffold Steps
@@ -60,6 +59,8 @@
    - `plugin-skeleton-d` (slug)
    - `Plugin Skeleton D` (title)
    - `PLUGIN_SKELETON_D` (constant prefix)
+   - `pluginSkeletonD` (camelCase reference)
+   - `PluginSkeletonD` (PascalCase reference)
 3. Update the plugin metadata in:
    - `.phpcs.xml.dist` (`testVersion`, `minimum_wp_version`)
    - `composer.json` (`config.platform.php`, `require.php`)

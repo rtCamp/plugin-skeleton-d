@@ -10,8 +10,6 @@ declare( strict_types = 1 );
 namespace rtCamp\Plugin_Skeleton_D\Tests\Unit;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use rtCamp\Plugin_Skeleton_D\Main;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
@@ -45,8 +43,6 @@ class MainTest extends TestCase {
 	/**
 	 * Test that get_instance returns the same singleton instance.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_instance_returns_singleton(): void {
 		$this->reset_main_instance();
 		$a = Main::get_instance();
@@ -57,8 +53,6 @@ class MainTest extends TestCase {
 	/**
 	 * Test that activate() sets the version option.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_activate_sets_version_option(): void {
 		$this->reset_main_instance();
 
@@ -70,8 +64,6 @@ class MainTest extends TestCase {
 	/**
 	 * Test that deactivate() runs without errors.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_deactivate_runs_without_errors(): void {
 		$this->reset_main_instance();
 
@@ -84,8 +76,6 @@ class MainTest extends TestCase {
 	/**
 	 * Test that setup() registers activation and deactivation hooks.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_setup_registers_activation_deactivation_hooks(): void {
 		$this->reset_main_instance();
 

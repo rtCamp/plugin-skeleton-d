@@ -55,15 +55,17 @@ final class Assets implements Registrable {
 	 */
 	public function register_hooks(): void {
 		add_action( 'init', [ $this, 'register_blocks' ] );
-		// @todo
-		add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ], 20 );
+
+		add_action( 'wp_enqueue_scripts', [ $this, 'register_assets' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'register_admin_assets' ] );
+		add_action( 'enqueue_block_editor_assets', [ $this, 'register_editor_assets' ] );
 
 		// Add defer attribute to certain plugin bundles to improve admin load performance.
 		add_filter( 'script_loader_tag', [ $this, 'defer_scripts' ], 10, 2 );
 	}
 
 	/**
-	 * Register admin assets to WordPress.
+	 * Register assets for frontend.
 	 *
 	 * Assets are registered once centrally, and enqueued in the modules that need them.
 	 */
@@ -73,6 +75,28 @@ final class Assets implements Registrable {
 		$this->register_style( self::FRONTEND_HANDLE, 'frontend' );
 
 		$this->register_style( self::GLOBAL_STYLES_HANDLE, 'global-styles' );
+	}
+
+	/**
+	 * Register assets for admin.
+	 *
+	 * Assets are registered once centrally, and enqueued in the modules that need them.
+	 */
+	public function register_admin_assets(): void {
+		// Register admin script and style.
+		$this->register_script( self::ADMIN_HANDLE, 'admin' );
+		$this->register_style( self::ADMIN_HANDLE, 'admin' );
+	}
+
+	/**
+	 * Register assets for editor.
+	 *
+	 * Assets are registered once centrally, and enqueued in the modules that need them.
+	 */
+	public function register_editor_assets(): void {
+		// Register editor script and style.
+		$this->register_script( self::EDITOR_HANDLE, 'editor' );
+		$this->register_style( self::EDITOR_HANDLE, 'editor' );
 	}
 
 	/**

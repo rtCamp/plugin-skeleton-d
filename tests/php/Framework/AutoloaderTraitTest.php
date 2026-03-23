@@ -10,8 +10,6 @@ declare( strict_types = 1 );
 namespace rtCamp\Plugin_Skeleton_D\Tests\Framework;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use rtCamp\Plugin_Skeleton_D\Framework\AutoloaderTrait;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
@@ -60,9 +58,7 @@ class AutoloaderTraitTest extends TestCase {
 
 	/**
 	 * Tests `require_autoloader()` returns true on success.
-	*/
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
+	 */
 	public function test_require_autoloader_returns_true_for_readable_autoloader_file(): void {
 		// We don't reuse vendor/autoload.php so it can be portable to other plugins.
 		$autoloader_file = tempnam( sys_get_temp_dir(), 'autoload-trait-' );
@@ -79,8 +75,6 @@ class AutoloaderTraitTest extends TestCase {
 	/**
 	 * Tests `require_autoloader()` returns false and registers notices when the file is missing.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_require_autoloader_returns_false_and_registers_notices_when_file_is_missing(): void {
 		$this->assertFalse( AutoloaderTraitTestDouble::call_require_autoloader( '/tmp/does-not-exist/autoload.php' ) );
 		$this->assertNotFalse( has_action( 'admin_notices' ) );
@@ -90,8 +84,6 @@ class AutoloaderTraitTest extends TestCase {
 	/**
 	 * Tests the `missing_autoloader_notice outputs the correct notices
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_missing_autoloader_notice_emits_expected_notice_and_doing_it_wrong(): void {
 		$this->setExpectedIncorrectUsage( AutoloaderTraitTestDouble::class );
 

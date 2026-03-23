@@ -2,12 +2,12 @@
 /**
  * Unit tests for the CLI module.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
@@ -23,8 +23,6 @@ class CLITest extends TestCase {
 	/**
 	 * Tests that register_hooks() does not attempt to register commands when WP_CLI is not defined or false.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_cli_register_hooks_safe_without_wp_cli(): void {
 		$cli = new CLI();
 

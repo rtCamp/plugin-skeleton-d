@@ -71,8 +71,18 @@ Code contributions, bug reports, and feature requests are welcome! The following
 │   ├── Core/
 │   │   ├── Assets.php    # Registers scripts, styles, blocks.
 │   │   └── Templates.php # Template loader and helper functions.
+│   │
 │   ├── Modules/
-│   │   └── CLI/   # wp-cli command definitions.
+│   │   ├── CLI/   # wp-cli command definitions.
+│   │   ├── Example/   # Example module.
+│   │   │   ├── Example_Post_Type.php
+│   │   │   ├── Example_Taxonomy.php
+│   │   │   ├── Example_Post_Type_Meta.php
+│   │   │   └── Example_REST_Controller.php
+│   │   └── Settings/ # Settings module.
+│   │       ├── Settings.php
+│   │       └── Admin_Screen.php
+│   │
 │   ├── Autoloader.php # PSR-4 autoloader.
 │   └── Main.php # Main plugin entrypoint.
 │
@@ -224,7 +234,8 @@ You should now have a fully functional local development environment with the pl
 - `npm run wp-env start`: Start the local development environment.
 - `npm run wp-env stop`: Stop the local development environment.
 - `npm run wp-env run cli -- --env-cwd=wp-content/plugins/plugin-skeleton-d {YOUR_CMD_HERE}`: Run WP-CLI commands in the local environment.
-- `npm run wp-env run tests-cli -- --env-cwd=wp-content/plugins/plugin-skeleton-d {YOUR_CMD_HERE}`: Run Composer/PHP tooling in the tests container.
+- `npm run wp-env:test run cli -- --env-cwd=wp-content/plugins/plugin-skeleton-d {YOUR_CMD_HERE}`: Run Composer/PHP tooling in the tests container.
+- `npm run wp-env clean all`: Resets the wp-env database.
 
 For more information on using `wp-env`, see the [wp-env documentation](https://developer.wordpress.org/block-editor/packages/packages-env/).
 
@@ -377,7 +388,7 @@ npm run test:php
 To generate a code coverage report, make sure to start the testing environment with coverage mode enabled:
 
 ```bash
-npm run wp-env start -- --xdebug-mode=coverage
+npm run wp-env:test start -- --xdebug-mode=coverage
 
 npm run test:php
 ```
@@ -388,7 +399,7 @@ You should see the html coverage report in the `tests/_output/html` directory an
 
 We use [Jest](https://jestjs.io/) for JavaScript/TypeScript unit testing, configured via [`jest.config.js`](../jest.config.js) and extending `@wordpress/scripts` defaults.
 
-#### Running Tests
+Jest can be run with the following commands:
 
 ```bash
 # Run all tests
