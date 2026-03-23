@@ -10,8 +10,6 @@ declare( strict_types = 1 );
 namespace rtCamp\Plugin_Skeleton_D\Tests\Unit;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use rtCamp\Plugin_Skeleton_D\Autoloader;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
@@ -33,8 +31,6 @@ class AutoloaderTest extends TestCase {
 	/**
 	 * Tests that autoload returns true when PLUGIN_SKELETON_D_AUTOLOAD is false.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_autoload_returns_true_when_autoload_disabled(): void {
 		define( 'PLUGIN_SKELETON_D_AUTOLOAD', false );
 		$this->assertTrue( Autoloader::autoload() );
