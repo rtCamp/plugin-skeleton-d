@@ -11,8 +11,6 @@ namespace rtCamp\Plugin_Skeleton_D\Tests\Framework;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use rtCamp\Plugin_Skeleton_D\Framework\Encryptor;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
@@ -24,8 +22,6 @@ class EncryptorTest extends TestCase {
 	/**
 	 * Test that encrypting and then decrypting returns the original value.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_encrypt_and_decrypt(): void {
 		$raw       = 'Sensitive data: ' . uniqid();
 		$encrypted = Encryptor::encrypt( $raw );
@@ -39,8 +35,6 @@ class EncryptorTest extends TestCase {
 	/**
 	 * Test that decrypting invalid base64 data returns false.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_decrypt_returns_false_on_invalid_base64(): void {
 		$this->setExpectedIncorrectUsage( Encryptor::class . '::decrypt' );
 		$invalid_base64 = '!!!not-valid-base64!!!';
@@ -53,8 +47,6 @@ class EncryptorTest extends TestCase {
 	 * @param string $tamper_type Which component to tamper with.
 	 */
 	#[DataProvider( 'tamper_data_provider' )]
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_decrypt_returns_false_on_tampered_data( string $tamper_type ): void {
 		$raw       = 'test data';
 		$encrypted = Encryptor::encrypt( $raw );
@@ -101,8 +93,6 @@ class EncryptorTest extends TestCase {
 	/**
 	 * Test that custom key is used for encryption and decryption.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_encrypt_and_decrypt_with_custom_key(): void {
 		if ( ! defined( 'PLUGIN_SKELETON_D_ENCRYPTION_KEY' ) ) {
 			define( 'PLUGIN_SKELETON_D_ENCRYPTION_KEY', 'custom-key-123' );
@@ -117,8 +107,6 @@ class EncryptorTest extends TestCase {
 	/**
 	 * Test encryption with LOGGED_IN_KEY fallback (no custom key defined).
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_encrypt_and_decrypt_with_logged_in_key_fallback(): void {
 		if ( ! defined( 'LOGGED_IN_KEY' ) ) {
 			define( 'LOGGED_IN_KEY', 'fallback-logged-in-key-789' );
@@ -133,8 +121,6 @@ class EncryptorTest extends TestCase {
 	/**
 	 * Test encryption of unicode/multibyte string.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_encrypt_and_decrypt_unicode(): void {
 		$raw       = '日本語テスト 🎉 émoji and àccënts';
 		$encrypted = Encryptor::encrypt( $raw );

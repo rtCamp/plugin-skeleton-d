@@ -10,8 +10,6 @@ declare( strict_types = 1 );
 namespace rtCamp\Plugin_Skeleton_D\Tests\Framework;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use rtCamp\Plugin_Skeleton_D\Framework\TemplateLoaderTrait;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
@@ -145,8 +143,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_part returns false when no template found.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_part_returns_false_when_no_template_found(): void {
 		$temp_dir = sys_get_temp_dir() . '/test-no-templates-' . uniqid();
 		$this->loader->set_template_dir( $temp_dir );
@@ -159,8 +155,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_part returns path when template found in plugin.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_part_returns_path_when_template_found_in_plugin(): void {
 		$temp_dir = sys_get_temp_dir() . '/test-plugin-templates-' . uniqid();
 		mkdir( $temp_dir, 0777, true );
@@ -182,8 +176,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_part with name variant returns correct template.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_part_with_name_variant_returns_correct_template(): void {
 		$temp_dir = sys_get_temp_dir() . '/test-plugin-templates-' . uniqid();
 		mkdir( $temp_dir, 0777, true );
@@ -206,8 +198,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_part outputs the correct template.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_part_outputs_correct_template(): void {
 		$temp_dir = sys_get_temp_dir() . '/test-plugin-templates-' . uniqid();
 		mkdir( $temp_dir, 0777, true );
@@ -231,8 +221,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_part falls back to base template when name variant not found.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_part_falls_back_to_base_template(): void {
 		$temp_dir = sys_get_temp_dir() . '/test-plugin-templates-' . uniqid();
 		mkdir( $temp_dir, 0777, true );
@@ -254,8 +242,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_part fires action hook.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_part_fires_action_hook(): void {
 		$called = [];
 		add_action(
@@ -282,8 +268,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_part applies template args filter.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_part_applies_template_args_filter(): void {
 		$filter_called = false;
 		$filtered_args = [];
@@ -315,8 +299,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_file_names generates basic template.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_file_names_generates_basic_template(): void {
 		$result = $this->loader->call_get_template_file_names( 'content', null );
 
@@ -326,8 +308,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_file_names generates name variant first.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_file_names_generates_name_variant_first(): void {
 		$result = $this->loader->call_get_template_file_names( 'content', 'card' );
 
@@ -337,8 +317,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_file_names applies filter.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_file_names_applies_filter(): void {
 		add_filter(
 			'test_plugin/template_file_names',
@@ -359,8 +337,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that locate_template returns false for empty templates.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_locate_template_returns_false_for_empty_templates(): void {
 		$result = $this->loader->call_locate_template( [] );
 
@@ -370,8 +346,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that locate_template sanitizes template names.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_locate_template_sanitizes_template_names(): void {
 		$temp_dir = sys_get_temp_dir() . '/test-plugin-templates-' . uniqid();
 		mkdir( $temp_dir, 0777, true );
@@ -390,8 +364,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that locate_template applies located_template filter.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_locate_template_applies_located_template_filter(): void {
 		$temp_dir = sys_get_temp_dir() . '/test-plugin-templates-' . uniqid();
 		mkdir( $temp_dir, 0777, true );
@@ -418,8 +390,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that find_template caches results.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_find_template_caches_results(): void {
 		$temp_dir = sys_get_temp_dir() . '/test-plugin-templates-' . uniqid();
 		mkdir( $temp_dir, 0777, true );
@@ -444,8 +414,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_paths returns correct priority order.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_paths_returns_correct_priority_order(): void {
 		$result = $this->loader->call_get_template_paths();
 
@@ -461,8 +429,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_paths applies filter.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_get_template_paths_applies_filter(): void {
 		add_filter(
 			'test_plugin/template_paths',
@@ -481,8 +447,6 @@ class TemplateLoaderTraitTest extends TestCase {
 	/**
 	 * Tests that get_template_part returns false when slug is empty after sanitization.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_locate_template_returns_false_for_invalid_template_names(): void {
 		// Empty strings should be filtered out.
 		$result = $this->loader->call_locate_template( [ '', '  ' ] );

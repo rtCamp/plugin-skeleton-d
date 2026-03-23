@@ -2,16 +2,14 @@
 /**
  * Unit tests for Assets.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Core
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Core;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use rtCamp\Plugin_Skeleton_D\Core\Assets;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
@@ -23,14 +21,14 @@ class AssetsTest extends TestCase {
 	/**
 	 * Ensure no errors are thrown when the Assets class is instantiated.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_assets_class_instantiation(): void {
 		$assets = new Assets();
 		$this->assertInstanceOf( Assets::class, $assets );
 
 		$assets->register_hooks();
 		$assets->register_assets();
+		$assets->register_admin_assets();
+		$assets->register_editor_assets();
 
 		$this->setExpectedIncorrectUsage( 'WP_Block_Type_Registry::register' );
 		$assets->register_blocks();
@@ -42,8 +40,6 @@ class AssetsTest extends TestCase {
 	/**
 	 * Tests defer attribute is added to block editor script tags.
 	 */
-	#[RunInSeparateProcess]
-	#[PreserveGlobalState( false )]
 	public function test_defer_attribute_added_to_block_editor_scripts(): void {
 		$assets = new Assets();
 
