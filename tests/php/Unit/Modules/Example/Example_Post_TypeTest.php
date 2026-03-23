@@ -16,9 +16,7 @@ use rtCamp\Plugin_Skeleton_D\Modules\Example\Example_Taxonomy;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
 /**
- * Class Example_Post_TypeTest
- *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\Example
+ * Class - Example_Post_TypeTest
  */
 #[CoversClass( Example_Post_Type::class )]
 #[CoversClass( Abstract_Post_Type::class )]

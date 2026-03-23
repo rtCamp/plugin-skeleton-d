@@ -14,9 +14,7 @@ use rtCamp\Plugin_Skeleton_D\Modules\Settings\Settings;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
 /**
- * Class SettingsTest
- *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\Settings
+ * Class - SettingsTest
  */
 #[CoversClass( Settings::class )]
 class SettingsTest extends TestCase {

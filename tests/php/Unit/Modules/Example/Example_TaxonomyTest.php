@@ -16,9 +16,7 @@ use rtCamp\Plugin_Skeleton_D\Modules\Example\Example_Taxonomy;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
 /**
- * Class Example_TaxonomyTest
- *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\Example
+ * Class - Example_TaxonomyTest
  */
 #[CoversClass( Example_Taxonomy::class )]
 #[CoversClass( Abstract_Taxonomy::class )]

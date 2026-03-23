@@ -15,9 +15,7 @@ use rtCamp\Plugin_Skeleton_D\Modules\Settings\Admin_Screen;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
 /**
- * Class Admin_ScreenTest
- *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit
+ * Class - Admin_ScreenTest
  */
 #[CoversClass( Admin_Screen::class )]
 class Admin_ScreenTest extends TestCase {

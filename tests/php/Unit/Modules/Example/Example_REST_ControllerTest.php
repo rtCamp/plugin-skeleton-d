@@ -16,9 +16,7 @@ use rtCamp\Plugin_Skeleton_D\Modules\Example\Example_REST_Controller;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
 /**
- * Class Example_REST_ControllerTest
- *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\Example
+ * Class - Example_REST_ControllerTest
  */
 #[CoversClass( Example_REST_Controller::class )]
 #[CoversClass( Abstract_REST_Controller::class )]

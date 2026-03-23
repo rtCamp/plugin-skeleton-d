@@ -16,9 +16,7 @@ use rtCamp\Plugin_Skeleton_D\Modules\Example\Example_Post_Type_Meta;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
 /**
- * Class Example_Post_Type_MetaTest
- *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\Example
+ * Class - Example_Post_Type_MetaTest
  */
 #[CoversClass( Example_Post_Type_Meta::class )]
 class Example_Post_Type_MetaTest extends TestCase {
