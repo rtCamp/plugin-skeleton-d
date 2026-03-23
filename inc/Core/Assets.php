@@ -56,7 +56,7 @@ final class Assets implements Registrable {
 	public function register_hooks(): void {
 		add_action( 'init', [ $this, 'register_blocks' ] );
 
-		add_action( 'enqueue_scripts', [ $this, 'register_assets' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'register_assets' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'register_admin_assets' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'register_editor_assets' ] );
 
