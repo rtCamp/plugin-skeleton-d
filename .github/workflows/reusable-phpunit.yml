@@ -164,3 +164,7 @@ jobs:
       - name: Stop the Docker testing environment
         if: always()
         run: npm run wp-env:test destroy -- --force
+
+      - name: Post-run cleanup
+        if: always()
+        run: rm -rf ${GITHUB_WORKSPACE}/*

@@ -57,3 +57,7 @@ jobs:
         run: |
           echo "One or more checks failed. See logs above for details."
           exit 1
+
+      - name: Post-run cleanup
+        if: always()
+        run: rm -rf ${GITHUB_WORKSPACE}/*

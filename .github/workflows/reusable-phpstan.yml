@@ -59,3 +59,7 @@ jobs:
         with:
           path: tests/_output
           key: phpstan-result-cache-${{ runner.os }}-date-${{ steps.get-date.outputs.date }}
+
+      - name: Post-run cleanup
+        if: always()
+        run: rm -rf ${GITHUB_WORKSPACE}/*

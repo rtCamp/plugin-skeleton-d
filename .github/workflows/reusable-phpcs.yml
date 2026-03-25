@@ -56,3 +56,7 @@ jobs:
       - name: Show PHPCS results in PR
         if: ${{ always() && steps.phpcs.outcome == 'failure' }}
         run: cs2pr ./tests/_output/phpcs-report.xml
+
+      - name: Post-run cleanup
+        if: always()
+        run: rm -rf ${GITHUB_WORKSPACE}/*

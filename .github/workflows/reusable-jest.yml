@@ -58,3 +58,7 @@ jobs:
           path: tests/_output/js-coverage/lcov-report
           retention-days: 7
           if-no-files-found: ignore
+
+      - name: Post-run cleanup
+        if: always()
+        run: rm -rf ${GITHUB_WORKSPACE}/*
