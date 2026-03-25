@@ -31,22 +31,13 @@ jobs:
     name: Post Playground Preview
     runs-on: [public-repo]
     container:
-      image: ubuntu:24.04
+      image: ghcr.io/actions/actions-runner:2.333.0
     permissions:
       actions: read
       contents: write
       pull-requests: write
 
     steps:
-      - name: Install system dependencies
-        run: |
-          apt-get update
-          apt install -y git curl jq gpg unzip
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          apt-get update
-          apt install -y gh
-
       - name: Extract PR metadata and artifact info
         id: pr-metadata
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0

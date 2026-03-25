@@ -31,8 +31,8 @@ jobs:
     name: PHPUnit (PHP ${{ inputs.php-version }}, WP ${{ inputs.wp-version }})${{ inputs.coverage && ' with coverage' || '' }}${{ inputs.multisite && ' multisite' || '' }}
     runs-on: [public-repo]
     container:
-      image: ubuntu:24.04
-      options: --user root -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env
+      image: ghcr.io/actions/actions-runner:2.333.0
+      options: -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env
 
     timeout-minutes: 30
 
@@ -43,23 +43,27 @@ jobs:
       WP_ENV_HOME: /tmp/wp-env
 
     steps:
-      - name: Install system dependencies
+      - name: Magic thing needed becuase of github as it bind mounts __temp
         run: |
-          apt update
-          apt-get install -y git curl sudo unzip jq
-
-      - name: setup Docker
-        run: |
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sh get-docker.sh
+          sudo apt update && sudo apt install -y acl
+          id
+          ls -ln /__w
+          # 1. Grant runner user access to workspace WITHOUT changing the owner
+          sudo setfacl -R -m u:runner:rwX /__w
+          # Set default ACL so new files created by the host also get these permissions
+          sudo setfacl -R -d -m u:runner:rwX /__w
+          sudo getfacl /__w
+          ls -ln /__w
 
       - name: Configure Docker group permissions
         run: |
-          useradd -m wpuser -s /bin/bash
           SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
-          groupmod -g $SOCK_GID -o docker
-          usermod -aG docker wpuser
-          chown -R wpuser:wpuser /tmp/wp-env
+          sudo groupmod -g $SOCK_GID -o docker
+          sudo usermod -aG $SOCK_GID runner
+
+      - name: Configure Docker group permissions
+        run: |
+          mkdir -p /tmp/wp-env
 
       - name: Configure environment variables
         run: |
@@ -118,8 +122,7 @@ jobs:
 
       - name: Fix workspace permissions
         run: |
-          chown -R wpuser:wpuser .
-          sudo -u wpuser git config --global --add safe.directory '/tmp/wp-env/*'
+          git config --global --add safe.directory '/tmp/wp-env/*'
 
       - name: Start the Docker testing environment
         uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4.0.0
@@ -128,18 +131,18 @@ jobs:
           max_attempts: 3
           command: |
             if [ "${{ inputs.coverage }}" == "true" ]; then
-              sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" npm run wp-env:test start -- --xdebug=coverage --update --debug
+              npm run wp-env:test start -- --xdebug=coverage --update --debug
             else
-              sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" npm run wp-env:test start -- --update
+              npm run wp-env:test start -- --update
             fi
 
       - name: Log versions
         run: |
-          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test -- run cli php -- -v
-          sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test -- run cli wp core version
+          npm run wp-env:test -- run cli php -- -v
+          npm run wp-env:test -- run cli wp core version
 
       - name: Run PHPUnit tests${{ inputs.coverage && ' with coverage report' || '' }}
-        run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" "WP_ENV_TESTS_PORT=$WP_ENV_TESTS_PORT" npm run test:php ${{ !inputs.coverage && '-- --no-coverage' || '' }}
+        run: npm run test:php ${{ !inputs.coverage && '-- --no-coverage' || '' }}
 
       - name: Upload code coverage report
         if: ${{ inputs.coverage }}
@@ -160,4 +163,4 @@ jobs:
 
       - name: Stop the Docker testing environment
         if: always()
-        run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test destroy -- --force
+        run: npm run wp-env:test destroy -- --force

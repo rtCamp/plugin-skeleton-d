@@ -16,10 +16,10 @@ jobs:
     name: Playwright E2E Tests
     runs-on: [public-repo]
     container:
-      image: ubuntu:24.04
+      image: ghcr.io/actions/actions-runner:2.333.0
       # We use --add-host to get the host IP, and we will use socat to forward
       # localhost:8889 to the host so Playwright and WordPress agree on "localhost".
-      options: --user root --add-host=host.docker.internal:host-gateway -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env -v /tmp/playwright-cache:/tmp/playwright-cache
+      options: --add-host=host.docker.internal:host-gateway -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env -v /tmp/playwright-cache:/tmp/playwright-cache
 
     timeout-minutes: 30
 
@@ -29,26 +29,36 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: /tmp/playwright-cache
 
     steps:
-      - name: Install system dependencies
+      - name: Magic thing needed becuase of github as it bind mounts __temp
         run: |
-          apt-get update
-          apt-get install -y git curl sudo unzip jq socat
-
-      - name: setup Docker
-        run: |
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sh get-docker.sh
+          sudo apt update && sudo apt install -y acl socat
+          id
+          ls -ln /__w
+          # 1. Grant runner user access to workspace WITHOUT changing the owner
+          sudo setfacl -R -m u:runner:rwX /__w
+          # Set default ACL so new files created by the host also get these permissions
+          sudo setfacl -R -d -m u:runner:rwX /__w
+          sudo getfacl /__w
+          ls -ln /__w
 
       - name: Configure Docker group permissions
         run: |
-          useradd -m wpuser
           SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
-          groupmod -g $SOCK_GID -o docker
-          usermod -aG docker wpuser
+          sudo groupmod -g $SOCK_GID -o docker
+          sudo usermod -aG $SOCK_GID runner
+
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v2.1.0
+        with:
+          version: latest
+          cache-binary: true
+
+      - name: Configure Docker group permissions
+        run: |
           mkdir -p /tmp/wp-env
           mkdir -p /tmp/playwright-cache
-          chown -R wpuser:wpuser /tmp/wp-env
-          chown -R wpuser:wpuser /tmp/playwright-cache
+          chown -R /tmp/wp-env
+          chown -R /tmp/playwright-cache
 
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -100,20 +110,19 @@ jobs:
 
       - name: Fix workspace permissions
         run: |
-          chown -R wpuser:wpuser .
-          sudo -u wpuser git config --global --add safe.directory '/tmp/wp-env/*'
+          git config --global --add safe.directory '/tmp/wp-env/*'
 
       - name: Start the Docker testing environment
         uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4.0.0
         with:
           timeout_minutes: 15
           max_attempts: 3
-          command: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" "WP_ENV_PORT=$WP_ENV_PORT" npm run wp-env:test start -- --update
+          command: npm run wp-env:test start -- --update
 
       - name: Install Playwright dependencies
         run: |
           npx playwright install-deps
-          sudo -u wpuser env "PATH=$PATH" "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" npx playwright install
+          npx playwright install
 
       - name: Run E2E tests
         run: |
@@ -121,8 +130,7 @@ jobs:
           # where the WordPress Docker container is actually listening.
           # This ensures Playwright and WordPress both agree the domain is "localhost:8889".
           socat TCP4-LISTEN:8889,fork,bind=127.0.0.1 TCP4:host.docker.internal:8889 &
-
-          sudo -u wpuser env "PATH=$PATH" "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" npm run test:e2e
+          npm run test:e2e
 
       - name: Upload E2E test results as artifact
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -135,4 +143,4 @@ jobs:
 
       - name: Stop the Docker testing environment
         if: always()
-        run: sudo -u wpuser env "PATH=$PATH" "WP_ENV_HOME=$WP_ENV_HOME" npm run wp-env:test destroy -- --force
+        run: npm run wp-env:test destroy -- --force

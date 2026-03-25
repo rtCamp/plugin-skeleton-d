@@ -16,15 +16,10 @@ jobs:
     name: PHPStan Static Analysis
     runs-on: [public-repo]
     container:
-      image: ubuntu:24.04
+      image: ghcr.io/actions/actions-runner:2.333.0
     timeout-minutes: 20
 
     steps:
-      - name: Install system dependencies
-        run: |
-          apt-get update
-          apt-get install -y git curl sudo unzip
-
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
