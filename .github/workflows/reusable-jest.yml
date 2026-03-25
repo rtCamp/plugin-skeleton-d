@@ -17,7 +17,7 @@ jobs:
     name: Jest Unit Tests${{ inputs.coverage && ' with coverage' || '' }}
     runs-on: [public-repo]
     container:
-      image: node:22
+      image: ghcr.io/actions/actions-runner:2.333.0
     timeout-minutes: 10
 
     steps:

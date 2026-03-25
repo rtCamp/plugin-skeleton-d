@@ -11,7 +11,7 @@ jobs:
     name: JS Lint & TypeScript
     runs-on: [public-repo]
     container:
-      image: node:22
+      image: ghcr.io/actions/actions-runner:2.333.0
     timeout-minutes: 20
 
     steps:
