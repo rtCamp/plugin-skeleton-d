@@ -131,3 +131,9 @@ jobs:
       - name: Stop the Docker testing environment
         if: always()
         run: npm run wp-env destroy -- --force
+
+      - name: Post-run cleanup to remove next run artifact pollution
+        if: always()
+        run: |
+          rm -rf /__w/*
+          rm -rf $HOME/*

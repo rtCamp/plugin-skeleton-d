@@ -122,6 +122,8 @@ jobs:
           pr-number: ${{ steps.pr-metadata.outputs.pr-number }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Post-run cleanup
+      - name: Post-run cleanup to remove next run artifact pollution
         if: always()
-        run: rm -rf ${GITHUB_WORKSPACE}/*
+        run: |
+          rm -rf /__w/*
+          rm -rf $HOME/*

@@ -57,6 +57,8 @@ jobs:
         if: ${{ always() && steps.phpcs.outcome == 'failure' }}
         run: cs2pr ./tests/_output/phpcs-report.xml
 
-      - name: Post-run cleanup
+      - name: Post-run cleanup to remove next run artifact pollution
         if: always()
-        run: rm -rf ${GITHUB_WORKSPACE}/*
+        run: |
+          rm -rf /__w/*
+          rm -rf $HOME/*

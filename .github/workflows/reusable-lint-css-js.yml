@@ -58,6 +58,8 @@ jobs:
           echo "One or more checks failed. See logs above for details."
           exit 1
 
-      - name: Post-run cleanup
+      - name: Post-run cleanup to remove next run artifact pollution
         if: always()
-        run: rm -rf ${GITHUB_WORKSPACE}/*
+        run: |
+          rm -rf /__w/*
+          rm -rf $HOME/*

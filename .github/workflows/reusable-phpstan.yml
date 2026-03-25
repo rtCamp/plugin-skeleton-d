@@ -60,6 +60,8 @@ jobs:
           path: tests/_output
           key: phpstan-result-cache-${{ runner.os }}-date-${{ steps.get-date.outputs.date }}
 
-      - name: Post-run cleanup
+      - name: Post-run cleanup to remove next run artifact pollution
         if: always()
-        run: rm -rf ${GITHUB_WORKSPACE}/*
+        run: |
+          rm -rf /__w/*
+          rm -rf $HOME/*
