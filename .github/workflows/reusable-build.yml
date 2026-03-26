@@ -148,3 +148,6 @@ jobs:
 
           sudo rm -rf /github/workflow/*
           sudo rm -rf /github/workflow/.* 2>/dev/null || true
+
+          # Empty the wp-env directory
+          sudo rm -rf /tmp/wp-env/*
