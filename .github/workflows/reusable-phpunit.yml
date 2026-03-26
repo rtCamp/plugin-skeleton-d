@@ -23,18 +23,48 @@ on:
         type: boolean
         default: false
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   phpunit:
     name: PHPUnit (PHP ${{ inputs.php-version }}, WP ${{ inputs.wp-version }})${{ inputs.coverage && ' with coverage' || '' }}${{ inputs.multisite && ' multisite' || '' }}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    runs-on: [public-repo]
+    container:
+      image: ghcr.io/actions/actions-runner:2.333.0
+      options: -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env
+
+    timeout-minutes: 30
+
     env:
       WP_ENV_PHP_VERSION: ${{ inputs.php-version }}
       WP_ENV_CORE: ${{ inputs.wp-version == 'trunk' && 'WordPress/WordPress' || format('https://wordpress.org/wordpress-{0}.zip', inputs.wp-version) }}
+      WP_ENV_PORT: 8889
+      WP_ENV_HOME: /tmp/wp-env
 
     steps:
+      - name: Magic thing needed becuase of github as it bind mounts __temp
+        run: |
+          sudo apt update && sudo apt install -y acl
+          id
+          ls -ln /__w
+          # 1. Grant runner user access to workspace WITHOUT changing the owner
+          sudo setfacl -R -m u:runner:rwX /__w
+          # Set default ACL so new files created by the host also get these permissions
+          sudo setfacl -R -d -m u:runner:rwX /__w
+          sudo getfacl /__w
+          ls -ln /__w
+
+      - name: Configure Docker group permissions
+        run: |
+          SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
+          sudo groupmod -g $SOCK_GID -o docker
+          sudo usermod -aG $SOCK_GID runner
+
+      - name: Configure Docker group permissions
+        run: |
+          mkdir -p /tmp/wp-env
+
       - name: Configure environment variables
         run: |
           echo "PHP_FPM_UID=$(id -u)" >> "$GITHUB_ENV"
@@ -44,7 +74,9 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           show-progress: ${{ runner.debug == '1' && 'true' || 'false' }}
-          persist-credentials: false
+
+      - name: Configure Git for Safe Directory
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
 
       - name: Set up PHP
         uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.37.0
@@ -53,7 +85,7 @@ jobs:
           coverage: ${{ inputs.coverage && 'xdebug' || 'none' }}
 
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # v4.0.0
+        uses: ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f # v3.2.1
 
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
@@ -67,16 +99,41 @@ jobs:
       - name: Build development assets
         run: npm run build:dev
 
+      - name: Fix wp-env host mapping
+        run: |
+          # Get the host path for the workspace by inspecting the container's own mounts
+          HOST_WORKSPACE_PATH=$(docker inspect $(hostname) --format '{{ range .Mounts }}{{ if eq .Destination "/__w" }}{{ .Source }}{{ end }}{{ end }}')
+
+          # Construct the full host path for the current plugin directory
+          # We strip the internal /__w prefix and append it to the host workspace path
+          RELATIVE_PATH=$(pwd | sed 's|^/__w||')
+          PLUGIN_HOST_PATH="${HOST_WORKSPACE_PATH}${RELATIVE_PATH}"
+
+          echo "Host Workspace: $HOST_WORKSPACE_PATH"
+          echo "Plugin Host Path: $PLUGIN_HOST_PATH"
+
+          # 1. Remove the "plugins" field to prevent broken automatic mounts
+          # 2. Add the host mapping
+          jq --arg path "$PLUGIN_HOST_PATH" \
+             'del(.plugins) | .mappings["wp-content/plugins/plugin-skeleton-d"] = $path' \
+             .wp-env.test.json > .wp-env.test.json.tmp && mv .wp-env.test.json.tmp .wp-env.test.json
+
+          cat .wp-env.test.json
+
+      - name: Fix workspace permissions
+        run: |
+          git config --global --add safe.directory '/tmp/wp-env/*'
+
       - name: Start the Docker testing environment
         uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4.0.0
         with:
-          timeout_minutes: 10
+          timeout_minutes: 15
           max_attempts: 3
           command: |
             if [ "${{ inputs.coverage }}" == "true" ]; then
-              npm run wp-env:test start -- --xdebug=coverage
+              npm run wp-env:test start -- --xdebug=coverage --update --debug
             else
-              npm run wp-env:test start
+              npm run wp-env:test start -- --update
             fi
 
       - name: Log versions
@@ -103,3 +160,27 @@ jobs:
           name: wp-code-coverage-${{ inputs.php-version }}-${{ inputs.wp-version }}
           path: tests/_output/html
           overwrite: true
+
+      - name: Stop the Docker testing environment
+        if: always()
+        run: npm run wp-env:test destroy -- --force
+
+      - name: Cleanup Workspace & Home to avoid pollution
+        if: always()
+        run: |
+          # Wipes the actual code, build artifacts, and hidden files
+          sudo rm -rf ${{ github.workspace }}/*
+          sudo rm -rf ${{ github.workspace }}/.* 2>/dev/null || true
+
+          # Deletes everything inside _temp EXCEPT the locked mount points
+          sudo find /__w/_temp/ -mindepth 1 -maxdepth 1 ! -name '_github_home' ! -name '_github_workflow' -exec rm -rf {} +
+
+          # Empties the contents of the locked directories without deleting the folders themselves
+          sudo rm -rf /github/home/*
+          sudo rm -rf /github/home/.* 2>/dev/null || true
+
+          sudo rm -rf /github/workflow/*
+          sudo rm -rf /github/workflow/.* 2>/dev/null || true
+
+          # Empty the wp-env directory
+          sudo rm -rf /tmp/wp-env/*
