@@ -32,7 +32,9 @@ jobs:
     runs-on: [public-repo]
     container:
       image: ghcr.io/actions/actions-runner:2.333.0
-      options: -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /tmp/wp-env:/tmp/wp-env
 
     timeout-minutes: 30
 

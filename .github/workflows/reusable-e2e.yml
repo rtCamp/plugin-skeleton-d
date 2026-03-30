@@ -19,7 +19,11 @@ jobs:
       image: ghcr.io/actions/actions-runner:2.333.0
       # We use --add-host to get the host IP, and we will use socat to forward
       # localhost:8889 to the host so Playwright and WordPress agree on "localhost".
-      options: --add-host=host.docker.internal:host-gateway -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/wp-env:/tmp/wp-env -v /tmp/playwright-cache:/tmp/playwright-cache
+      options: --add-host=host.docker.internal:host-gateway
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /tmp/wp-env:/tmp/wp-env
+        - /tmp/playwright-cache:/tmp/playwright-cache
 
     timeout-minutes: 30
 
