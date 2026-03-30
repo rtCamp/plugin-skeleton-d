@@ -47,13 +47,6 @@ jobs:
           version: latest
           cache-binary: true
 
-      - name: Configure Docker group permissions
-        run: |
-          mkdir -p /tmp/wp-env
-          mkdir -p /tmp/playwright-cache
-          sudo chown -R /tmp/wp-env
-          sudo chown -R /tmp/playwright-cache
-
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
