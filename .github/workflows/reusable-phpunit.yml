@@ -46,24 +46,14 @@ jobs:
       - name: Magic thing needed becuase of github as it bind mounts __temp
         run: |
           sudo apt update && sudo apt install -y acl
-          id
-          ls -ln /__w
-          # 1. Grant runner user access to workspace WITHOUT changing the owner
-          sudo setfacl -R -m u:runner:rwX /__w
-          # Set default ACL so new files created by the host also get these permissions
-          sudo setfacl -R -d -m u:runner:rwX /__w
-          sudo getfacl /__w
-          ls -ln /__w
+          sudo setfacl -R -m u:runner:rwX /{__w,github/home,github/workflow,tmp/wp-env}
+          sudo setfacl -R -d -m u:runner:rwX /{__w,github/home,github/workflow,tmp/wp-env}
 
       - name: Configure Docker group permissions
         run: |
           SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
           sudo groupmod -g $SOCK_GID -o docker
           sudo usermod -aG $SOCK_GID runner
-
-      - name: Configure Docker group permissions
-        run: |
-          mkdir -p /tmp/wp-env
 
       - name: Configure environment variables
         run: |
