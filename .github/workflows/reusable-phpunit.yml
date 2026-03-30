@@ -84,6 +84,8 @@ jobs:
 
       - name: Install Composer dependencies
         uses: ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f # v3.2.1
+        with:
+          working-directory: '.'
 
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
