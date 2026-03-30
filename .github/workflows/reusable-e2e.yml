@@ -32,8 +32,8 @@ jobs:
       - name: Magic thing needed becuase of github as it bind mounts __temp
         run: |
           sudo apt update && sudo apt install -y acl socat
-          sudo setfacl -R -m u:runner:rwX /{__w,github/home,github/workflow,tmp/wp-env,tmp/playwright-cache}
-          sudo setfacl -R -d -m u:runner:rwX /{__w,github/home,github/workflow,tmp/wp-env,tmp/playwright-cache}
+          sudo setfacl -R -m u:runner:rwX /__w /github/home /github/workflow /tmp/wp-env /tmp/playwright-cache
+          sudo setfacl -R -d -m u:runner:rwX /__w /github/home /github/workflow /tmp/wp-env /tmp/playwright-cache
 
       - name: Configure Docker group permissions
         run: |

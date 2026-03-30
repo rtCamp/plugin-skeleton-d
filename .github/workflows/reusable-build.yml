@@ -30,8 +30,8 @@ jobs:
       - name: Magic thing needed becuase of github as it bind mounts __temp
         run: |
           sudo apt update && sudo apt install -y acl
-          sudo setfacl -R -m u:runner:rwX /{__w,github/home,github/workflow,tmp/wp-env}
-          sudo setfacl -R -d -m u:runner:rwX /{__w,github/home,github/workflow,tmp/wp-env}
+          sudo setfacl -R -m u:runner:rwX /__w /github/home /github/workflow /tmp/wp-env
+          sudo setfacl -R -d -m u:runner:rwX /__w /github/home /github/workflow /tmp/wp-env
 
       - name: Configure Docker group permissions
         run: |
