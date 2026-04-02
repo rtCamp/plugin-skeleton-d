@@ -46,7 +46,7 @@ jobs:
           sudo usermod -aG $SOCK_GID runner
 
       - name: Set up Docker Compose
-        uses: docker/setup-compose-action@v2.1.0
+        uses: docker/setup-compose-action@8cccb8c14b6500aaffebff1aa49c502c34d2e5e6 # v2.1.0
         with:
           version: latest
           cache-binary: true
@@ -146,12 +146,12 @@ jobs:
           sudo find /__w/_temp/ -mindepth 1 -maxdepth 1 ! -name '_github_home' ! -name '_github_workflow' -exec rm -rf {} +
 
           # Empties the contents of the locked directories without deleting the folders themselves
-          sudo rm -rf /github/home/*
+          sudo rm -rf /github/home/* || true
           sudo rm -rf /github/home/.* 2>/dev/null || true
 
-          sudo rm -rf /github/workflow/*
+          sudo rm -rf /github/workflow/* || true
           sudo rm -rf /github/workflow/.* 2>/dev/null || true
 
           # Empty the wp-env directory
-          sudo rm -rf /tmp/wp-env/*
-          sudo rm -rf /tmp/playwright-cache/*
+          sudo rm -rf /tmp/wp-env/* || true
+          sudo rm -rf /tmp/playwright-cache/* || true
