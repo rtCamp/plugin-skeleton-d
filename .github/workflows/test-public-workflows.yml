@@ -1,4 +1,6 @@
-name: CI
+# These are used by the repository to test the GitHub workflows for the repository.
+# Projects using the skeleton should remove this file, and updated the `ci.yml` workflow
+name: CI (Public Workflows)
 
 on:
   push:
@@ -21,8 +23,7 @@ permissions:
 jobs:
   detect:
     name: Detect Changes
-    # Use `ubuntu-24.04` on public repositories.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     permissions:
       contents: read
@@ -40,78 +41,56 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        # Comment this out on private repositories to allow sharing of credentials with subsequent jobs.
-        # with:
-        #  persist-credentials: false
+        with:
+          persist-credentials: false
 
       - name: Detect file changes
-        uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
+        uses: dorny/paths-filter@9d7afb8d214ad99e78fbd4247752c4caed2b6e4c # v4.0.0
         id: filter
         with:
           filters: |
             php:
-              - '**.php'
               - 'composer.*'
             phpcs:
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/reusable-phpcs.yml'
+              - '.github/workflows/reusable-phpcs-public.yml'
+              - '.github/workflows/test-public-workflows.yml'
               - '.phpcs.xml.dist'
             phpstan:
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/reusable-phpstan.yml'
+              - '.github/workflows/reusable-phpstan-public.yml'
+              - '.github/workflows/test-public-workflows.yml'
               - 'phpstan.neon.dist'
             phpunit:
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/reusable-phpunit.yml'
-              - 'tests/**/*.php'
+              - '.github/workflows/reusable-phpunit-public.yml'
+              - '.github/workflows/test-public-workflows.yml'
               - 'phpunit.xml.dist'
               - 'package*.json'
-              - '.wp-env.test.json'
             js:
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/reusable-lint-css-js.yml'
+              - '.github/workflows/reusable-lint-css-js-public.yml'
+              - '.github/workflows/test-public-workflows.yml'
+              - '.eslintrc.js'
               - '.nvmrc'
-              - '**.cjs'
-              - '**.js'
-              - '**.jsx'
-              - '**.mjs'
-              - '**.cts'
-              - '**.mts'
-              - '**.ts'
-              - '**.tsx'
+              - '.prettierrc.js'
               - 'package*.json'
+              - '.eslintrc*'
               - 'tsconfig*.json'
             css:
-              - '**.css'
-              - '**.scss'
-              - '.editorconfig'
-              - '.browserslistrc'
               - '.stylelintignore'
-              - '.stylelint.config.js'
+              - '.stylelint.config.js*'
             e2e:
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/reusable-e2e.yml'
-              - 'tests/e2e/**/*'
+              - '.github/workflows/reusable-e2e-public.yml'
+              - '.github/workflows/test-public-workflows.yml'
               - 'playwright.config.ts'
             jest:
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/reusable-jest.yml'
-              - 'tests/js/**/*'
-              - 'src/**/__tests__/**/*'
-              - 'src/**/*.test.ts'
-              - 'src/**/*.test.tsx'
-              - 'src/**/*.spec.ts'
-              - 'src/**/*.spec.tsx'
+              - '.github/workflows/reusable-jest-public.yml'
+              - '.github/workflows/test-public-workflows.yml'
               - 'jest.config.js'
               - 'package*.json'
-              - '.wp-env.test.json'
 
   phpcs:
     name: PHPCS
     needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpcs == 'true'
-    uses: ./.github/workflows/reusable-phpcs.yml
-    # uses: ./.github/workflows/reusable-phpcs-public.yml
+    uses: ./.github/workflows/reusable-phpcs-public.yml
     permissions:
       contents: read
     with:
@@ -121,8 +100,7 @@ jobs:
     name: PHPStan
     needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpstan == 'true'
-    uses: ./.github/workflows/reusable-phpstan.yml
-    # uses: ./.github/workflows/reusable-phpstan-public.yml
+    uses: ./.github/workflows/reusable-phpstan-public.yml
     permissions:
       contents: read
     with:
@@ -132,8 +110,7 @@ jobs:
     name: CSS/JS Lint
     needs: detect
     if: needs.detect.outputs.css == 'true' || needs.detect.outputs.js == 'true'
-    uses: ./.github/workflows/reusable-lint-css-js.yml
-    # uses: ./.github/workflows/reusable-lint-css-js-public.yml
+    uses: ./.github/workflows/reusable-lint-css-js-public.yml
     permissions:
       contents: read
 
@@ -141,8 +118,7 @@ jobs:
     name: Jest Unit Tests
     needs: detect
     if: needs.detect.outputs.js == 'true' || needs.detect.outputs.jest == 'true'
-    uses: ./.github/workflows/reusable-jest.yml
-    # uses: ./.github/workflows/reusable-jest-public.yml
+    uses: ./.github/workflows/reusable-jest-public.yml
     permissions:
       contents: read
     with:
@@ -150,18 +126,15 @@ jobs:
 
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
-    needs: [detect, build-plugin-zip]
+    needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpunit == 'true'
-    uses: ./.github/workflows/reusable-phpunit.yml
-    # uses: ./.github/workflows/reusable-phpunit-public.yml
+    uses: ./.github/workflows/reusable-phpunit-public.yml
     permissions:
       contents: read
     strategy:
       fail-fast: false
-      # Uncomment this on private runners, which can't run multiple wp-env instances in parallel.
-      max-parallel: 1
       matrix:
-        php: ['8.4', '8.3', '8.2']
+        php: ['8.4']
         wp: ['latest']
         include:
           - php: '8.4'
@@ -175,11 +148,9 @@ jobs:
 
   e2e:
     name: E2E Tests
-    # needs: detect
-    needs: phpunit
+    needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.e2e == 'true' || needs.detect.outputs.js == 'true' || needs.detect.outputs.css == 'true'
-    uses: ./.github/workflows/reusable-e2e.yml
-    # uses: ./.github/workflows/reusable-e2e-public.yml
+    uses: ./.github/workflows/reusable-e2e-public.yml
     permissions:
       contents: read
     with:
@@ -189,24 +160,22 @@ jobs:
     name: Build Plugin Zip
     permissions:
       contents: read
-    uses: ./.github/workflows/reusable-build.yml
-    # uses: ./.github/workflows/reusable-build-public.yml
+    uses: ./.github/workflows/reusable-build-public.yml
     with:
       php-version: '8.2'
-      artifact-name: plugin-skeleton-d-pr${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
+      artifact-name: plugin-skeleton-d-pr-public${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
     secrets: inherit
 
   playground-preview:
     name: Playground Preview
     needs: build-plugin-zip
     if: github.event_name == 'pull_request'
-    uses: ./.github/workflows/reusable-wp-playground-pr-preview.yml
-    # uses: ./.github/workflows/reusable-wp-playground-pr-preview-public.yml
+    uses: ./.github/workflows/reusable-wp-playground-pr-preview-public.yml
     permissions:
       actions: read
       contents: write
       pull-requests: write
     with:
       run-id: ${{ github.run_id }}
-      artifact-prefix: 'plugin-skeleton-d-pr'
+      artifact-prefix: 'plugin-skeleton-d-pr-public'
       artifact-filename: 'plugin-skeleton-d.zip'

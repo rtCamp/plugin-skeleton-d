@@ -23,28 +23,18 @@ on:
         type: string
         default: '2'
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   playground-preview:
     name: Post Playground Preview
-    runs-on: [public-repo]
-    container:
-      image: ghcr.io/actions/actions-runner:2.333.0
+    runs-on: ubuntu-24.04
     permissions:
       actions: read
       contents: write
       pull-requests: write
 
     steps:
-      - name: Install GH cli
-        run: |
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          sudo apt-get update
-          sudo apt install -y gh
-
       - name: Extract PR metadata and artifact info
         id: pr-metadata
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
@@ -105,12 +95,22 @@ jobs:
       - name: Generate Playground blueprint JSON
         id: blueprint
         run: |
-          if [ -z "$ARTIFACT_URL" ]; then
-            echo "::error::ARTIFACT_URL is required"
-            exit 1
-          fi
-          BLUEPRINT=$(jq --arg url "$ARTIFACT_URL" '(.steps[] | select(.step == "installPlugin") | .pluginData.url) = $url' blueprint.json)
-          echo "blueprint=$(echo $BLUEPRINT | jq -c .)" >> "$GITHUB_OUTPUT"
+          node - <<'NODE' >> "$GITHUB_OUTPUT"
+          const fs = require('fs');
+          const url = process.env.ARTIFACT_URL;
+          if (!url) {
+            throw new Error('ARTIFACT_URL is required');
+          }
+
+          // Load the base blueprint and update the plugin URL
+          const blueprint = JSON.parse(fs.readFileSync('blueprint.json', 'utf8'));
+          const installStep = blueprint.steps.find(s => s.step === 'installPlugin');
+          if (installStep) {
+            installStep.pluginData.url = url;
+          }
+
+          console.log(`blueprint=${JSON.stringify(blueprint)}`);
+          NODE
         env:
           ARTIFACT_URL: ${{ steps.expose.outputs.artifact-url }}
 
@@ -121,19 +121,3 @@ jobs:
           blueprint: ${{ steps.blueprint.outputs.blueprint }}
           pr-number: ${{ steps.pr-metadata.outputs.pr-number }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Cleanup Workspace & Home to avoid pollution
-        if: always()
-        run: |
-          # Wipes the actual code, build artifacts, and hidden files
-          sudo rm -rf ./* .[!.]* 2>/dev/null || true
-
-          # Deletes everything inside _temp EXCEPT the locked mount points
-          sudo find /__w/_temp/ -mindepth 1 -maxdepth 1 ! -name '_github_home' ! -name '_github_workflow' -exec rm -rf {} +
-
-          # Empties the contents of the locked directories without deleting the folders themselves
-          sudo rm -rf /github/home/* || true
-          sudo rm -rf /github/home/.* 2>/dev/null || true
-
-          sudo rm -rf /github/workflow/* || true
-          sudo rm -rf /github/workflow/.* 2>/dev/null || true
