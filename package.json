@@ -47,7 +47,7 @@
 		"wp-env:test": "wp-env --config=.wp-env.test.json"
 	},
 	"dependencies": {
-		"@wordpress/block-editor": "^15.15.0",
+		"@wordpress/block-editor": "^15.16.0",
 		"@wordpress/blocks": "^15.15.0",
 		"@wordpress/dom-ready": "^4.42.0",
 		"@wordpress/i18n": "^6.15.0",
