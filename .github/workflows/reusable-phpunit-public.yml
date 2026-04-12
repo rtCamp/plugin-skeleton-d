@@ -47,7 +47,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.37.0
         with:
           php-version: ${{ inputs.php-version }}
           coverage: ${{ inputs.coverage && 'xdebug' || 'none' }}
@@ -68,7 +68,7 @@ jobs:
         run: npm run build:dev
 
       - name: Start the Docker testing environment
-        uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
+        uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4.0.0
         with:
           timeout_minutes: 10
           max_attempts: 3
@@ -89,7 +89,7 @@ jobs:
 
       - name: Upload code coverage report
         if: ${{ inputs.coverage }}
-        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: tests/_output/php-coverage.xml
@@ -98,7 +98,7 @@ jobs:
 
       - name: Upload HTML coverage report as artifact
         if: ${{ inputs.coverage }}
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: wp-code-coverage-${{ inputs.php-version }}-${{ inputs.wp-version }}
           path: tests/_output/html
