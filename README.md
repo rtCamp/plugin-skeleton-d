@@ -8,7 +8,7 @@
   - Sensible [dependabot.yml](.github/dependabot.yml) for automated dependency updates.
   - Reusable GitHub workflows for CI ([README.md](.github/workflows/README.md))
 - Tooling & Testing:
-  - [ESlint](.eslintrc.js)
+  - [ESlint](eslint.config.mjs)
   - [PHP_CodeSniffer](.phpcs.xml.dist)
   - [PHPStan](phpstan.neon.dist)
   - [Prettier](.prettierrc)
