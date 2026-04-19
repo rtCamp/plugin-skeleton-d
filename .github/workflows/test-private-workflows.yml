@@ -1,4 +1,6 @@
-name: CI
+# These are used by the repository to test the private workflows for the repository.
+# Projects using the skeleton should remove this file and update the `ci.yml` workflow.
+name: CI (Private Workflows)
 
 on:
   push:
@@ -21,7 +23,7 @@ permissions:
 jobs:
   detect:
     name: Detect Changes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     permissions:
       contents: read
@@ -39,9 +41,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        # Comment this out on private repositories to allow sharing of credentials with subsequent jobs.
-        # with:
-        #  persist-credentials: false
+        with:
+          persist-credentials: false
 
       - name: Detect file changes
         uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
@@ -49,68 +50,46 @@ jobs:
         with:
           filters: |
             php:
-              - '**.php'
               - 'composer.*'
             phpcs:
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/reusable-phpcs-public.yml' # Update this if using private reusable workflow
+              - '.github/workflows/reusable-phpcs.yml'
+              - '.github/workflows/test-private-workflows.yml'
               - '.phpcs.xml.dist'
             phpstan:
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/reusable-phpstan-public.yml' # Update this if using private reusable workflow
+              - '.github/workflows/reusable-phpstan.yml'
+              - '.github/workflows/test-private-workflows.yml'
               - 'phpstan.neon.dist'
             phpunit:
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/reusable-phpunit-public.yml' # Update this if using private reusable workflow
-              - 'tests/**/*.php'
+              - '.github/workflows/reusable-phpunit.yml'
+              - '.github/workflows/test-private-workflows.yml'
               - 'phpunit.xml.dist'
               - 'package*.json'
-              - '.wp-env.test.json'
             js:
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/reusable-lint-css-js-public.yml' # Update this if using private reusable workflow
+              - '.github/workflows/reusable-lint-css-js.yml'
+              - '.github/workflows/test-private-workflows.yml'
+              - 'eslint.config.mjs'
               - '.nvmrc'
-              - '**.cjs'
-              - '**.js'
-              - '**.jsx'
-              - '**.mjs'
-              - '**.cts'
-              - '**.mts'
-              - '**.ts'
-              - '**.tsx'
+              - '.prettierrc.js'
               - 'package*.json'
               - 'tsconfig*.json'
             css:
-              - '**.css'
-              - '**.scss'
-              - '.editorconfig'
-              - '.browserslistrc'
               - '.stylelintignore'
-              - '.stylelint.config.js'
+              - '.stylelint.config.js*'
             e2e:
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/reusable-e2e-public.yml' # Update this if using private reusable workflow
-              - 'tests/e2e/**/*'
+              - '.github/workflows/reusable-e2e.yml'
+              - '.github/workflows/test-private-workflows.yml'
               - 'playwright.config.ts'
             jest:
-              - '.github/workflows/ci.yml'
-              - '.github/workflows/reusable-jest-public.yml' # Update this if using private reusable workflow
-              - 'tests/js/**/*'
-              - 'src/**/__tests__/**/*'
-              - 'src/**/*.test.ts'
-              - 'src/**/*.test.tsx'
-              - 'src/**/*.spec.ts'
-              - 'src/**/*.spec.tsx'
+              - '.github/workflows/reusable-jest.yml'
+              - '.github/workflows/test-private-workflows.yml'
               - 'jest.config.js'
               - 'package*.json'
-              - '.wp-env.test.json'
 
   phpcs:
     name: PHPCS
     needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpcs == 'true'
-    uses: ./.github/workflows/reusable-phpcs-public.yml
-    # uses: ./.github/workflows/reusable-phpcs.yml
+    uses: ./.github/workflows/reusable-phpcs.yml
     permissions:
       contents: read
     with:
@@ -120,8 +99,7 @@ jobs:
     name: PHPStan
     needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpstan == 'true'
-    uses: ./.github/workflows/reusable-phpstan-public.yml
-    # uses: ./.github/workflows/reusable-phpstan.yml
+    uses: ./.github/workflows/reusable-phpstan.yml
     permissions:
       contents: read
     with:
@@ -131,8 +109,7 @@ jobs:
     name: CSS/JS Lint
     needs: detect
     if: needs.detect.outputs.css == 'true' || needs.detect.outputs.js == 'true'
-    uses: ./.github/workflows/reusable-lint-css-js-public.yml
-    # uses: ./.github/workflows/reusable-lint-css-js.yml
+    uses: ./.github/workflows/reusable-lint-css-js.yml
     permissions:
       contents: read
 
@@ -140,8 +117,7 @@ jobs:
     name: Jest Unit Tests
     needs: detect
     if: needs.detect.outputs.js == 'true' || needs.detect.outputs.jest == 'true'
-    uses: ./.github/workflows/reusable-jest-public.yml
-    # uses: ./.github/workflows/reusable-jest.yml
+    uses: ./.github/workflows/reusable-jest.yml
     permissions:
       contents: read
     with:
@@ -149,18 +125,15 @@ jobs:
 
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
-    needs: [detect, build-plugin-zip]
+    needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpunit == 'true'
-    uses: ./.github/workflows/reusable-phpunit-public.yml
-    # uses: ./.github/workflows/reusable-phpunit.yml
+    uses: ./.github/workflows/reusable-phpunit.yml
     permissions:
       contents: read
     strategy:
       fail-fast: false
-      # Uncomment this on private runners, which can't run multiple wp-env instances in parallel.
-      max-parallel: 1
       matrix:
-        php: ['8.4', '8.3', '8.2']
+        php: ['8.4']
         wp: ['latest']
         include:
           - php: '8.4'
@@ -174,11 +147,9 @@ jobs:
 
   e2e:
     name: E2E Tests
-    needs: [detect, build-plugin-zip]
-    # needs: phpstan
+    needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.e2e == 'true' || needs.detect.outputs.js == 'true' || needs.detect.outputs.css == 'true'
-    uses: ./.github/workflows/reusable-e2e-public.yml
-    # uses: ./.github/workflows/reusable-e2e.yml
+    uses: ./.github/workflows/reusable-e2e.yml
     permissions:
       contents: read
     with:
@@ -188,24 +159,23 @@ jobs:
     name: Build Plugin Zip
     permissions:
       contents: read
-    uses: ./.github/workflows/reusable-build-public.yml
-    # uses: ./.github/workflows/reusable-build.yml
+    uses: ./.github/workflows/reusable-build.yml
     with:
       php-version: '8.2'
-      artifact-name: plugin-skeleton-d-pr${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
+      artifact-name: plugin-skeleton-d-pr-private-${{ github.event.pull_request.head.sha || github.sha }}
+
     secrets: inherit
 
   playground-preview:
     name: Playground Preview
     needs: build-plugin-zip
     if: github.event_name == 'pull_request'
-    uses: ./.github/workflows/reusable-wp-playground-pr-preview-public.yml
-    # uses: ./.github/workflows/reusable-wp-playground-pr-preview.yml
+    uses: ./.github/workflows/reusable-wp-playground-pr-preview.yml
     permissions:
       actions: read
       contents: write
       pull-requests: write
     with:
       run-id: ${{ github.run_id }}
-      artifact-prefix: 'plugin-skeleton-d-pr'
+      artifact-prefix: 'plugin-skeleton-d-pr-private'
       artifact-filename: 'plugin-skeleton-d.zip'
