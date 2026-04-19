@@ -23,8 +23,8 @@ abstract class TestCase extends WP_UnitTestCase {
 	 * @return array<string, array<string, list<string>>>
 	 */
 	public function getAnnotations(): array { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Required compatibility method name.
-		$class_reflection  = new \ReflectionClass( static::class );
-		$method_name       = method_exists( $this, 'name' ) ? $this->name() : $this->getName( false );
+		$class_reflection  = new ReflectionClass( static::class );
+		$method_name       = $this->name();
 		$method_reflection = $class_reflection->hasMethod( $method_name )
 			? $class_reflection->getMethod( $method_name )
 			: null;

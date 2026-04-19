@@ -135,8 +135,6 @@ Code contributions, bug reports, and feature requests are welcome! The following
 ├── .browserslistrc               # Browserslist configuration.
 ├── .distignore                   # Files to exclude from installation via Composer.
 ├── .editorconfig                 # Editor configuration.
-├── .eslintignore                 # ESLint ignore patterns.
-├── .eslintrc.js                  # ESLint configuration.
 ├── .gitignore                    # Git ignore rules.
 ├── .gitattributes                # Git attributes.
 ├── .lefthook.yml                 # Git hooks configuration.
@@ -152,6 +150,7 @@ Code contributions, bug reports, and feature requests are welcome! The following
 ├── blueprint.json                # WordPress Playground blueprint configuration.
 ├── babel.config.js               # Babel configuration.
 ├── composer.json                 # PHP dependencies.
+├── eslint.config.mjs            # ESLint configuration.
 ├── jest.config.js                # Jest configuration.
 ├── LICENSE.md                    # License file.
 ├── package.json                  # Node.js dependencies.
@@ -277,7 +276,7 @@ This project uses several tools to ensure code quality and standards are maintai
 
 This project uses [ESLint](https://eslint.org) through `@wordpress/scripts` and `@wordpress/eslint-plugin` for JavaScript linting, following WordPress coding standards and best practices.
 
-Our specific ESLint configuration is defined in the [`.eslintrc.js`](../.eslintrc.js) file.
+Our specific ESLint configuration is defined in the [`eslint.config.mjs`](../eslint.config.mjs) file.
 
 You can run ESLint on JavaScript files using:
 

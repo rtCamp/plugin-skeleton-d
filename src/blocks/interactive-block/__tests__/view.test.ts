@@ -42,7 +42,6 @@ describe( 'Interactive Block view', () => {
 		const calls = mockStore.mock.calls as unknown[][];
 		expect( calls.length ).toBeGreaterThan( 0 );
 
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const storeConfig = calls[ 0 ]![ 1 ]! as {
 			state: Record< string, unknown >;
 			actions: Record< string, () => void >;

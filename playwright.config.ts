@@ -16,7 +16,7 @@ process.env[ 'STORAGE_STATE_PATH' ] = path.join(
 );
 
 const baseConfig =
-	require( '@wordpress/scripts/config/playwright.config.js' ) as PlaywrightTestConfig; // eslint-disable-line @typescript-eslint/no-var-requires
+	require( '@wordpress/scripts/config/playwright.config.js' ) as PlaywrightTestConfig;
 
 // Disable Playwright's automatic webServer orchestration to prevent port
 // conflicts, as the CI workflow/local scripts manually manage the wp-env lifecycle.

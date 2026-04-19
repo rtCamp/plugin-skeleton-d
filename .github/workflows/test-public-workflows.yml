@@ -67,11 +67,10 @@ jobs:
             js:
               - '.github/workflows/reusable-lint-css-js-public.yml'
               - '.github/workflows/test-public-workflows.yml'
-              - '.eslintrc.js'
+              - 'eslint.config.mjs'
               - '.nvmrc'
               - '.prettierrc.js'
               - 'package*.json'
-              - '.eslintrc*'
               - 'tsconfig*.json'
             css:
               - '.stylelintignore'
