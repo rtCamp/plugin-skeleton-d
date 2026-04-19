@@ -1,5 +1,5 @@
 # These are used by the repository to test the private workflows for the repository.
-# Projects using the skeleton should remove this file, and updated the `ci.yml` workflow
+# Projects using the skeleton should remove this file and update the `ci.yml` workflow.
 name: CI (Private Workflows)
 
 on:
@@ -162,7 +162,8 @@ jobs:
     uses: ./.github/workflows/reusable-build.yml
     with:
       php-version: '8.2'
-      artifact-name: plugin-skeleton-d-pr-public${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
+      artifact-name: plugin-skeleton-d-pr-private-${{ github.event.pull_request.head.sha || github.sha }}
+
     secrets: inherit
 
   playground-preview:
@@ -176,5 +177,5 @@ jobs:
       pull-requests: write
     with:
       run-id: ${{ github.run_id }}
-      artifact-prefix: 'plugin-skeleton-d-pr-public'
+      artifact-prefix: 'plugin-skeleton-d-pr-private'
       artifact-filename: 'plugin-skeleton-d.zip'
