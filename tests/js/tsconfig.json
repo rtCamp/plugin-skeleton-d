@@ -4,9 +4,7 @@
 	"compilerOptions": {
 		"outDir": "../_output/js",
 		"noEmit": true,
-		"types": [ "jest", "node", "@testing-library/jest-dom" ],
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true
+		"types": [ "jest", "node", "@testing-library/jest-dom" ]
 	},
 	"include": [
 		"./**/*.ts",
