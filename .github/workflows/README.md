@@ -6,16 +6,16 @@ Workflows are defined to be reusable and modular.
 
 Main CI pipeline used to validate code. Based on file changes it calls the following reusable workflows:
 
-| Reusable Workflow                                                                                                                                                                        | What                                      |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| [`reusable-phpcs.yml`](reusable-phpcs.yml) <br /> [`reusable-phpcs-public.yml`](reusable-phpcs-public.yml)                                                                               | PHPCS linting                             |
-| [`reusable-phpstan.yml`](reusable-phpstan.yml) <br /> [`reusable-phpstan-public.yml`](reusable-phpstan-public.yml)                                                                       | PHPStan static analysis                   |
-| [`reusable-phpunit.yml`](reusable-phpunit.yml) <br /> [`reusable-phpunit-public.yml`](reusable-phpunit-public.yml)                                                                       | PHPUnit tests                             |
-| [`reusable-lint-css-js.yml`](reusable-lint-css-js.yml) <br /> [`reusable-lint-css-js-public.yml`](reusable-lint-css-js-public.yml)                                                       | ESlint, Stylelint, Prettier, tsc linting  |
-| [`reusable-jest.yml`](reusable-jest.yml) <br /> [`reusable-jest-public.yml`](reusable-jest-public.yml)                                                                                   | Jest tests                                |
-| [`reusable-e2e.yml`](reusable-e2e.yml) <br /> [`reusable-e2e-public.yml`](reusable-e2e-public.yml)                                                                                       | Playwright end-to-end tests               |
-| [`reusable-build.yml`](reusable-build.yml) <br /> [`reusable-build-public.yml`](reusable-build-public.yml)                                                                               | Creates a build zip (used by playground)  |
-| [`reusable-wp-playground-pr-preview.yml`](reusable-wp-playground-pr-preview.yml) <br /> [`reusable-wp-playground-pr-preview-public.yml`](reusable-wp-playground-pr-preview-public.yml)   | PR preview environment with wp-playground |
+| Reusable Workflow                                                                                                                                                                      | What                                      |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| [`reusable-phpcs.yml`](reusable-phpcs.yml) <br /> [`reusable-phpcs-public.yml`](reusable-phpcs-public.yml)                                                                             | PHPCS linting                             |
+| [`reusable-phpstan.yml`](reusable-phpstan.yml) <br /> [`reusable-phpstan-public.yml`](reusable-phpstan-public.yml)                                                                     | PHPStan static analysis                   |
+| [`reusable-phpunit.yml`](reusable-phpunit.yml) <br /> [`reusable-phpunit-public.yml`](reusable-phpunit-public.yml)                                                                     | PHPUnit tests                             |
+| [`reusable-lint-css-js.yml`](reusable-lint-css-js.yml) <br /> [`reusable-lint-css-js-public.yml`](reusable-lint-css-js-public.yml)                                                     | ESlint, Stylelint, Prettier, tsc linting  |
+| [`reusable-jest.yml`](reusable-jest.yml) <br /> [`reusable-jest-public.yml`](reusable-jest-public.yml)                                                                                 | Jest tests                                |
+| [`reusable-e2e.yml`](reusable-e2e.yml) <br /> [`reusable-e2e-public.yml`](reusable-e2e-public.yml)                                                                                     | Playwright end-to-end tests               |
+| [`reusable-build.yml`](reusable-build.yml) <br /> [`reusable-build-public.yml`](reusable-build-public.yml)                                                                             | Creates a build zip (used by playground)  |
+| [`reusable-wp-playground-pr-preview.yml`](reusable-wp-playground-pr-preview.yml) <br /> [`reusable-wp-playground-pr-preview-public.yml`](reusable-wp-playground-pr-preview-public.yml) | PR preview environment with wp-playground |
 
 Reusable workflows have a `-public` variant which is used for public GitHub runners. The non-public variants are used for rtCamp's private runners. Ensure that `ci.yml` points to the correct workflows you need, and delete the others.
 
@@ -42,7 +42,7 @@ When a release is created, it builds the plugin via `reusable-build.yml` and upl
 
 | Secret          | Required By                                                    | Notes                                                |
 | --------------- | -------------------------------------------------------------- | ---------------------------------------------------- |
-| `CODECOV_TOKEN` | `reusable-phpunit-public.yml` <br />`reusable-jest-public.yml` | Optional — coverage uploads fail silently without it |
+| `CODECOV_TOKEN` | `reusable-phpunit-public.yml` <br />`reusable-jest-public.yml` | Optional - coverage uploads fail silently without it |
 
 ### PR Previews
 
