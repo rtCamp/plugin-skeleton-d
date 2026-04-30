@@ -22,6 +22,10 @@ https://github.com/rtCamp/plugin-skeleton-d/blob/main/docs/CONTRIBUTING.md
 
 <!-- How does your PR address the issue at hand? What are the implementation details? Please be specific. -->
 
+### AI Disclosure
+
+<!-- How did you use AI to help you write this code? Please be specific - it helps us understand and better review the changes. -->
+
 ## Testing Instructions
 
 <!-- Please include step by step instructions on how to test this PR. -->

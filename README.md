@@ -1,80 +1,69 @@
 # Plugin Skeleton D
 
 [![Try in WordPress Playground](https://img.shields.io/badge/Try%20in-WordPress%20Playground-blue?logo=wordpress)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/rtCamp/plugin-skeleton-d/main/blueprint.json)
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](LICENSE.md)
+[![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue?logo=php)](composer.json)
+[![WordPress](https://img.shields.io/badge/WordPress-6.x%2B-blue?logo=wordpress)](https://wordpress.org)<br>
+[![CI](https://github.com/rtCamp/plugin-skeleton-d/actions/workflows/ci.yml/badge.svg)](https://github.com/rtCamp/plugin-skeleton-d/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/rtCamp/plugin-skeleton-d/branch/main/graph/badge.svg)](https://codecov.io/gh/rtCamp/plugin-skeleton-d)
+[![GitHub commits since latest release](https://img.shields.io/github/commits-since/rtCamp/plugin-skeleton-d/latest)](https://github.com/rtCamp/plugin-skeleton-d/releases)
 
-## What's included
+---
 
-- Automation:
-  - Sensible [dependabot.yml](.github/dependabot.yml) for automated dependency updates.
-  - Reusable GitHub workflows for CI ([README.md](.github/workflows/README.md))
-- Tooling & Testing:
-  - [ESlint](eslint.config.mjs)
-  - [PHP_CodeSniffer](.phpcs.xml.dist)
-  - [PHPStan](phpstan.neon.dist)
-  - [Prettier](.prettierrc)
-  - [Stylelint](stylelint.config.js)
-  - [Typescript](tsconfig.json)
-  - Enforcement with [lefthook](.lefthook.yml) and [lint-staged](.lintstagedrc.mjs)
-- Testing:
-  - [PHPUnit](phpunit.xml.dist)
-  - [Jest](jest.config.js)
-  - [Playwright](playwright.config.ts)
-  - Coverage reports with [codecov](.github/.codecov.yml)
-- Environment & Build:
-  - [@wordpress/env](https://github.com/WordPress/gutenberg/tree/trunk/packages/env) support with a pre-configured [wp-env.json](wp-env.json)
-  - Release demos and PR previews with [WP Playground](https://playground.wordpress.net/) using the included [blueprint.json](blueprint.json)
-  - [@wordpress/scripts](https://github.com/WordPress/gutenberg/tree/trunk/packages/scripts) for build and dev tooling.
-  - Automated release PRs with [release-please](https://github.com/googleapis/release-please) using the included [release-please-config.json](release-please-config.json)
+A WordPress plugin skeleton with modular architecture, first-class tooling, and enterprise-grade best practices - for humans and agentic contributors. Battle-tested and ready to help your team build plugins better, faster, and without compromise.
 
-## Docs
+## Documentation
 
-### Getting Started
+- **[Development Guide](docs/DEVELOPMENT.md)** - Local setup, commands, testing, and contribution guidelines.
+- **[Contributing](docs/CONTRIBUTING.md)** - How to contribute to this project.
+- **[Code of Conduct](docs/CODE_OF_CONDUCT.md)** - Community standards.
+- **[Security](docs/SECURITY.md)** - Reporting security vulnerabilities.
 
-- [Scaffolding Steps](#scaffold-steps)
+**Reference:**
+[Action Hooks](docs/reference/actions.md) | [Filter Hooks](docs/reference/filters.md) | [Constants](docs/reference/constants.md) | [WP-CLI Commands](docs/reference/cli.md)
 
-### Contributing
+## Project Structure
 
-- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for development and contribution guidelines.
-- [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for contribution guidelines.
-- [docs/CODE_OF_CONDUCT.md](docs/CODE_OF_CONDUCT.md) for the code of conduct.
-- [docs/SECURITY.md](docs/SECURITY.md) for security policies and reporting.
+```
+├── .github/workflows/      # CI/CD workflows
+├── docs/                   # Development guides and references
+├── inc/                    # Plugin-specific PHP source
+├── framework/              # Reusable framework (shared across plugins)
+│   └── README.md
+├── src/                    # TypeScript/JS entry points
+│   └── README.md
+├── templates/              # PHP templates with theme override support
+└── tests/                  # PHPUnit, Jest, Playwright tests
+```
 
-### References
+See [./docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#directory-structure) for a detailed directory tree and descriptions.
 
-- [Action Hooks](./docs/reference/actions.md)
-- [Filter Hooks](./docs/reference/filters.md)
-- [Constants](./docs/reference/constants.md)
-- [WP-CLI Commands](./docs/reference/cli.md)
+## Scaffolding a New Plugin
 
-## To do
+> [!NOTE]
+> We recommend purging the example modules and blocks once you've understood the structure to keep your production codebase lean.
 
-- [ ] GitHub workflows for private runners.
-- [ ] docs/ARCHITECTURE.md
-- [ ] Scaffold scripts (search/replace strings, delete examples and unused deps etc)
-
-## Scaffold Steps
-
-1. Create a new project from this repo.
-2. Do a `find and replace` for the skeleton placeholder strings:
+1. Create a new repo from this template.
+2. Find and replace the following placeholder strings:
    - `plugin-skeleton-d` (slug)
    - `Plugin Skeleton D` (title)
    - `PLUGIN_SKELETON_D` (constant prefix)
    - `pluginSkeletonD` (camelCase reference)
    - `PluginSkeletonD` (PascalCase reference)
-3. Update the plugin metadata in:
+3. Update plugin metadata in these config files:
    - `.phpcs.xml.dist` (`testVersion`, `minimum_wp_version`)
    - `composer.json` (`config.platform.php`, `require.php`)
    - `phpstan.neon.dist` (`phpVersion`)
    - `plugin-skeleton-d.php`
    - `readme.txt`
-   - `readme.md`
-4. Remove and replace example TS entrypoints, and blocks if not needed:
-   - `src/`
-     Then, update the references to them in:
-   - `webpack.config.js` (`entry`)
-   - `inc/Core/Assets.php`
-5. Update and replace the `.github/workflows` with the relevant CI for your project.
-   - PHP Version in `ci.yml` and `release.yml` (latest supported)
-   - PHPUnit test matrix in `ci.yml`
-6. Search for `@todo` comments and resolve them as needed.
-7. **Remove all remaining example code** from `inc` and `src` as needed, along with any relevant tests, unused dependencies, and references.
+4. Remove or replace example entrypoints and blocks from `src/`, then update `webpack.config.js` and `inc/Core/Assets.php`.
+5. Update CI workflows in `.github/workflows/`.
+6. Search for `@todo` comments and resolve them.
+7. Remove all remaining example code from `inc/`, `src/`, and their corresponding `tests/`.
+8. Update the documentation in `docs/` and **this README** to reflect your plugin's functionality and architecture.
+
+## License
+
+GPL-2.0-or-later. See [LICENSE.md](LICENSE.md).
+
+<a href="https://rtcamp.com/"><img src="https://rtcamp.com/wp-content/uploads/sites/2/2019/04/github-banner@2x.png" alt="Join us at rtCamp, we specialize in providing high performance enterprise WordPress solutions"></a>
