@@ -36,7 +36,7 @@ A WordPress plugin skeleton with modular architecture, first-class tooling, and 
 └── tests/                  # PHPUnit, Jest, Playwright tests
 ```
 
-See [../docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#directory-structure) for a detailed directory tree and descriptions.
+See [./docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#directory-structure) for a detailed directory tree and descriptions.
 
 ## Scaffolding a New Plugin
 

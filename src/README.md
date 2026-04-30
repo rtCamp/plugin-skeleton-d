@@ -2,7 +2,7 @@
 
 This directory contains all source code for the buildable WordPress assets.
 
-- The `blocks/` directory contains WordPress blocks, and is is automatically discovered by `@wordpress/scripts` and does not require a manual entry.
+- The `blocks/` directory contains WordPress blocks, and is automatically discovered by `@wordpress/scripts` and does not require a manual entry.
 - The other directories (`admin/`, `editor/`, `frontend/`, `global-styles/`, and `example-module/`) contain scripts that are compiled as separate entries defined in `webpack.config.js`.
 
 Assets are built by running `npm run build:dev` or `npm run build:prod`, which compiles the source files and outputs them to the `build/` directory. You can also run `npm run start` to start a development server that watches for changes and rebuilds automatically.
