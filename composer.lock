@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "96e9e586d2fbf6dad2629f316734add6",
+    "content-hash": "ae5267ace0308613e66027feff57c6f4",
     "packages": [],
     "packages-dev": [
         {
@@ -63,16 +63,16 @@
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/composer-installer.git",
-                "reference": "845eb62303d2ca9b289ef216356568ccc075ffd1"
+                "reference": "963f0c67bffde0eac41b56be71ac0e8ba132f0bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/composer-installer/zipball/845eb62303d2ca9b289ef216356568ccc075ffd1",
-                "reference": "845eb62303d2ca9b289ef216356568ccc075ffd1",
+                "url": "https://api.github.com/repos/PHPCSStandards/composer-installer/zipball/963f0c67bffde0eac41b56be71ac0e8ba132f0bd",
+                "reference": "963f0c67bffde0eac41b56be71ac0e8ba132f0bd",
                 "shasum": ""
             },
             "require": {
@@ -155,7 +155,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-11-11T04:32:07+00:00"
+            "time": "2026-05-06T08:26:05+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1605,16 +1605,16 @@
         },
         {
             "name": "rtcamp/coding-standards-d",
-            "version": "v0.1.0",
+            "version": "v0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rtCamp/coding-standards-d.git",
-                "reference": "82cfbdab0aeb4ff2d5784d6c32e70fcc30f17f49"
+                "reference": "f699b1f205bcaeeac79a3aed336e26156ba049a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rtCamp/coding-standards-d/zipball/82cfbdab0aeb4ff2d5784d6c32e70fcc30f17f49",
-                "reference": "82cfbdab0aeb4ff2d5784d6c32e70fcc30f17f49",
+                "url": "https://api.github.com/repos/rtCamp/coding-standards-d/zipball/f699b1f205bcaeeac79a3aed336e26156ba049a7",
+                "reference": "f699b1f205bcaeeac79a3aed336e26156ba049a7",
                 "shasum": ""
             },
             "require": {
@@ -1629,6 +1629,11 @@
                 "phpcsstandards/phpcsdevtools": "^1.0"
             },
             "type": "phpcodesniffer-standard",
+            "scripts": {
+                "lint": [
+                    "xmllint --noout --schema vendor/squizlabs/php_codesniffer/phpcs.xsd ./*/ruleset.xml"
+                ]
+            },
             "license": [
                 "GPL-2.0-or-later"
             ],
@@ -1655,7 +1660,7 @@
                 "issues": "https://github.com/rtCamp/coding-standards-d/issues",
                 "source": "https://github.com/rtCamp/coding-standards-d/"
             },
-            "time": "2026-02-23T14:26:19+00:00"
+            "time": "2026-05-15T11:12:57+00:00"
         },
         {
             "name": "sebastian/cli-parser",
