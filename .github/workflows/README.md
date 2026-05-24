@@ -21,7 +21,7 @@ Reusable workflows have a `*-public.yml` variant which is used for public GitHub
 
 Ensure that `ci.yml` points to the correct workflows you need, and delete the others.
 
-If you are using `ci.yml` in a private repository with rtCamp runners, you must also set `persists-credentials: true` in the `actions/checkout` step of `ci.yml` to allow the reusable workflows to access secrets.
+If you are using `ci.yml` in a private repository with rtCamp runners and later steps in the same job need authenticated Git operations, set `persist-credentials: true` in the `actions/checkout` step of `ci.yml`.
 
 ### [`copilot-setup-steps.yml`](copilot-setup-steps.yml)
 
