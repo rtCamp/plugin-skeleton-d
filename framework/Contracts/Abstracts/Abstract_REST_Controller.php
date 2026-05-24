@@ -23,14 +23,14 @@ abstract class Abstract_REST_Controller extends WP_REST_Controller implements Re
 	 *
 	 * Usually at /wp-json/{namespace}/{route}
 	 *
-	 * @var string
+	 * @var non-falsy-string
 	 */
 	protected $namespace = 'plugin-skeleton-d/v';
 
 	/**
 	 * Version number for the REST API routes.
 	 *
-	 * @var string
+	 * @var non-falsy-string
 	 */
 	protected string $version = '1';
 
