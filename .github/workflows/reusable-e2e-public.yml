@@ -39,7 +39,7 @@ jobs:
           cache: 'npm'
 
       - name: Install npm dependencies
-        run: npm ci
+        run: npm install -g npm@$(jq -r .engines.npm package.json | tr -d ">=^~") && npm ci
 
       - name: Build development assets
         run: npm run build:dev
