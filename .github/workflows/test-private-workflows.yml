@@ -10,7 +10,7 @@ on:
     branches:
       - main
       - release/**
-    types: [opened, synchronize, reopened, ready_for_review, closed]
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 concurrency:
@@ -24,7 +24,7 @@ jobs:
   detect:
     name: Detect Changes
     runs-on: ubuntu-24.04
-    if: (github.event_name != 'pull_request' || github.event.pull_request.draft == false) && github.event.action != 'closed'
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     permissions:
       contents: read
       pull-requests: read
@@ -157,7 +157,6 @@ jobs:
 
   build-plugin-zip:
     name: Build Plugin Zip
-    if: github.event_name != 'pull_request' || github.event.action != 'closed'
     permissions:
       contents: read
     uses: ./.github/workflows/reusable-build.yml
@@ -180,12 +179,3 @@ jobs:
       run-id: ${{ github.run_id }}
       artifact-prefix: 'plugin-skeleton-d-pr-private'
       artifact-filename: 'plugin-skeleton-d.zip'
-
-  cleanup-pr-artifacts:
-    name: Cleanup PR Artifacts
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    uses: ./.github/workflows/reusable-cleanup-pr-artifacts.yml
-    permissions:
-      contents: write
-    with:
-      pr-number: ${{ github.event.pull_request.number }}
