@@ -1,0 +1,30 @@
+name: Cleanup WordPress Playground PR Artifacts
+
+on:
+  workflow_call:
+    inputs:
+      pr-number:
+        description: 'The pull request number'
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  cleanup-artifacts:
+    name: Cleanup PR Artifacts
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Cleanup PR artifacts from release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          assets=$(gh release view ci-artifacts --repo ${{ github.repository }} --json assets -q ".assets[].name" 2>/dev/null || echo "")
+          for asset in $assets; do
+            if [[ "$asset" == "pr-${{ inputs.pr-number }}-"* ]]; then
+              echo "Deleting $asset..."
+              gh release delete-asset ci-artifacts "$asset" --repo ${{ github.repository }} -y || true
+            fi
+          done
