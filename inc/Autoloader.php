@@ -11,6 +11,7 @@ declare( strict_types = 1 );
 
 namespace rtCamp\Plugin_Skeleton_D;
 
+// @phpstan-ignore function.impossibleType (This file is loaded before the Composer autoloader.)
 if ( ! class_exists( 'rtCamp\Plugin_Skeleton_D\Framework\AutoloaderTrait' ) ) {
 	require_once PLUGIN_SKELETON_D_PATH . 'framework/AutoloaderTrait.php';
 }

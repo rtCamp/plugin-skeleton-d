@@ -169,8 +169,8 @@ Code contributions, bug reports, and feature requests are welcome! The following
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/): v22.21.1+ ([NVM](https://nvm.sh/) recommended)
-- npm: v10.9.4+
+- [Node.js](https://nodejs.org/): v24.12.0+ ([NVM](https://nvm.sh/) recommended)
+- npm: v11.14.1+
 - [Docker](https://www.docker.com/)
 - Optional: [Composer](https://getcomposer.org/) (if you prefer to run the Composer tools locally instead of using wp-env's built-in Composer)
 
