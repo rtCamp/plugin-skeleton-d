@@ -58,12 +58,12 @@ trait AssetLoaderTrait {
 	/**
 	 * Register a script.
 	 *
-	 * @param string   $handle        Name of the script. Should be unique.
-	 * @param string   $filename      Path of the script relative to js directory.
-	 *                                excluding the .js extension.
-	 * @param string[] $deps          Optional. An array of registered script handles this script depends on. If not set, the dependencies will be inherited from the asset file.
-	 * @param ?string  $ver           Optional. String specifying script version number, if not set, the version will be inherited from the asset file.
-	 * @param bool     $in_footer     Optional. Whether to enqueue the script before </body> instead of in the <head>.
+	 * @param non-falsy-string $handle    Name of the script. Should be unique.
+	 * @param string           $filename  Path of the script relative to js directory.
+	 *                                    excluding the .js extension.
+	 * @param string[]         $deps      Optional. An array of registered script handles this script depends on. If not set, the dependencies will be inherited from the asset file.
+	 * @param ?string          $ver       Optional. String specifying script version number, if not set, the version will be inherited from the asset file.
+	 * @param bool             $in_footer Optional. Whether to enqueue the script before </body> instead of in the <head>.
 	 */
 	private function register_script( string $handle, string $filename, array $deps = [], $ver = null, bool $in_footer = true ): bool {
 

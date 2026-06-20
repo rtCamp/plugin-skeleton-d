@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b53cd3e38daaea8295365ccdaf4011c",
+    "content-hash": "7883e94d00fbfa888d87d04ce15f5e9e",
     "packages": [],
     "packages-dev": [
         {
@@ -395,16 +395,16 @@
         },
         {
             "name": "php-stubs/wordpress-stubs",
-            "version": "v6.9.4",
+            "version": "v7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "90a9412826b9944f93b10bf41d795b5fe68abcd5"
+                "reference": "d74b963ed4f47303859bf73c741c80f554c83dc6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/90a9412826b9944f93b10bf41d795b5fe68abcd5",
-                "reference": "90a9412826b9944f93b10bf41d795b5fe68abcd5",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/d74b963ed4f47303859bf73c741c80f554c83dc6",
+                "reference": "d74b963ed4f47303859bf73c741c80f554c83dc6",
                 "shasum": ""
             },
             "conflict": {
@@ -441,9 +441,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
-                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.9.4"
+                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v7.0.0"
             },
-            "time": "2026-05-01T20:36:01+00:00"
+            "time": "2026-05-21T21:41:34+00:00"
         },
         {
             "name": "php-stubs/wp-cli-stubs",
@@ -989,11 +989,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dea9c8f2d25cc849391042b71e429c1a4bf82660",
-                "reference": "dea9c8f2d25cc849391042b71e429c1a4bf82660",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e5cc34d491a90e79c216d824f60fe21fd4d93bd6",
+                "reference": "e5cc34d491a90e79c216d824f60fe21fd4d93bd6",
                 "shasum": ""
             },
             "require": {
@@ -1049,7 +1049,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-28T14:44:12+00:00"
+            "time": "2026-06-05T09:00:01+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -3092,16 +3092,16 @@
         },
         {
             "name": "wp-phpunit/wp-phpunit",
-            "version": "6.9.4",
+            "version": "7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-phpunit/wp-phpunit.git",
-                "reference": "15fd216bf6516670d8d07b938675925bfa5c15b0"
+                "reference": "06828a65f8276e31368fbe4c5f3d445332abc4c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-phpunit/wp-phpunit/zipball/15fd216bf6516670d8d07b938675925bfa5c15b0",
-                "reference": "15fd216bf6516670d8d07b938675925bfa5c15b0",
+                "url": "https://api.github.com/repos/wp-phpunit/wp-phpunit/zipball/06828a65f8276e31368fbe4c5f3d445332abc4c5",
+                "reference": "06828a65f8276e31368fbe4c5f3d445332abc4c5",
                 "shasum": ""
             },
             "type": "library",
@@ -3136,7 +3136,7 @@
                 "issues": "https://github.com/wp-phpunit/issues",
                 "source": "https://github.com/wp-phpunit/wp-phpunit"
             },
-            "time": "2026-02-04T01:48:23+00:00"
+            "time": "2026-05-21T02:56:35+00:00"
         },
         {
             "name": "yoast/phpunit-polyfills",
@@ -3202,7 +3202,14 @@
             "time": "2025-02-09T18:58:54+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "php-stubs/wordpress-stubs",
+            "version": "7.0.0.0",
+            "alias": "6.9.4",
+            "alias_normalized": "6.9.4.0"
+        }
+    ],
     "minimum-stability": "alpha",
     "stability-flags": {},
     "prefer-stable": true,

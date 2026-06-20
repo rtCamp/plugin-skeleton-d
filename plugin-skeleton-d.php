@@ -18,8 +18,8 @@
  * Text Domain:       plugin-skeleton-d
  * Domain Path:       /languages
  * Requires PHP:      8.2
- * Requires at least: 6.9
- * Tested up to:      6.9
+ * Requires at least: 7.0
+ * Tested up to:      7.0
  */
 
 declare( strict_types = 1 );
