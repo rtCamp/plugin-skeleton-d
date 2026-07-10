@@ -158,7 +158,6 @@ jobs:
     strategy:
       fail-fast: false
       # Uncomment this on private runners, which can't run multiple wp-env instances in parallel.
-      max-parallel: 1
       matrix:
         php: ['8.4', '8.3', '8.2']
         wp: ['latest']

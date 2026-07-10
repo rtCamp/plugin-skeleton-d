@@ -29,34 +29,18 @@ permissions:
 jobs:
   phpunit:
     name: PHPUnit (PHP ${{ inputs.php-version }}, WP ${{ inputs.wp-version }})${{ inputs.coverage && ' with coverage' || '' }}${{ inputs.multisite && ' multisite' || '' }}
-    runs-on: [public-repo]
-    container:
-      image: ghcr.io/actions/actions-runner@sha256:1ad983536759ceec39ed75a2c8f007ca8c37b66eee35ed86f13623b29a4db97d # v2.333.0
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-        - /tmp/wp-env:/tmp/wp-env
-
+    runs-on: [self-hosted]
     timeout-minutes: 30
 
     env:
       WP_ENV_PHP_VERSION: ${{ inputs.php-version }}
       WP_ENV_CORE: ${{ inputs.wp-version == 'trunk' && 'WordPress/WordPress' || format('https://wordpress.org/wordpress-{0}.zip', inputs.wp-version) }}
       WP_ENV_PORT: 8889
-      WP_ENV_HOME: /tmp/wp-env
+      # Must live on the shared work emptyDir mounted by ARC's dind containerMode
+      # so the dind sidecar can resolve the bind-mount source paths wp-env generates.
+      WP_ENV_HOME: /home/runner/_work/_temp/wp-env-home
 
     steps:
-      - name: Magic thing needed becuase of github as it bind mounts __temp
-        run: |
-          sudo apt update && sudo apt install -y acl
-          sudo setfacl -R -m u:runner:rwX /__w /github/home /github/workflow /tmp/wp-env
-          sudo setfacl -R -d -m u:runner:rwX /__w /github/home /github/workflow /tmp/wp-env
-
-      - name: Configure Docker group permissions
-        run: |
-          SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
-          sudo groupmod -g $SOCK_GID -o docker
-          sudo usermod -aG $SOCK_GID runner
-
       - name: Set up Docker Compose
         uses: docker/setup-compose-action@4eb059ff7f16592f9c84d5ca339c53cb7c5064e2 # v2.3.0
         with:
@@ -96,25 +80,11 @@ jobs:
       - name: Build development assets
         run: npm run build:dev
 
-      - name: Fix wp-env host mapping
+      - name: Pin plugin folder name in wp-env config
         run: |
-          # Get the host path for the workspace by inspecting the container's own mounts
-          HOST_WORKSPACE_PATH=$(docker inspect $(hostname) --format '{{ range .Mounts }}{{ if eq .Destination "/__w" }}{{ .Source }}{{ end }}{{ end }}')
-
-          # Construct the full host path for the current plugin directory
-          # We strip the internal /__w prefix and append it to the host workspace path
-          RELATIVE_PATH=$(pwd | sed 's|^/__w||')
-          PLUGIN_HOST_PATH="${HOST_WORKSPACE_PATH}${RELATIVE_PATH}"
-
-          echo "Host Workspace: $HOST_WORKSPACE_PATH"
-          echo "Plugin Host Path: $PLUGIN_HOST_PATH"
-
-          # 1. Remove the "plugins" field to prevent broken automatic mounts
-          # 2. Add the host mapping
-          jq --arg path "$PLUGIN_HOST_PATH" \
+          jq --arg path "$(pwd)" \
              'del(.plugins) | .mappings["wp-content/plugins/plugin-skeleton-d"] = $path' \
              .wp-env.test.json > .wp-env.test.json.tmp && mv .wp-env.test.json.tmp .wp-env.test.json
-
           cat .wp-env.test.json
 
       - name: Start the Docker testing environment
@@ -158,21 +128,3 @@ jobs:
         if: always()
         run: npm run wp-env:test destroy -- --force
 
-      - name: Cleanup Workspace & Home to avoid pollution
-        if: always()
-        run: |
-          # Wipes the actual code, build artifacts, and hidden files
-          sudo rm -rf ./* .[!.]* 2>/dev/null || true
-
-          # Deletes everything inside _temp EXCEPT the locked mount points
-          sudo find /__w/_temp/ -mindepth 1 -maxdepth 1 ! -name '_github_home' ! -name '_github_workflow' -exec rm -rf {} +
-
-          # Empties the contents of the locked directories without deleting the folders themselves
-          sudo rm -rf /github/home/* || true
-          sudo rm -rf /github/home/.* 2>/dev/null || true
-
-          sudo rm -rf /github/workflow/* || true
-          sudo rm -rf /github/workflow/.* 2>/dev/null || true
-
-          # Empty the wp-env directory
-          sudo rm -rf /tmp/wp-env/* || true
