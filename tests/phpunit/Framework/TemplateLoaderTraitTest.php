@@ -1,6 +1,6 @@
 <?php
 /**
- * Unit tests for TemplateLoaderTrait.
+ * Integration tests for TemplateLoaderTrait.
  *
  * @package rtCamp\Plugin_Skeleton_D\Tests
  */
@@ -50,7 +50,6 @@ final class TemplateLoaderTraitTestDouble {
 	 */
 	public function call_get_template_file_names( string $slug, ?string $name = null ): array {
 		$method = new \ReflectionMethod( self::class, 'get_template_file_names' );
-		$method->setAccessible( true );
 		return $method->invoke( $this, $slug, $name );
 	}
 
@@ -61,7 +60,6 @@ final class TemplateLoaderTraitTestDouble {
 	 */
 	public function call_locate_template( array $templates ): string|false {
 		$method = new \ReflectionMethod( self::class, 'locate_template' );
-		$method->setAccessible( true );
 		return $method->invoke( $this, $templates );
 	}
 
@@ -72,7 +70,6 @@ final class TemplateLoaderTraitTestDouble {
 	 */
 	public function call_get_template_paths(): array {
 		$method = new \ReflectionMethod( self::class, 'get_template_paths' );
-		$method->setAccessible( true );
 		return $method->invoke( $this );
 	}
 
@@ -83,7 +80,6 @@ final class TemplateLoaderTraitTestDouble {
 	 */
 	public function call_find_template( array $templates ): string|false {
 		$method = new \ReflectionMethod( self::class, 'find_template' );
-		$method->setAccessible( true );
 		return $method->invoke( $this, $templates );
 	}
 
@@ -92,7 +88,6 @@ final class TemplateLoaderTraitTestDouble {
 	 */
 	public function clear_cache(): void {
 		$prop = new \ReflectionProperty( self::class, 'template_location_cache' );
-		$prop->setAccessible( true );
 		$prop->setValue( null, [] );
 	}
 

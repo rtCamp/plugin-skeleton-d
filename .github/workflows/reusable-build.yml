@@ -91,4 +91,3 @@ jobs:
       - name: Stop the Docker testing environment
         if: always()
         run: npm run wp-env destroy -- --force
-

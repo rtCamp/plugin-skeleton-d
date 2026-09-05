@@ -1,13 +1,13 @@
 <?php
 /**
- * Unit tests for the Example module.
+ * Integration tests for the Example module.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Integration\Modules
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Integration\Modules;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use rtCamp\Plugin_Skeleton_D\Modules\Example;

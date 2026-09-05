@@ -1,6 +1,6 @@
 <?php
 /**
- * Unit tests for AssetLoaderTrait.
+ * Integration tests for AssetLoaderTrait.
  *
  * @package rtCamp\Plugin_Skeleton_D\Tests
  */

@@ -112,4 +112,3 @@ jobs:
           blueprint: ${{ steps.blueprint.outputs.blueprint }}
           pr-number: ${{ steps.pr-metadata.outputs.pr-number }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-

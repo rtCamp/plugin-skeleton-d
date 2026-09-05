@@ -1,13 +1,13 @@
 <?php
 /**
- * Unit tests for Templates class.
+ * Integration tests for Templates class.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Core
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Integration\Core
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Core;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Integration\Core;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use rtCamp\Plugin_Skeleton_D\Core\Templates;
@@ -26,12 +26,10 @@ class TemplatesTest extends TestCase {
 
 		// Reset the instance.
 		$prop = $ref->getProperty( 'instance' );
-		$prop->setAccessible( true );
 		$prop->setValue( null, null );
 
 		// Reset the cache.
 		$prop = $ref->getProperty( 'template_location_cache' );
-		$prop->setAccessible( true );
 		$prop->setValue( null, [] );
 	}
 
