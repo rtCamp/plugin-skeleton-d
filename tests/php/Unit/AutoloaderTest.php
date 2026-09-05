@@ -62,7 +62,6 @@ class AutoloaderTest extends TestCase {
 	 */
 	public function test_get_autoloader_error_message_contains_plugin_name(): void {
 		$method = new \ReflectionMethod( Autoloader::class, 'get_autoloader_error_message' );
-		$method->setAccessible( true );
 		$result = $method->invoke( null );
 		$this->assertStringContainsString( 'Plugin Skeleton D', $result );
 		$this->assertStringContainsString( 'Composer autoloader', $result );

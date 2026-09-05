@@ -24,7 +24,6 @@ class MainTest extends TestCase {
 	private function reset_main_instance(): void {
 		$ref  = new \ReflectionClass( Main::class );
 		$prop = $ref->getProperty( 'instance' );
-		$prop->setAccessible( true );
 		$prop->setValue( null, null );
 	}
 

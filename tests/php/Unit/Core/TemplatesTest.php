@@ -26,12 +26,10 @@ class TemplatesTest extends TestCase {
 
 		// Reset the instance.
 		$prop = $ref->getProperty( 'instance' );
-		$prop->setAccessible( true );
 		$prop->setValue( null, null );
 
 		// Reset the cache.
 		$prop = $ref->getProperty( 'template_location_cache' );
-		$prop->setAccessible( true );
 		$prop->setValue( null, [] );
 	}
 
