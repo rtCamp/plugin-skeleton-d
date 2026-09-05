@@ -1,6 +1,6 @@
 <?php
 /**
- * Unit tests for TemplateLoaderTrait.
+ * Integration tests for TemplateLoaderTrait.
  *
  * @package rtCamp\Plugin_Skeleton_D\Tests
  */

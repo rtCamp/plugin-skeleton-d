@@ -1,6 +1,6 @@
 <?php
 /**
- * Unit tests for Encryptor class.
+ * Integration tests for Encryptor class.
  *
  * @package rtCamp\Plugin_Skeleton_D\Tests
  */

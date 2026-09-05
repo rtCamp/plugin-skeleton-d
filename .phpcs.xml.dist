@@ -11,7 +11,7 @@
 	<file>./inc/</file>
 	<file>./src/blocks/</file>
 	<file>./templates/</file>
-	<file>./tests/php/</file>
+	<file>./tests/phpunit/</file>
 	<file>./plugin-skeleton-d.php</file>
 	<file>./uninstall.php</file>
 

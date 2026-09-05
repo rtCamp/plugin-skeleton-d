@@ -1,13 +1,13 @@
 <?php
 /**
- * Unit tests for the Healthcheck CLI command.
+ * Integration tests for the Healthcheck CLI command.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\CLI
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Integration\Modules\CLI
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\CLI;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Integration\Modules\CLI;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;

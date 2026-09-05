@@ -118,9 +118,9 @@ Code contributions, bug reports, and feature requests are welcome! The following
 │   │   ├── setup.ts          # Jest setup file.
 │   │   └── tsconfig.json     # Test TypeScript config.
 │   │   # PHPUnit tests.
-│   └── php/
+│   └── phpunit/
 │       ├── Framework/        # Framework tests.
-│       ├── Unit/             # Unit tests.
+│       ├── Integration/             # Integration tests.
 │       ├── bootstrap.php     # PHPUnit bootstrapper.
 │       └── TestCase.php      # Base test case class.
 │

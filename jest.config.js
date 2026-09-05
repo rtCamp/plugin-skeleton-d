@@ -45,7 +45,7 @@ module.exports = {
 		'/build/',
 		'/vendor/',
 		'/tests/e2e/',
-		'/tests/php/',
+		'/tests/phpunit/',
 	],
 
 	// Test match patterns

@@ -21,7 +21,7 @@
 		"psr-4": {
 			"rtCamp\\Plugin_Skeleton_D\\": "inc/",
 			"rtCamp\\Plugin_Skeleton_D\\Framework\\": "framework/",
-			"rtCamp\\Plugin_Skeleton_D\\Tests\\": "tests/php/"
+			"rtCamp\\Plugin_Skeleton_D\\Tests\\": "tests/phpunit/"
 		}
 	},
 	"repositories": [

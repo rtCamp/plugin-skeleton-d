@@ -1,6 +1,6 @@
 <?php
 /**
- * Unit tests for Singleton trait.
+ * Integration tests for Singleton trait.
  *
  * @package rtCamp\Plugin_Skeleton_D\Tests\Framework\Traits
  */
