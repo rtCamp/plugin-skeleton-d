@@ -5,7 +5,8 @@
 			"release-type": "php",
 			"changelog-path": "CHANGELOG.md",
 			"include-v-in-tag": true,
-			"bump-minor-pre-major": true
+			"bump-minor-pre-major": true,
+			"extra-types": [ "build" ]
 		}
 	}
 }

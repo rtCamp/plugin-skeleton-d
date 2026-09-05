@@ -54,4 +54,3 @@ jobs:
         run: |
           echo "One or more checks failed. See logs above for details."
           exit 1
-
