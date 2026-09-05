@@ -159,10 +159,10 @@ jobs:
       fail-fast: false
       # Uncomment this on private runners, which can't run multiple wp-env instances in parallel.
       matrix:
-        php: ['8.4', '8.3', '8.2']
+        php: ['8.5', '8.4', '8.3', '8.2']
         wp: ['latest']
         include:
-          - php: '8.4'
+          - php: '8.5'
             wp: 'latest'
             coverage: true
     with:

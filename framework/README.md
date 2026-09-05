@@ -38,7 +38,7 @@ framework/
 
 ## Testing
 
-Tests for the framework are located in [`tests/php/Framework`](../tests/php/Framework)
+Tests for the framework are located in [`tests/phpunit/Framework`](../tests/phpunit/Framework)
 
 . They should have complete unit test coverage and should not contain any plugin-specific tests or dependencies.
 
@@ -48,5 +48,5 @@ npm run wp-env stop && npm run wp-env start -- xdebug=coverage
 
 # Run tests
 npm run test:php
-npm run test:php -- tests/php/Framework
+npm run test:php -- tests/phpunit/Framework
 ````

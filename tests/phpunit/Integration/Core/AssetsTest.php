@@ -1,13 +1,13 @@
 <?php
 /**
- * Unit tests for Assets.
+ * Integration tests for Assets.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Core
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Integration\Core
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Core;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Integration\Core;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use rtCamp\Plugin_Skeleton_D\Core\Assets;

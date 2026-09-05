@@ -2,12 +2,12 @@
 /**
  * Example_REST_ControllerTest file.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\Example
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Integration\Modules\Example
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\Example;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Integration\Modules\Example;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use WP_REST_Request;

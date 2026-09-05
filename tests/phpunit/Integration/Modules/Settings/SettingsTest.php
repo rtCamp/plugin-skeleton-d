@@ -2,12 +2,12 @@
 /**
  * SettingsTest file.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\Settings
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Integration\Modules\Settings
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\Settings;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Integration\Modules\Settings;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use rtCamp\Plugin_Skeleton_D\Modules\Settings\Settings;

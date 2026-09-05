@@ -1,13 +1,13 @@
 <?php
 /**
- * Unit tests for Autoloader.
+ * Integration tests for Autoloader.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Integration
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Integration;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use rtCamp\Plugin_Skeleton_D\Autoloader;
@@ -62,7 +62,6 @@ class AutoloaderTest extends TestCase {
 	 */
 	public function test_get_autoloader_error_message_contains_plugin_name(): void {
 		$method = new \ReflectionMethod( Autoloader::class, 'get_autoloader_error_message' );
-		$method->setAccessible( true );
 		$result = $method->invoke( null );
 		$this->assertStringContainsString( 'Plugin Skeleton D', $result );
 		$this->assertStringContainsString( 'Composer autoloader', $result );

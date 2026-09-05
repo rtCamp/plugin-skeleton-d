@@ -1,6 +1,6 @@
 <?php
 /**
- * Unit tests for AutoloaderTrait.
+ * Integration tests for AutoloaderTrait.
  *
  * @package rtCamp\Plugin_Skeleton_D\Tests
  */

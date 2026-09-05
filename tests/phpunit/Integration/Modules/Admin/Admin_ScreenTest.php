@@ -2,12 +2,12 @@
 /**
  * Admin_ScreenTest file.
  *
- * @package rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\Admin
+ * @package rtCamp\Plugin_Skeleton_D\Tests\Integration\Modules\Admin
  */
 
 declare( strict_types = 1 );
 
-namespace rtCamp\Plugin_Skeleton_D\Tests\Unit\Modules\Admin;
+namespace rtCamp\Plugin_Skeleton_D\Tests\Integration\Modules\Admin;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use rtCamp\Plugin_Skeleton_D\Core\Assets;
