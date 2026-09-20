@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [0.1.2](https://github.com/rtCamp/plugin-skeleton-d/compare/v0.1.1...v0.1.2) (2026-09-20)
+
+
+### Changed
+
+* **deps-dev:** bump the npm-dev-minor-patch group with 5 updates ([#129](https://github.com/rtCamp/plugin-skeleton-d/issues/129)) ([1b7dbfd](https://github.com/rtCamp/plugin-skeleton-d/commit/1b7dbfd1c24f31a11452f2c62f0eb1c59bacd3a4))
+* **deps-dev:** bump wp-phpunit/wp-phpunit ([#128](https://github.com/rtCamp/plugin-skeleton-d/issues/128)) ([faa6e72](https://github.com/rtCamp/plugin-skeleton-d/commit/faa6e728b7f8c5c65581dff2cb3b0d8c8d95ab78))
+* **deps:** bump adm-zip from 0.6.0 to 0.6.1 ([#132](https://github.com/rtCamp/plugin-skeleton-d/issues/132)) ([a62a129](https://github.com/rtCamp/plugin-skeleton-d/commit/a62a129a6d4700232f373aa18b07879c47adff04))
+* **deps:** bump colord from 2.9.3 to 2.10.0 ([#127](https://github.com/rtCamp/plugin-skeleton-d/issues/127)) ([855be19](https://github.com/rtCamp/plugin-skeleton-d/commit/855be1918bcbe645e3e06cb8f19aaab90dfe0bb0))
+
 ## [0.1.1](https://github.com/rtCamp/plugin-skeleton-d/compare/v0.1.0...v0.1.1) (2026-09-05)
 
 
