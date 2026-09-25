@@ -42,7 +42,7 @@ jobs:
 
     steps:
       - name: Set up Docker Compose
-        uses: docker/setup-compose-action@4eb059ff7f16592f9c84d5ca339c53cb7c5064e2 # v2.3.0
+        uses: docker/setup-compose-action@54042514f505b273907334ae2b9cdbb9a0213c1a # v2.4.0
         with:
           version: latest
           cache-binary: true
@@ -109,7 +109,7 @@ jobs:
 
       - name: Upload code coverage report
         if: ${{ inputs.coverage }}
-        uses: codecov/codecov-action@0b35c9ecc4f0529d0eb674914510c22f85b196b4 # v7.1.0
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: tests/_output/php-coverage.xml
