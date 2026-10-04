@@ -1,6 +1,6 @@
 name: PR Cleanup
 
-# Deletes a closed PR's Actions artifacts. Unlike the public variant, there are no Playground preview zips to delete.
+# Cancels a closed PR's runs, then deletes their Actions artifacts. Unlike the public variant, there are no Playground preview zips to delete.
 #
 # Callers usually trigger this on `pull_request_target` (closed), so fork PRs get a token that can delete.
 # It must never check out, build, or run PR code.
@@ -39,7 +39,7 @@ jobs:
       contents: write
 
     steps:
-      - name: Delete Actions artifacts from PR runs
+      - name: Cancel PR runs and delete their Actions artifacts
         if: inputs.head-repo-id != ''
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
@@ -50,16 +50,31 @@ jobs:
             const { owner, repo } = context.repo;
             const headRepoId = Number(process.env.HEAD_REPO_ID);
 
-            const runs = await github.paginate(github.rest.actions.listWorkflowRunsForRepo, {
-              owner,
-              repo,
-              event: 'pull_request',
-              branch: process.env.HEAD_REF,
-              per_page: 100,
-            });
-
             // Match the head repository too, so a fork branch with the same name is left alone.
-            for (const run of runs.filter((r) => r.head_repository?.id === headRepoId)) {
+            const runs = (
+              await github.paginate(github.rest.actions.listWorkflowRunsForRepo, {
+                owner,
+                repo,
+                event: 'pull_request',
+                branch: process.env.HEAD_REF,
+                per_page: 100,
+              })
+            ).filter((r) => r.head_repository?.id === headRepoId);
+
+            // Closing a PR doesn't cancel its runs, which could otherwise upload artifacts after this cleanup.
+            for (const run of runs.filter((r) => r.status !== 'completed')) {
+              core.info(`Cancelling run ${run.id}`);
+              try {
+                await github.rest.actions.cancelWorkflowRun({ owner, repo, run_id: run.id });
+              } catch (error) {
+                // 409: the run already finished.
+                if (error.status !== 409) {
+                  throw error;
+                }
+              }
+            }
+
+            for (const run of runs) {
               const artifacts = await github.paginate(github.rest.actions.listWorkflowRunArtifacts, {
                 owner,
                 repo,

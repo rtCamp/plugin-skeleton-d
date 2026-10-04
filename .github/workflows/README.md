@@ -53,9 +53,9 @@ There is no private variant. See [PR Previews](#pr-previews).
 
 Triggers when a PR is closed or merged, and calls:
 
-| Reusable Workflow                                                                                                              | What                                                                                                       |
-| ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
-| [`reusable-pr-cleanup.yml`](reusable-pr-cleanup.yml) <br /> [`reusable-pr-cleanup-public.yml`](reusable-pr-cleanup-public.yml) | Deletes the Actions artifacts from all of the PR's runs. The public variant also deletes its preview zips. |
+| Reusable Workflow                                                                                                              | What                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| [`reusable-pr-cleanup.yml`](reusable-pr-cleanup.yml) <br /> [`reusable-pr-cleanup-public.yml`](reusable-pr-cleanup-public.yml) | Cancels the PR's in-progress runs and deletes the Actions artifacts from all of them. The public variant also deletes its preview zips. |
 
 It uses `pull_request_target` so that PRs from forks get a token that can delete artifacts, so it must never check out or run PR code. Like `workflow_run`, it runs from the default branch, so changes only take effect once merged.
 
