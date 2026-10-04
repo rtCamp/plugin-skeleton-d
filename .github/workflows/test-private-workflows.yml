@@ -24,7 +24,10 @@ jobs:
   detect:
     name: Detect Changes
     runs-on: [self-hosted]
-    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    # Never run untrusted fork code on self-hosted runners.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository)
     permissions:
       contents: read
       pull-requests: read
@@ -37,6 +40,7 @@ jobs:
       css: ${{ steps.filter.outputs.css }}
       e2e: ${{ steps.filter.outputs.e2e }}
       jest: ${{ steps.filter.outputs.jest }}
+      build: ${{ steps.filter.outputs.build }}
 
     steps:
       - name: Checkout repository
@@ -84,6 +88,10 @@ jobs:
               - '.github/workflows/test-private-workflows.yml'
               - 'jest.config.js'
               - 'package*.json'
+            build:
+              - '.github/workflows/reusable-build.yml'
+              - '.github/workflows/reusable-wp-playground-pr-preview.yml'
+              - '.github/workflows/test-private-workflows.yml'
 
   phpcs:
     name: PHPCS
@@ -122,6 +130,8 @@ jobs:
       contents: read
     with:
       coverage: true
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
@@ -143,7 +153,8 @@ jobs:
       php-version: ${{ matrix.php }}
       wp-version: ${{ matrix.wp }}
       coverage: ${{ matrix.coverage == true }}
-    secrets: inherit
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   e2e:
     name: E2E Tests
@@ -157,14 +168,14 @@ jobs:
 
   build-plugin-zip:
     name: Build Plugin Zip
+    needs: detect
+    if: needs.detect.outputs.build == 'true'
     permissions:
       contents: read
     uses: ./.github/workflows/reusable-build.yml
     with:
       php-version: '8.2'
       artifact-name: plugin-skeleton-d-pr-private-${{ github.event.pull_request.head.sha || github.sha }}
-
-    secrets: inherit
 
   playground-preview:
     name: Playground Preview

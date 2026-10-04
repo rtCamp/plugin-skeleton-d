@@ -31,12 +31,13 @@ jobs:
     permissions:
       contents: read
     needs: release-please
-    if: ${{ needs.release-please.outputs.release_created }}
-    uses: ./.github/workflows/reusable-build.yml
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    uses: ./.github/workflows/reusable-build-public.yml
+    # uses: ./.github/workflows/reusable-build.yml # Use this for private repositories using private runners.
     with:
       php-version: '8.2'
       artifact-name: plugin-skeleton-d
-    secrets: inherit
+      ref: ${{ needs.release-please.outputs.tag_name }}
 
   upload:
     name: Upload release asset
@@ -55,4 +56,5 @@ jobs:
       - name: Upload release asset
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ needs.release-please.outputs.tag_name }} plugin-skeleton-d.zip --clobber
+          TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
+        run: gh release upload "$TAG_NAME" plugin-skeleton-d.zip --clobber

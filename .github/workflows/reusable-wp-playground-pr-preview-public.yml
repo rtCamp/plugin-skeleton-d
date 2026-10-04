@@ -38,14 +38,18 @@ jobs:
       - name: Extract PR metadata and artifact info
         id: pr-metadata
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          ARTIFACT_PREFIX: ${{ inputs.artifact-prefix }}
+          RUN_ID: ${{ inputs.run-id }}
         with:
           script: |
-            const prefix = '${{ inputs.artifact-prefix }}';
+            const prefix = process.env.ARTIFACT_PREFIX;
+            const runId = process.env.RUN_ID;
 
             const run = await github.rest.actions.getWorkflowRun({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: '${{ inputs.run-id }}',
+              run_id: runId,
             });
 
             const pulls = run.data.pull_requests;
@@ -59,7 +63,7 @@ jobs:
             const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: '${{ inputs.run-id }}',
+              run_id: runId,
             });
 
             const artifact = artifacts.data.artifacts.find(a =>
@@ -95,22 +99,12 @@ jobs:
       - name: Generate Playground blueprint JSON
         id: blueprint
         run: |
-          node - <<'NODE' >> "$GITHUB_OUTPUT"
-          const fs = require('fs');
-          const url = process.env.ARTIFACT_URL;
-          if (!url) {
-            throw new Error('ARTIFACT_URL is required');
-          }
-
-          // Load the base blueprint and update the plugin URL
-          const blueprint = JSON.parse(fs.readFileSync('blueprint.json', 'utf8'));
-          const installStep = blueprint.steps.find(s => s.step === 'installPlugin');
-          if (installStep) {
-            installStep.pluginData.url = url;
-          }
-
-          console.log(`blueprint=${JSON.stringify(blueprint)}`);
-          NODE
+          if [ -z "$ARTIFACT_URL" ]; then
+            echo "::error::ARTIFACT_URL is required"
+            exit 1
+          fi
+          BLUEPRINT=$(jq -c --arg url "$ARTIFACT_URL" '(.steps[] | select(.step == "installPlugin") | .pluginData.url) = $url' blueprint.json)
+          echo "blueprint=$BLUEPRINT" >> "$GITHUB_OUTPUT"
         env:
           ARTIFACT_URL: ${{ steps.expose.outputs.artifact-url }}
 

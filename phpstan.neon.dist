@@ -16,6 +16,7 @@ parameters:
 
 	# Configuration
 	level: 8
+	tmpDir: tests/_output/phpstan
 	phpVersion:
 		min: 80200
 		max: 80500

@@ -23,6 +23,11 @@ on:
         type: boolean
         default: false
 
+    secrets:
+      CODECOV_TOKEN:
+        description: 'Codecov upload token'
+        required: false
+
 permissions: {}
 
 jobs:
