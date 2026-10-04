@@ -6,22 +6,27 @@ Workflows are defined to be reusable and modular.
 
 Main CI pipeline used to validate code. Based on file changes it calls the following reusable workflows:
 
-| Reusable Workflow                                                                                                                                                                      | What                                      |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| [`reusable-phpcs.yml`](reusable-phpcs.yml) <br /> [`reusable-phpcs-public.yml`](reusable-phpcs-public.yml)                                                                             | PHPCS linting                             |
-| [`reusable-phpstan.yml`](reusable-phpstan.yml) <br /> [`reusable-phpstan-public.yml`](reusable-phpstan-public.yml)                                                                     | PHPStan static analysis                   |
-| [`reusable-phpunit.yml`](reusable-phpunit.yml) <br /> [`reusable-phpunit-public.yml`](reusable-phpunit-public.yml)                                                                     | PHPUnit tests                             |
-| [`reusable-lint-css-js.yml`](reusable-lint-css-js.yml) <br /> [`reusable-lint-css-js-public.yml`](reusable-lint-css-js-public.yml)                                                     | ESLint, Stylelint, Prettier, tsc linting  |
-| [`reusable-jest.yml`](reusable-jest.yml) <br /> [`reusable-jest-public.yml`](reusable-jest-public.yml)                                                                                 | Jest tests                                |
-| [`reusable-e2e.yml`](reusable-e2e.yml) <br /> [`reusable-e2e-public.yml`](reusable-e2e-public.yml)                                                                                     | Playwright end-to-end tests               |
-| [`reusable-build.yml`](reusable-build.yml) <br /> [`reusable-build-public.yml`](reusable-build-public.yml)                                                                             | Creates a build zip (used by playground)  |
-| [`reusable-wp-playground-pr-preview.yml`](reusable-wp-playground-pr-preview.yml) <br /> [`reusable-wp-playground-pr-preview-public.yml`](reusable-wp-playground-pr-preview-public.yml) | PR preview environment with wp-playground |
+| Reusable Workflow                                                                                                                                                                      | What                                        |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| [`reusable-actionlint.yml`](reusable-actionlint.yml)                                                                                                                                   | actionlint + shellcheck on GitHub workflows |
+| [`reusable-phpcs.yml`](reusable-phpcs.yml) <br /> [`reusable-phpcs-public.yml`](reusable-phpcs-public.yml)                                                                             | PHPCS linting                               |
+| [`reusable-phpstan.yml`](reusable-phpstan.yml) <br /> [`reusable-phpstan-public.yml`](reusable-phpstan-public.yml)                                                                     | PHPStan static analysis                     |
+| [`reusable-phpunit.yml`](reusable-phpunit.yml) <br /> [`reusable-phpunit-public.yml`](reusable-phpunit-public.yml)                                                                     | PHPUnit tests                               |
+| [`reusable-lint-css-js.yml`](reusable-lint-css-js.yml) <br /> [`reusable-lint-css-js-public.yml`](reusable-lint-css-js-public.yml)                                                     | ESLint, Stylelint, Prettier, tsc linting    |
+| [`reusable-jest.yml`](reusable-jest.yml) <br /> [`reusable-jest-public.yml`](reusable-jest-public.yml)                                                                                 | Jest tests                                  |
+| [`reusable-e2e.yml`](reusable-e2e.yml) <br /> [`reusable-e2e-public.yml`](reusable-e2e-public.yml)                                                                                     | Playwright end-to-end tests                 |
+| [`reusable-build.yml`](reusable-build.yml) <br /> [`reusable-build-public.yml`](reusable-build-public.yml)                                                                             | Creates a build zip (used by playground)    |
+| [`reusable-wp-playground-pr-preview.yml`](reusable-wp-playground-pr-preview.yml) <br /> [`reusable-wp-playground-pr-preview-public.yml`](reusable-wp-playground-pr-preview-public.yml) | PR preview environment with wp-playground   |
 
 Reusable workflows have a `*-public.yml` variant which is used for public GitHub runners and should be used for public repositories. The non-public `*.yml` are meant for private repositories using private runners.
 
 Ensure that `ci.yml` points to the correct workflows you need, and delete the others.
 
 If you are using `ci.yml` in a private repository with rtCamp runners and later steps in the same job need authenticated Git operations, set `persist-credentials: true` in the `actions/checkout` step of `ci.yml`.
+
+### [`test-private-workflows.yml`](test-private-workflows.yml)
+
+Skeleton-only. Exercises the private (self-hosted runner) reusable workflows, since `ci.yml` only covers the `*-public.yml` variants. Skips PRs from forks so untrusted code never runs on self-hosted runners. Projects using the skeleton should delete it.
 
 ### [`copilot-setup-steps.yml`](copilot-setup-steps.yml)
 
@@ -35,9 +40,11 @@ Triggers on PRs. Validates [Conventional Commit](https://www.conventionalcommits
 
 Triggers on push to `main`. Uses [release-please](https://github.com/googleapis/release-please) to automate releases based on conventional commits.
 
-When a release is created, it builds the plugin via `reusable-build.yml` and uploads the zip artifact to the GitHub release.
+When a release is created, it builds the plugin at the release tag via `reusable-build-public.yml` (switch to `reusable-build.yml` for private runners) and uploads the zip artifact to the GitHub release.
 
 ## Configuration
+
+`reusable-actionlint.yml` downloads a pinned actionlint release and verifies its SHA-256. Dependabot can't update it, so bump `ACTIONLINT_VERSION` and `ACTIONLINT_SHA256` together by hand.
 
 1. `php-version`
 2. `ci.yml:phpunit` matrix.

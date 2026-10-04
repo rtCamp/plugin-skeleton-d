@@ -4,11 +4,26 @@ on:
   workflow_call:
     inputs:
       php-version:
+        description: 'PHP version to use'
         required: true
         type: string
       artifact-name:
+        description: 'Name of the uploaded artifact'
         required: true
         type: string
+      artifact-path:
+        description: 'Path of the file to upload as the artifact'
+        required: false
+        type: string
+        default: 'plugin-skeleton-d.zip'
+      ref:
+        description: 'Git ref to build. Empty builds the commit that triggered the workflow.'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -34,6 +49,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.ref }}
           show-progress: ${{ runner.debug == '1' && 'true' || 'false' }}
 
       - name: Configure Git for Safe Directory
@@ -85,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ inputs.artifact-name }}
-          path: plugin-skeleton-d.zip
+          path: ${{ inputs.artifact-path }}
           if-no-files-found: error
 
       - name: Stop the Docker testing environment

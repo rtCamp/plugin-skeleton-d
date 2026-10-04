@@ -27,6 +27,7 @@ jobs:
       contents: read
       pull-requests: read
     outputs:
+      actionlint: ${{ steps.filter.outputs.actionlint }}
       php: ${{ steps.filter.outputs.php }}
       phpcs: ${{ steps.filter.outputs.phpcs }}
       phpstan: ${{ steps.filter.outputs.phpstan }}
@@ -48,6 +49,9 @@ jobs:
         id: filter
         with:
           filters: |
+            actionlint:
+              - '.github/workflows/**'
+              - '.github/actionlint.yaml'
             php:
               - '**.php'
               - 'composer.*'
@@ -105,6 +109,14 @@ jobs:
               - 'package*.json'
               - '.wp-env.test.json'
 
+  actionlint:
+    name: actionlint
+    needs: detect
+    if: needs.detect.outputs.actionlint == 'true'
+    uses: ./.github/workflows/reusable-actionlint.yml
+    permissions:
+      contents: read
+
   phpcs:
     name: PHPCS
     needs: detect
@@ -146,6 +158,8 @@ jobs:
       contents: read
     with:
       coverage: true
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
@@ -169,7 +183,8 @@ jobs:
       php-version: ${{ matrix.php }}
       wp-version: ${{ matrix.wp }}
       coverage: ${{ matrix.coverage == true }}
-    secrets: inherit
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   e2e:
     name: E2E Tests
@@ -192,7 +207,6 @@ jobs:
     with:
       php-version: '8.2'
       artifact-name: plugin-skeleton-d-pr${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
-    secrets: inherit
 
   playground-preview:
     name: Playground Preview

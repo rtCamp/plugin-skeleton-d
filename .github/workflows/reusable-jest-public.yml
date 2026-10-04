@@ -9,6 +9,11 @@ on:
         type: boolean
         default: true
 
+    secrets:
+      CODECOV_TOKEN:
+        description: 'Codecov upload token'
+        required: false
+
 permissions: {}
 
 jobs:
@@ -30,11 +35,19 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
 
+      - name: Cache Jest transforms
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.jest-cache
+          key: jest-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            jest-${{ runner.os }}-
+
       - name: Install npm dependencies
         run: npm ci
 
       - name: Run Jest tests${{ inputs.coverage && ' with coverage' || '' }}
-        run: npm run test:js${{ inputs.coverage && ':coverage' || '' }}
+        run: npm run test:js${{ inputs.coverage && ':coverage' || '' }} -- --ci --cacheDirectory="$HOME/.jest-cache"
 
       - name: Upload code coverage report to Codecov
         if: ${{ inputs.coverage }}

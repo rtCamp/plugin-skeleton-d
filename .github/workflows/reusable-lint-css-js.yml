@@ -2,6 +2,27 @@ name: Run JS Lint
 
 on:
   workflow_call:
+    inputs:
+      eslint:
+        description: 'Run ESLint check'
+        required: false
+        type: boolean
+        default: true
+      tsc:
+        description: 'Run TypeScript check'
+        required: false
+        type: boolean
+        default: true
+      stylelint:
+        description: 'Run Stylelint check'
+        required: false
+        type: boolean
+        default: true
+      prettier:
+        description: 'Run Prettier check'
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -27,30 +48,26 @@ jobs:
           node-version-file: '.nvmrc'
 
       - name: Install npm dependencies
+        id: npm-ci
         run: npm ci
 
+      # Each check runs even when an earlier one fails, so every failure is reported in one run.
       - name: Run ESLint
         id: eslint
-        continue-on-error: true
+        if: ${{ inputs.eslint && !cancelled() && steps.npm-ci.outcome == 'success' }}
         run: npm run lint:js
 
       - name: Run TypeScript check
         id: typescript
-        continue-on-error: true
+        if: ${{ inputs.tsc && !cancelled() && steps.npm-ci.outcome == 'success' }}
         run: npm run lint:js:types
 
       - name: Run Stylelint
         id: stylelint
-        continue-on-error: true
+        if: ${{ inputs.stylelint && !cancelled() && steps.npm-ci.outcome == 'success' }}
         run: npm run lint:css
 
       - name: Run Prettier check
         id: prettier
-        continue-on-error: true
+        if: ${{ inputs.prettier && !cancelled() && steps.npm-ci.outcome == 'success' }}
         run: npm run format -- --check
-
-      - name: Check for errors
-        if: ${{ steps.eslint.outcome == 'failure' || steps.typescript.outcome == 'failure' || steps.prettier.outcome == 'failure' || steps.stylelint.outcome == 'failure' }}
-        run: |
-          echo "One or more checks failed. See logs above for details."
-          exit 1
