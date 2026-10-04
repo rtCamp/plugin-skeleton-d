@@ -41,22 +41,25 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo;
-            const run = context.payload.workflow_run;
 
-            // `pull_requests` is empty for fork PRs, so look those up by head branch.
-            const pulls = await github.paginate(github.rest.pulls.list, {
+            // Branch and SHA can match several PRs, but the bundle name (`wp-playground-preview-pr<N>-<SHA>`) has the exact one.
+            const { data } = await github.rest.actions.listWorkflowRunArtifacts({
               owner,
               repo,
-              head: `${run.head_repository.owner.login}:${run.head_branch}`,
-              state: 'all',
-              per_page: 100,
+              run_id: context.payload.workflow_run.id,
             });
-            const matching = pulls.filter((pr) => pr.head.sha === run.head_sha);
+            const number = data.artifacts.map((a) => a.name.match(/^wp-playground-preview-pr(\d+)-/)?.[1]).find(Boolean);
 
-            // If no PR matches, let preview-publish.yml report the mismatch.
-            const open = matching.length === 0 || matching.some((pr) => pr.state === 'open');
+            // Without a bundle, let preview-publish.yml report the problem.
+            if (!number) {
+              core.setOutput('open', 'true');
+              return;
+            }
+
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: Number(number) });
+            const open = pr.state === 'open';
             if (!open) {
-              core.notice(`PR #${matching[0].number} is closed, so no preview is published.`);
+              core.notice(`PR #${pr.number} is closed, so no preview is published.`);
             }
             core.setOutput('open', String(open));
 

@@ -73,9 +73,17 @@ jobs:
               }
             }
 
+            // A Playground preview that saw the PR open may still be uploading, so wait for those (`workflow_run`) too.
+            const { data: previews } = await github.rest.actions.listWorkflowRunsForRepo({
+              owner,
+              repo,
+              event: 'workflow_run',
+              per_page: 100,
+            });
+
             // Cancelling is asynchronous: wait for the runs to stop, so none uploads an artifact after the deletion below.
             const deadline = Date.now() + 5 * 60 * 1000;
-            let active = runs.filter((r) => r.status !== 'completed').map((r) => r.id);
+            let active = [...runs, ...previews.workflow_runs].filter((r) => r.status !== 'completed').map((r) => r.id);
             while (active.length && Date.now() < deadline) {
               await new Promise((resolve) => setTimeout(resolve, 10_000));
               const current = await Promise.all(
