@@ -78,7 +78,7 @@ jobs:
               - 'tsconfig*.json'
             css:
               - '.stylelintignore'
-              - '.stylelint.config.js*'
+              - 'stylelint.config.mjs'
             e2e:
               - '.github/workflows/reusable-e2e.yml'
               - '.github/workflows/test-private-workflows.yml'
@@ -86,7 +86,7 @@ jobs:
             jest:
               - '.github/workflows/reusable-jest.yml'
               - '.github/workflows/test-private-workflows.yml'
-              - 'jest.config.js'
+              - 'jest.config.ts'
               - 'package*.json'
             build:
               - '.github/workflows/reusable-build.yml'

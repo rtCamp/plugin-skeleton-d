@@ -97,6 +97,8 @@ PR previews are split in two, so that untrusted PR code never runs with write pe
 1. **Build:** `build-plugin-zip` in `ci.yml` sets `playground-preview: true`, which uploads the plugin zip as a `wp-playground-preview-pr<N>-<SHA>` artifact.
 2. **Publish:** once `ci.yml` succeeds, `wp-playground-pr-preview.yml` uploads the zip to the `ci-artifacts` prerelease, points [`blueprint.json`](../../blueprint.json) at it, and posts the button.
 
+No preview is published if the PR was closed before CI finished.
+
 `wp-playground-pr-preview.yml` always runs from the default branch, so changes to it only take effect once merged. If the `ci.yml` workflow `name` changes, update its `workflows:` too.
 
 If an older `ci-artifacts` **draft** release exists, delete it or convert it to a prerelease. Playground cannot download draft assets.

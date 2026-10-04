@@ -29,9 +29,37 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+      pull-requests: read
     outputs:
       blueprint: ${{ steps.blueprint.outputs.blueprint }}
+      pr-open: ${{ steps.pr-state.outputs.open }}
     steps:
+      # CI can finish after its PR was closed and cleaned up. Publishing then would leave zips nothing deletes.
+      - name: Check the PR is still open
+        id: pr-state
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const run = context.payload.workflow_run;
+
+            // `pull_requests` is empty for fork PRs, so look those up by head branch.
+            const pulls = await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              head: `${run.head_repository.owner.login}:${run.head_branch}`,
+              state: 'all',
+              per_page: 100,
+            });
+            const matching = pulls.filter((pr) => pr.head.sha === run.head_sha);
+
+            // If no PR matches, let preview-publish.yml report the mismatch.
+            const open = matching.length === 0 || matching.some((pr) => pr.state === 'open');
+            if (!open) {
+              core.notice(`PR #${matching[0].number} is closed, so no preview is published.`);
+            }
+            core.setOutput('open', String(open));
+
       # In a `workflow_run`, this checks out the caller's default branch, never the PR code.
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -52,6 +80,7 @@ jobs:
   publish:
     name: Publish Preview
     needs: blueprint
+    if: needs.blueprint.outputs.pr-open == 'true'
     permissions:
       contents: write
       pull-requests: write

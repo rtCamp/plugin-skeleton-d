@@ -73,6 +73,20 @@ jobs:
               }
             }
 
+            // Cancelling is asynchronous: wait for the runs to stop, so none uploads an artifact after the deletion below.
+            const deadline = Date.now() + 5 * 60 * 1000;
+            let active = runs.filter((r) => r.status !== 'completed').map((r) => r.id);
+            while (active.length && Date.now() < deadline) {
+              await new Promise((resolve) => setTimeout(resolve, 10_000));
+              const current = await Promise.all(
+                active.map((run_id) => github.rest.actions.getWorkflowRun({ owner, repo, run_id }))
+              );
+              active = current.filter(({ data }) => data.status !== 'completed').map(({ data }) => data.id);
+            }
+            if (active.length) {
+              core.warning(`Runs still active after 5 minutes, so they may upload artifacts later: ${active.join(', ')}`);
+            }
+
             for (const run of runs) {
               const artifacts = await github.paginate(github.rest.actions.listWorkflowRunArtifacts, {
                 owner,
