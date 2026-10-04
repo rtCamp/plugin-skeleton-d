@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [0.2.0](https://github.com/rtCamp/plugin-skeleton-d/compare/v0.1.1...v0.2.0) (2026-10-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update playground flow and improve workflow reusability ([#147](https://github.com/rtCamp/plugin-skeleton-d/issues/147))
+
+### Changed
+
+* **deps-dev:** bump brace-expansion from 1.1.18 to 1.1.21 ([#141](https://github.com/rtCamp/plugin-skeleton-d/issues/141)) ([0d5dfcf](https://github.com/rtCamp/plugin-skeleton-d/commit/0d5dfcfa6358ca77b317b322c0bd6ff376dbeb82))
+* **deps-dev:** bump lefthook in the npm-dev-minor-patch group ([#136](https://github.com/rtCamp/plugin-skeleton-d/issues/136))z ([f0fb276](https://github.com/rtCamp/plugin-skeleton-d/commit/f0fb2767491829e9c6c7602e248acfab26ea84e7))
+* **deps-dev:** bump lint-staged ([#146](https://github.com/rtCamp/plugin-skeleton-d/issues/146)) ([db90858](https://github.com/rtCamp/plugin-skeleton-d/commit/db90858bca5235e8de54265d1274d97880afe8d8))
+* **deps-dev:** bump phpstan/phpstan ([#135](https://github.com/rtCamp/plugin-skeleton-d/issues/135)) ([54e3561](https://github.com/rtCamp/plugin-skeleton-d/commit/54e356135ec0f7e83e740979abcca4fca3dcd8c1))
+* **deps-dev:** bump phpstan/phpstan ([#138](https://github.com/rtCamp/plugin-skeleton-d/issues/138)) ([aa94d96](https://github.com/rtCamp/plugin-skeleton-d/commit/aa94d96a87fcd883dbb1063bf0da18c916fb0a84))
+* **deps-dev:** bump phpstan/phpstan-phpunit ([#145](https://github.com/rtCamp/plugin-skeleton-d/issues/145)) ([5d38a97](https://github.com/rtCamp/plugin-skeleton-d/commit/5d38a97b4204ede7f2e9516fc62708c178f81c54))
+* **deps-dev:** bump serialize-javascript from 7.1.1 to 7.1.2 ([#142](https://github.com/rtCamp/plugin-skeleton-d/issues/142)) ([d0bc8a1](https://github.com/rtCamp/plugin-skeleton-d/commit/d0bc8a12af9b14e859b1d08bc8f6063f85603a5e))
+* **deps-dev:** bump the npm-dev-minor-patch group with 4 updates ([#139](https://github.com/rtCamp/plugin-skeleton-d/issues/139)) ([5b8d2ac](https://github.com/rtCamp/plugin-skeleton-d/commit/5b8d2ac2281416b7d3d0f6ea085f279c1a6f93a4))
+* **deps-dev:** bump the npm-dev-minor-patch group with 5 updates ([#129](https://github.com/rtCamp/plugin-skeleton-d/issues/129)) ([1b7dbfd](https://github.com/rtCamp/plugin-skeleton-d/commit/1b7dbfd1c24f31a11452f2c62f0eb1c59bacd3a4))
+* **deps-dev:** bump wp-phpunit/wp-phpunit ([#128](https://github.com/rtCamp/plugin-skeleton-d/issues/128)) ([faa6e72](https://github.com/rtCamp/plugin-skeleton-d/commit/faa6e728b7f8c5c65581dff2cb3b0d8c8d95ab78))
+* **deps:** bump adm-zip from 0.6.0 to 0.6.1 ([#132](https://github.com/rtCamp/plugin-skeleton-d/issues/132)) ([a62a129](https://github.com/rtCamp/plugin-skeleton-d/commit/a62a129a6d4700232f373aa18b07879c47adff04))
+* **deps:** bump colord from 2.9.3 to 2.10.0 ([#127](https://github.com/rtCamp/plugin-skeleton-d/issues/127)) ([855be19](https://github.com/rtCamp/plugin-skeleton-d/commit/855be1918bcbe645e3e06cb8f19aaab90dfe0bb0))
+* **deps:** bump http-cache-semantics from 4.2.0 to 4.3.0 ([#148](https://github.com/rtCamp/plugin-skeleton-d/issues/148)) ([6e088e0](https://github.com/rtCamp/plugin-skeleton-d/commit/6e088e0ab880780c911c53871bfbf8a845f27a7a))
+* **deps:** bump ip-address from 10.7.0 to 10.7.3 ([#143](https://github.com/rtCamp/plugin-skeleton-d/issues/143)) ([1da41a0](https://github.com/rtCamp/plugin-skeleton-d/commit/1da41a05c2ba8677b6025dc68c09005e5d9daeaa))
+* **deps:** bump moment from 2.30.1 to 2.31.0 ([#140](https://github.com/rtCamp/plugin-skeleton-d/issues/140)) ([8543dc2](https://github.com/rtCamp/plugin-skeleton-d/commit/8543dc229258c50287a51427494b5afa059a1091))
+
+
+### Continuous Integration
+
+* backport workflow fixes ([#144](https://github.com/rtCamp/plugin-skeleton-d/issues/144)) ([95f46e2](https://github.com/rtCamp/plugin-skeleton-d/commit/95f46e2dd76de3edffcf67164519ccac3de89c80))
+* bump codecov/codecov-action in the github-actions-updates group ([#131](https://github.com/rtCamp/plugin-skeleton-d/issues/131)) ([dc66887](https://github.com/rtCamp/plugin-skeleton-d/commit/dc668879ba72ef5e0d9cf5f8aa7c174cc74e5350))
+* bump the github-actions-updates group with 4 updates ([#137](https://github.com/rtCamp/plugin-skeleton-d/issues/137)) ([6c93836](https://github.com/rtCamp/plugin-skeleton-d/commit/6c9383679b62f1e4da503a9b205ea0f14589cc6d))
+* fix release uploads and update deps ([#149](https://github.com/rtCamp/plugin-skeleton-d/issues/149)) ([1758458](https://github.com/rtCamp/plugin-skeleton-d/commit/175845864ebfa2927f8d7afe80f52af894a3d8dc))
+* track dependabot in release-please ([#133](https://github.com/rtCamp/plugin-skeleton-d/issues/133)) ([ea87521](https://github.com/rtCamp/plugin-skeleton-d/commit/ea875214721d13f04171eba02d52c57905238846))
+* Update playground flow and improve workflow reusability ([#147](https://github.com/rtCamp/plugin-skeleton-d/issues/147)) ([8b0eea6](https://github.com/rtCamp/plugin-skeleton-d/commit/8b0eea6f9316f715a6a55f5269d77ff2c8dd2690))
+
 ## [0.1.1](https://github.com/rtCamp/plugin-skeleton-d/compare/v0.1.0...v0.1.1) (2026-09-05)
 
 
