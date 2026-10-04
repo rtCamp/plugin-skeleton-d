@@ -1,0 +1,107 @@
+name: PR Cleanup
+
+# Deletes a closed PR's Actions artifacts and WordPress Playground preview zips.
+#
+# Callers usually trigger this on `pull_request_target` (closed), so fork PRs get a token that can delete.
+# It must never check out, build, or run PR code.
+on:
+  workflow_call:
+    inputs:
+      pr-number:
+        description: 'Number of the closed pull request'
+        required: true
+        type: number
+      head-ref:
+        description: 'Head branch of the pull request'
+        required: true
+        type: string
+      head-repo-id:
+        description: 'ID of the head repository. Empty (e.g. a deleted fork) skips deleting Actions artifacts.'
+        required: false
+        type: string
+        default: ''
+      release-tag:
+        description: 'Release holding Playground preview zips. Empty skips deleting release assets.'
+        required: false
+        type: string
+        default: 'ci-artifacts'
+
+permissions: {}
+
+jobs:
+  cleanup:
+    name: Delete PR Artifacts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      actions: write
+      contents: write
+
+    steps:
+      - name: Delete Actions artifacts from PR runs
+        if: inputs.head-repo-id != ''
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          HEAD_REF: ${{ inputs.head-ref }}
+          HEAD_REPO_ID: ${{ inputs.head-repo-id }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const headRepoId = Number(process.env.HEAD_REPO_ID);
+
+            const runs = await github.paginate(github.rest.actions.listWorkflowRunsForRepo, {
+              owner,
+              repo,
+              event: 'pull_request',
+              branch: process.env.HEAD_REF,
+              per_page: 100,
+            });
+
+            // Match the head repository too, so a fork branch with the same name is left alone.
+            for (const run of runs.filter((r) => r.head_repository?.id === headRepoId)) {
+              const artifacts = await github.paginate(github.rest.actions.listWorkflowRunArtifacts, {
+                owner,
+                repo,
+                run_id: run.id,
+                per_page: 100,
+              });
+
+              for (const artifact of artifacts.filter((a) => !a.expired)) {
+                core.info(`Deleting artifact ${artifact.name} from run ${run.id}`);
+                await github.rest.actions.deleteArtifact({ owner, repo, artifact_id: artifact.id });
+              }
+            }
+
+      - name: Delete Playground preview zips
+        if: inputs.release-tag != ''
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          PR_NUMBER: ${{ inputs.pr-number }}
+          RELEASE_TAG: ${{ inputs.release-tag }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prefix = `pr-${process.env.PR_NUMBER}-`;
+
+            let release;
+            try {
+              ({ data: release } = await github.rest.repos.getReleaseByTag({ owner, repo, tag: process.env.RELEASE_TAG }));
+            } catch (error) {
+              if (error.status === 404) {
+                core.info(`No ${process.env.RELEASE_TAG} release found, nothing to delete.`);
+                return;
+              }
+              throw error;
+            }
+
+            const assets = await github.paginate(github.rest.repos.listReleaseAssets, {
+              owner,
+              repo,
+              release_id: release.id,
+              per_page: 100,
+            });
+
+            for (const asset of assets.filter((a) => a.name.startsWith(prefix))) {
+              core.info(`Deleting release asset ${asset.name}`);
+              await github.rest.repos.deleteReleaseAsset({ owner, repo, asset_id: asset.id });
+            }

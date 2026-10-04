@@ -1,24 +1,21 @@
-name: Run WordPress Playground PR Preview
+name: WordPress Playground PR Preview
 
+# Publishes the Playground preview bundle uploaded by `reusable-build*.yml` (`playground-preview: true`) and posts the
+# Preview button to the PR. Must be called from a `workflow_run` trigger. Public repositories only.
 on:
   workflow_call:
     inputs:
-      run-id:
-        description: 'The workflow run ID to download artifacts from'
+      plugin-slug:
+        description: 'Plugin slug, matching the `plugin-slug` passed to reusable-build-public.yml'
         required: true
         type: string
-      artifact-prefix:
-        description: 'Prefix for the artifact name (e.g., plugin-skeleton-d-pr)'
+      blueprint-path:
+        description: 'Path to the Blueprint whose installPlugin step should install the PR build'
         required: false
         type: string
-        default: 'plugin-skeleton-d-pr'
-      artifact-filename:
-        description: 'Filename of the zip inside the artifact'
-        required: false
-        type: string
-        default: 'plugin-skeleton-d.zip'
+        default: 'blueprint.json'
       artifacts-to-keep:
-        description: 'Number of artifacts to keep per PR'
+        description: 'Number of commits worth of preview zips to keep per PR, or `keep-all`'
         required: false
         type: string
         default: '2'
@@ -26,92 +23,39 @@ on:
 permissions: {}
 
 jobs:
-  playground-preview:
-    name: Post Playground Preview
+  blueprint:
+    name: Prepare Blueprint
     runs-on: ubuntu-24.04
+    timeout-minutes: 5
     permissions:
-      actions: read
-      contents: write
-      pull-requests: write
-
+      contents: read
+    outputs:
+      blueprint: ${{ steps.blueprint.outputs.blueprint }}
     steps:
-      - name: Extract PR metadata and artifact info
-        id: pr-metadata
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        env:
-          ARTIFACT_PREFIX: ${{ inputs.artifact-prefix }}
-          RUN_ID: ${{ inputs.run-id }}
-        with:
-          script: |
-            const prefix = process.env.ARTIFACT_PREFIX;
-            const runId = process.env.RUN_ID;
-
-            const run = await github.rest.actions.getWorkflowRun({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: runId,
-            });
-
-            const pulls = run.data.pull_requests;
-            if (!pulls || pulls.length === 0) {
-              core.setFailed('No pull request found in workflow_run');
-              return;
-            }
-            const prNumber = pulls[0].number;
-            const commitSha = run.data.head_sha;
-
-            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: runId,
-            });
-
-            const artifact = artifacts.data.artifacts.find(a =>
-              a.name.startsWith(prefix)
-            );
-
-            if (!artifact) {
-              core.setFailed(`Could not find artifact with prefix: ${prefix}`);
-              return;
-            }
-
-            core.setOutput('pr-number', prNumber.toString());
-            core.setOutput('commit-sha', commitSha);
-            core.setOutput('artifact-name', artifact.name);
-
-      - name: Expose built artifact on public URL
-        id: expose
-        uses: WordPress/action-wp-playground-pr-preview/.github/actions/expose-artifact-on-public-url@07d56d39d84ecfcdae2e7ddf9dd83e5e6dde769a # v2
-        with:
-          artifact-name: ${{ steps.pr-metadata.outputs.artifact-name }}
-          artifact-filename: ${{ inputs.artifact-filename }}
-          pr-number: ${{ steps.pr-metadata.outputs.pr-number }}
-          commit-sha: ${{ steps.pr-metadata.outputs.commit-sha }}
-          artifact-source-run-id: ${{ inputs.run-id }}
-          artifacts-to-keep: ${{ inputs.artifacts-to-keep }}
-
+      # In a `workflow_run`, this checks out the caller's default branch, never the PR code.
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          sparse-checkout: blueprint.json
+          sparse-checkout: ${{ inputs.blueprint-path }}
           sparse-checkout-cone-mode: false
+          persist-credentials: false
 
-      - name: Generate Playground blueprint JSON
+      - name: Point blueprint.json at the PR build
         id: blueprint
         run: |
-          if [ -z "$ARTIFACT_URL" ]; then
-            echo "::error::ARTIFACT_URL is required"
-            exit 1
-          fi
-          BLUEPRINT=$(jq -c --arg url "$ARTIFACT_URL" '(.steps[] | select(.step == "installPlugin") | .pluginData.url) = $url' blueprint.json)
+          BLUEPRINT=$(jq -c --arg url "{{ARTIFACT_URL:${PLUGIN_SLUG}}}" '(.steps[] | select(.step == "installPlugin") | .pluginData.url) = $url' "$BLUEPRINT_PATH")
           echo "blueprint=$BLUEPRINT" >> "$GITHUB_OUTPUT"
         env:
-          ARTIFACT_URL: ${{ steps.expose.outputs.artifact-url }}
+          PLUGIN_SLUG: ${{ inputs.plugin-slug }}
+          BLUEPRINT_PATH: ${{ inputs.blueprint-path }}
 
-      - name: Post Playground preview button
-        uses: WordPress/action-wp-playground-pr-preview@07d56d39d84ecfcdae2e7ddf9dd83e5e6dde769a # v2
-        with:
-          mode: append-to-description
-          blueprint: ${{ steps.blueprint.outputs.blueprint }}
-          pr-number: ${{ steps.pr-metadata.outputs.pr-number }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+  publish:
+    name: Publish Preview
+    needs: blueprint
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: WordPress/action-wp-playground-pr-preview/.github/workflows/preview-publish.yml@1b15093d61b5e98cdfeb31466f34ade495762cd7 # v4.0.0
+    with:
+      blueprint: ${{ needs.blueprint.outputs.blueprint }}
+      artifacts-to-keep: ${{ inputs.artifacts-to-keep }}

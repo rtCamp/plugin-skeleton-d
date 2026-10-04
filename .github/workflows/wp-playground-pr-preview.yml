@@ -1,0 +1,20 @@
+name: WordPress Playground PR Preview
+
+# `workflow_run` workflows always run from the default branch, so changes here only take effect once merged.
+on:
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  playground-preview:
+    name: Playground Preview
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    uses: ./.github/workflows/reusable-wp-playground-pr-preview-public.yml
+    permissions:
+      contents: write
+      pull-requests: write
+    with:
+      plugin-slug: plugin-skeleton-d

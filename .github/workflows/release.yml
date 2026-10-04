@@ -33,9 +33,10 @@ jobs:
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created == 'true' }}
     uses: ./.github/workflows/reusable-build-public.yml
-    # uses: ./.github/workflows/reusable-build.yml # Use this for private repositories using private runners.
+    # uses: rtCamp/plugin-skeleton-d/.github/workflows/reusable-build-public.yml@<version> # Use this in downstream repositories.
     with:
       php-version: '8.2'
+      plugin-slug: plugin-skeleton-d
       artifact-name: plugin-skeleton-d
       ref: ${{ needs.release-please.outputs.tag_name }}
 
