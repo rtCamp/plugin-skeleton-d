@@ -7,20 +7,29 @@ on:
         description: 'PHP version to use'
         required: true
         type: string
+      plugin-slug:
+        description: 'Plugin slug (directory name and text domain), e.g. my-plugin'
+        required: true
+        type: string
       artifact-name:
         description: 'Name of the uploaded artifact'
         required: true
         type: string
       artifact-path:
-        description: 'Path of the file to upload as the artifact'
+        description: 'Path of the file to upload as the artifact. Defaults to `<plugin-slug>.zip`.'
         required: false
         type: string
-        default: 'plugin-skeleton-d.zip'
+        default: ''
       ref:
         description: 'Git ref to build. Empty builds the commit that triggered the workflow.'
         required: false
         type: string
         default: ''
+      playground-preview:
+        description: 'Also upload the zip as a WordPress Playground PR preview bundle (pull_request events only).'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -79,10 +88,12 @@ jobs:
 
       - name: Pin plugin folder name in wp-env config
         run: |
-          jq --arg path "$(pwd)" \
-             'del(.plugins) | .mappings["wp-content/plugins/plugin-skeleton-d"] = $path' \
+          jq --arg path "$(pwd)" --arg slug "$PLUGIN_SLUG" \
+             'del(.plugins) | .mappings["wp-content/plugins/" + $slug] = $path' \
              .wp-env.json > .wp-env.json.tmp && mv .wp-env.json.tmp .wp-env.json
           cat .wp-env.json
+        env:
+          PLUGIN_SLUG: ${{ inputs.plugin-slug }}
 
       - name: Start the Docker testing environment
         uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4.0.0
@@ -101,8 +112,29 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ inputs.artifact-name }}
-          path: ${{ inputs.artifact-path }}
+          path: ${{ inputs.artifact-path || format('{0}.zip', inputs.plugin-slug) }}
           if-no-files-found: error
+
+      # Matches the bundle layout of WordPress/action-wp-playground-pr-preview's preview-build.yml (v4),
+      # Private repositories need their own publisher for it, since reusable-wp-playground-pr-preview-public.yml can't host it.
+      - name: Stage Playground preview bundle
+        if: inputs.playground-preview && github.event_name == 'pull_request'
+        run: |
+          mkdir -p wp-playground-preview-bundle/zips
+          cp "$ARTIFACT_PATH" "wp-playground-preview-bundle/zips/${PLUGIN_SLUG}.zip"
+        env:
+          ARTIFACT_PATH: ${{ inputs.artifact-path || format('{0}.zip', inputs.plugin-slug) }}
+          PLUGIN_SLUG: ${{ inputs.plugin-slug }}
+
+      - name: Upload Playground preview bundle
+        if: inputs.playground-preview && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: wp-playground-preview-pr${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
+          path: wp-playground-preview-bundle/
+          if-no-files-found: error
+          # Only needed until it is published.
+          retention-days: 7
 
       - name: Stop the Docker testing environment
         if: always()

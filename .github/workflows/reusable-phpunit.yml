@@ -7,6 +7,10 @@ on:
         description: 'PHP version to use'
         required: true
         type: string
+      plugin-slug:
+        description: 'Plugin slug (directory name and text domain), e.g. my-plugin'
+        required: true
+        type: string
       wp-version:
         description: 'WordPress version (latest, trunk, or X.Y)'
         required: false
@@ -87,10 +91,12 @@ jobs:
 
       - name: Pin plugin folder name in wp-env config
         run: |
-          jq --arg path "$(pwd)" \
-             'del(.plugins) | .mappings["wp-content/plugins/plugin-skeleton-d"] = $path' \
+          jq --arg path "$(pwd)" --arg slug "$PLUGIN_SLUG" \
+             'del(.plugins) | .mappings["wp-content/plugins/" + $slug] = $path' \
              .wp-env.test.json > .wp-env.test.json.tmp && mv .wp-env.test.json.tmp .wp-env.test.json
           cat .wp-env.test.json
+        env:
+          PLUGIN_SLUG: ${{ inputs.plugin-slug }}
 
       - name: Start the Docker testing environment
         uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4.0.0

@@ -7,6 +7,11 @@ on:
         description: 'PHP version to use'
         required: true
         type: string
+      plugin-slug:
+        description: 'Plugin slug. Unused here; accepted so callers can switch to the private variant unchanged.'
+        required: false
+        type: string
+        default: ''
       wp-version:
         description: 'WordPress version (latest, trunk, or X.Y)'
         required: false

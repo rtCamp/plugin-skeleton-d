@@ -57,7 +57,7 @@ See [./docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#directory-structure) for a detai
    - `plugin-skeleton-d.php`
    - `readme.txt`
 4. Remove or replace example entrypoints and blocks from `src/`, then update `webpack.config.js` and `inc/Core/Assets.php`.
-5. Update CI workflows in `.github/workflows/`.
+5. Update CI workflows in `.github/workflows/`: delete the `reusable-*.yml` files and point the remaining workflows at this repository instead. See [Using these workflows in another repository](.github/workflows/README.md#using-these-workflows-in-another-repository).
 6. Search for `@todo` comments and resolve them.
 7. Remove all remaining example code from `inc/`, `src/`, and their corresponding `tests/`.
 8. Update the documentation in `docs/` and **this README** to reflect your plugin's functionality and architecture.

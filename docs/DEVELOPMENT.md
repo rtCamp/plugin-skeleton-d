@@ -372,7 +372,7 @@ The project uses WordPress Playground to demo the release plugin, and on pull re
 
 The [README.md](../README.md) and plugin preview use the [../blueprint.json](../blueprint.json) file to load the latest release of the plugin for testing and demos.
 
-Pull requests automatically generate a Playground preview from the build artifacts of the PR branch, using the [PR preview workflow](../.github/workflows/reusable-wp-playground-pr-preview.yml).
+Pull requests automatically generate a Playground preview from the build artifacts of the PR branch, using the [PR preview workflow](../.github/workflows/wp-playground-pr-preview.yml).
 
 ## Running Tests
 
