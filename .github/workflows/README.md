@@ -51,9 +51,9 @@ When a release is created, it builds the plugin at the release tag via `reusable
 
 ### Secrets
 
-| Secret          | Required By                                                    | Notes                                                |
-| --------------- | -------------------------------------------------------------- | ---------------------------------------------------- |
-| `CODECOV_TOKEN` | `reusable-phpunit-public.yml` <br />`reusable-jest-public.yml` | Optional - coverage uploads fail silently without it |
+| Secret          | Required By                                                                                                           | Notes                                                |
+| --------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `CODECOV_TOKEN` | `reusable-phpunit.yml` <br />`reusable-phpunit-public.yml` <br />`reusable-jest.yml` <br />`reusable-jest-public.yml` | Optional - coverage uploads fail silently without it |
 
 ### PR Previews
 
