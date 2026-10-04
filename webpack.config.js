@@ -17,7 +17,7 @@ const path = require( 'path' );
  *
  * Each entrypoint will be built into its own enqueuable asset.
  *
- * Blocks are handled separately via the `--package-manifest` flag in @wordpress/scripts
+ * Blocks are handled separately via the `--package-manifest` flag in `@wordpress/scripts`
  */
 const scriptEntries = {
 	admin: path.resolve( process.cwd(), 'src/admin/index.ts' ),
@@ -35,7 +35,7 @@ const scriptEntries = {
  *
  * Each entrypoint will be built into its own enqueuable asset.
  *
- * Blocks are handled separately via the `--package-manifest` flag in @wordpress/scripts
+ * Blocks are handled separately via the `--package-manifest` flag in `@wordpress/scripts`
  */
 const scriptModuleEntries = {
 	// Example:

@@ -144,20 +144,20 @@ Code contributions, bug reports, and feature requests are welcome! The following
 ├── .prettierignore               # Prettier ignore patterns.
 ├── .prettierrc.js                # Prettier configuration.
 ├── .release-please-manifest.json # Release Please manifest file.
-├── .stylelint.config.js          # Stylelint configuration.
 ├── .stylelintignore              # Stylelint ignore patterns.
 ├── .wp-env.json                  # wp-env configuration.
 ├── blueprint.json                # WordPress Playground blueprint configuration.
 ├── babel.config.js               # Babel configuration.
 ├── composer.json                 # PHP dependencies.
 ├── eslint.config.mjs            # ESLint configuration.
-├── jest.config.js                # Jest configuration.
+├── jest.config.ts                # Jest configuration.
 ├── LICENSE.md                    # License file.
 ├── package.json                  # Node.js dependencies.
 ├── playwright.config.ts          # Playwright configuration.
 ├── phpstan.neon.dist             # PHPStan configuration.
 ├── phpunit.xml.dist              # PHPUnit configuration.
 ├── release-please-config.json    # Release Please configuration.
+├── stylelint.config.mjs          # Stylelint configuration.
 ├── tsconfig.base.json            # TypeScript base configuration.
 ├── tsconfig.json                 # TypeScript configuration.
 └── webpack.config.js             # Webpack configuration.
@@ -169,7 +169,7 @@ Code contributions, bug reports, and feature requests are welcome! The following
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/): v24.12.0+ ([NVM](https://nvm.sh/) recommended)
+- [Node.js](https://nodejs.org/): v24.15.0+ ([NVM](https://nvm.sh/) recommended)
 - npm: v11.14.1+
 - [Docker](https://www.docker.com/)
 - Optional: [Composer](https://getcomposer.org/) (if you prefer to run the Composer tools locally instead of using wp-env's built-in Composer)
@@ -336,7 +336,7 @@ npm run format
 
 This project uses [Stylelint](https://stylelint.io/) through `@wordpress/scripts` for CSS linting, following WordPress coding standards and best practices.
 
-Our specific Stylelint configuration is defined in the [`.stylelint.config.js`](../.stylelint.config.js) file.
+Our specific Stylelint configuration is defined in the [`stylelint.config.mjs`](../stylelint.config.mjs) file.
 
 You can run Stylelint on CSS files using:
 
@@ -396,7 +396,7 @@ You should see the html coverage report in the `tests/_output/html` directory an
 
 ### Jest (JavaScript Unit Tests)
 
-We use [Jest](https://jestjs.io/) for JavaScript/TypeScript unit testing, configured via [`jest.config.js`](../jest.config.js) and extending `@wordpress/scripts` defaults.
+We use [Jest](https://jestjs.io/) for JavaScript/TypeScript unit testing, configured via [`jest.config.ts`](../jest.config.ts) and extending the [`@wordpress/jest-preset-default`](https://www.npmjs.com/package/@wordpress/jest-preset-default) preset. Tests run through `wp-scripts test-unit-jest`, since `@wordpress/scripts` now defaults `test-unit-js` to Vitest.
 
 Jest can be run with the following commands:
 

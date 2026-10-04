@@ -1,5 +1,5 @@
 /**
- * Mock for @wordpress/interactivity module.
+ * Mock for `@wordpress/interactivity` module.
  *
  * Provides lightweight mock implementations for the WordPress Interactivity API
  * that can be used in unit tests.

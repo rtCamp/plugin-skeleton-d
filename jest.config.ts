@@ -1,7 +1,7 @@
 /**
  * Jest configuration for Plugin Skeleton D.
  *
- * Extends @wordpress/scripts default configuration with:
+ * Extends the WordPress Jest preset with:
  * - Custom test setup for WordPress mocks
  * - Module path aliases for cleaner imports
  * - Coverage thresholds to maintain code quality
@@ -10,12 +10,14 @@
  */
 
 /**
- * WordPress dependencies
+ * External dependencies
  */
-const defaultConfig = require( '@wordpress/scripts/config/jest-unit.config' );
+import type { Config } from 'jest';
 
-module.exports = {
-	...defaultConfig,
+const config: Config = {
+	// @wordpress/scripts no longer ships Jest defaults, so use the published preset directly.
+	// @see https://github.com/WordPress/gutenberg/blob/trunk/packages/scripts/docs/vitest-migration.md#keep-an-existing-jest-suite
+	preset: '@wordpress/jest-preset-default',
 
 	// Display name for clarity in multi-project setups
 	displayName: 'plugin-skeleton-d',
@@ -24,14 +26,10 @@ module.exports = {
 	rootDir: '.',
 
 	// Test setup files run after Jest environment is set up
-	setupFilesAfterEnv: [
-		...( defaultConfig.setupFilesAfterEnv || [] ),
-		'<rootDir>/tests/js/setup.ts',
-	],
+	setupFilesAfterEnv: [ '<rootDir>/tests/js/setup.ts' ],
 
 	// Module resolution aliases
 	moduleNameMapper: {
-		...defaultConfig.moduleNameMapper,
 		// Path alias for src directory
 		'^@/(.*)$': '<rootDir>/src/$1',
 		// Mock for WordPress Interactivity API (not available in test environment)
@@ -85,7 +83,7 @@ module.exports = {
 	coverageReporters: [ 'text', 'text-summary', 'lcov', 'html' ],
 
 	// Verbose output for CI environments
-	verbose: process.env.CI === 'true',
+	verbose: process.env[ 'CI' ] === 'true',
 
 	// Timeout for slow tests (useful for integration tests)
 	testTimeout: 10000,
@@ -96,3 +94,5 @@ module.exports = {
 		'jest-watch-typeahead/testname',
 	],
 };
+
+export default config;

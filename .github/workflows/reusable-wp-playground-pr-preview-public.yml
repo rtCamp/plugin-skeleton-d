@@ -29,9 +29,40 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+      pull-requests: read
     outputs:
       blueprint: ${{ steps.blueprint.outputs.blueprint }}
+      pr-open: ${{ steps.pr-state.outputs.open }}
     steps:
+      # CI can finish after its PR was closed and cleaned up. Publishing then would leave zips nothing deletes.
+      - name: Check the PR is still open
+        id: pr-state
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+
+            // Branch and SHA can match several PRs, but the bundle name (`wp-playground-preview-pr<N>-<SHA>`) has the exact one.
+            const { data } = await github.rest.actions.listWorkflowRunArtifacts({
+              owner,
+              repo,
+              run_id: context.payload.workflow_run.id,
+            });
+            const number = data.artifacts.map((a) => a.name.match(/^wp-playground-preview-pr(\d+)-/)?.[1]).find(Boolean);
+
+            // Without a bundle, let preview-publish.yml report the problem.
+            if (!number) {
+              core.setOutput('open', 'true');
+              return;
+            }
+
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: Number(number) });
+            const open = pr.state === 'open';
+            if (!open) {
+              core.notice(`PR #${pr.number} is closed, so no preview is published.`);
+            }
+            core.setOutput('open', String(open));
+
       # In a `workflow_run`, this checks out the caller's default branch, never the PR code.
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -52,6 +83,7 @@ jobs:
   publish:
     name: Publish Preview
     needs: blueprint
+    if: needs.blueprint.outputs.pr-open == 'true'
     permissions:
       contents: write
       pull-requests: write
