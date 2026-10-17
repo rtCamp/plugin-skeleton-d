@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [0.2.1](https://github.com/rtCamp/plugin-skeleton-d/compare/v0.2.0...v0.2.1) (2026-10-17)
+
+
+### Changed
+
+* **deps-dev:** bump compression from 1.8.1 to 1.8.2 ([#153](https://github.com/rtCamp/plugin-skeleton-d/issues/153)) ([83e93fd](https://github.com/rtCamp/plugin-skeleton-d/commit/83e93fd278b9366c45a281baddb22aff8c17b18d))
+* **deps-dev:** bump phpstan/phpstan-phpunit ([#150](https://github.com/rtCamp/plugin-skeleton-d/issues/150)) ([937aaaf](https://github.com/rtCamp/plugin-skeleton-d/commit/937aaaf18ad6d1f15e1413a52e90b4924d957dab))
+* **deps-dev:** bump phpstan/phpstan-phpunit ([#156](https://github.com/rtCamp/plugin-skeleton-d/issues/156)) ([7b15157](https://github.com/rtCamp/plugin-skeleton-d/commit/7b15157940a0a75638825f4360490804f401d1ad))
+* **deps-dev:** bump the npm-dev-minor-patch group with 8 updates ([#158](https://github.com/rtCamp/plugin-skeleton-d/issues/158)) ([40dd7d9](https://github.com/rtCamp/plugin-skeleton-d/commit/40dd7d95b070ef6250eb66dd6695f7358678653a))
+* **deps:** bump proxy-addr from 2.0.7 to 2.0.8 ([#152](https://github.com/rtCamp/plugin-skeleton-d/issues/152)) ([804bd59](https://github.com/rtCamp/plugin-skeleton-d/commit/804bd591df34f4c0be019a0956677e6911044eee))
+* **deps:** bump shell-quote from 1.10.0 to 1.12.0 ([#155](https://github.com/rtCamp/plugin-skeleton-d/issues/155)) ([5e163f1](https://github.com/rtCamp/plugin-skeleton-d/commit/5e163f1cb725538a476711e4cc5155c16ab15e01))
+* **deps:** bump source-map-js from 1.2.1 to 1.2.2 ([#154](https://github.com/rtCamp/plugin-skeleton-d/issues/154)) ([0028a7f](https://github.com/rtCamp/plugin-skeleton-d/commit/0028a7f774379f0cdcb092c0075574ffb3b11bb3))
+
+
+### Continuous Integration
+
+* bump the github-actions-updates group with 4 updates ([#157](https://github.com/rtCamp/plugin-skeleton-d/issues/157)) ([853a2ac](https://github.com/rtCamp/plugin-skeleton-d/commit/853a2acca3c4fee2ff1a545f554e79076428a4c7))
+
 ## [0.2.0](https://github.com/rtCamp/plugin-skeleton-d/compare/v0.1.1...v0.2.0) (2026-10-04)
 
 
