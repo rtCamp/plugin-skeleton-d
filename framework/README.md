@@ -14,7 +14,7 @@ The core rtCamp plugin framework provides a set of reusable and composable, "Ope
 
 ## Contents
 
-````bash
+```bash
 framework/
 ├── README.md # 🎯 You are here.
 │
@@ -35,18 +35,17 @@ framework/
 ├── AutoloaderTrait.php     # Trait for Composer autoloader.
 ├── Encryptor.php           # Simple encryption/decryption utility class.
 └── TemplateLoaderTrait.php # Trait for (over-)loading plugin template parts
+```
 
 ## Testing
 
-Tests for the framework are located in [`tests/phpunit/Framework`](../tests/phpunit/Framework)
-
-. They should have complete unit test coverage and should not contain any plugin-specific tests or dependencies.
+Tests for the framework are located in [`tests/phpunit/Framework`](../tests/phpunit/Framework). They should have complete unit test coverage and should not contain any plugin-specific tests or dependencies.
 
 ```bash
 # Optional: restart wp-env with coverage enabled
-npm run wp-env stop && npm run wp-env start -- xdebug=coverage
+npm run wp-env:test start -- --xdebug=coverage
 
 # Run tests
 npm run test:php
 npm run test:php -- tests/phpunit/Framework
-````
+```

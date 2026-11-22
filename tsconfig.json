@@ -26,6 +26,7 @@
 		"**/build/*",
 		"vendor/*",
 		"node_modules/*",
+		"tests/_output",
 		"eslint.config.mjs"
 	]
 }

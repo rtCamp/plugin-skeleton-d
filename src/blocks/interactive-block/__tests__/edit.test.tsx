@@ -1,17 +1,6 @@
-/**
- * External dependencies
- */
 import { render, screen } from '@testing-library/react';
-
-/**
- * WordPress dependencies
- */
 import { __ } from '@wordpress/i18n';
 import { useBlockProps } from '@wordpress/block-editor';
-
-/**
- * Internal dependencies
- */
 import Edit from '../edit';
 
 jest.mock( '../editor.scss', () => ( {} ) );

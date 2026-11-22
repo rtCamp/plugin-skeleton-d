@@ -58,11 +58,11 @@ constants();
 
 // If autoloader fails, we cannot proceed.
 require_once __DIR__ . '/inc/Autoloader.php';
-if ( ! class_exists( 'rtCamp\Plugin_Skeleton_D\Autoloader' ) || ! \rtCamp\Plugin_Skeleton_D\Autoloader::autoload() ) {
+if ( ! class_exists( Autoloader::class ) || ! Autoloader::autoload() ) {
 	return;
 }
 
 // Load the main plugin class.
-if ( class_exists( 'rtCamp\Plugin_Skeleton_D\Main' ) ) {
-	\rtCamp\Plugin_Skeleton_D\Main::get_instance();
+if ( class_exists( Main::class ) ) {
+	Main::get_instance();
 }

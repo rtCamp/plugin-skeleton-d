@@ -1,7 +1,5 @@
-/**
- * WordPress dependencies
- */
 import domReady from '@wordpress/dom-ready';
+import './styles/styles.module.scss';
 
 /**
  * Example `frontend` entrypoint.

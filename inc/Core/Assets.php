@@ -32,16 +32,6 @@ final class Assets implements Registrable {
 	public const GLOBAL_STYLES_HANDLE = self::PREFIX . 'global-styles';
 
 	/**
-	 * Assets to defer for better performance.
-	 */
-	private const DEFERRED_ASSETS = [
-		self::FRONTEND_HANDLE,
-		self::EDITOR_HANDLE,
-		self::ADMIN_HANDLE,
-		// Add other handles as needed.
-	];
-
-	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -59,9 +49,6 @@ final class Assets implements Registrable {
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_assets' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'register_admin_assets' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'register_editor_assets' ] );
-
-		// Add defer attribute to certain plugin bundles to improve admin load performance.
-		add_filter( 'script_loader_tag', [ $this, 'defer_scripts' ], 10, 2 );
 	}
 
 	/**
@@ -72,6 +59,7 @@ final class Assets implements Registrable {
 	public function register_assets(): void {
 		// Example: register a frontend script and style.
 		$this->register_script( self::FRONTEND_HANDLE, 'frontend' );
+		wp_script_add_data( self::FRONTEND_HANDLE, 'strategy', 'defer' );
 		$this->register_style( self::FRONTEND_HANDLE, 'frontend' );
 
 		$this->register_style( self::GLOBAL_STYLES_HANDLE, 'global-styles' );
@@ -85,6 +73,7 @@ final class Assets implements Registrable {
 	public function register_admin_assets(): void {
 		// Register admin script and style.
 		$this->register_script( self::ADMIN_HANDLE, 'admin' );
+		wp_script_add_data( self::ADMIN_HANDLE, 'strategy', 'defer' );
 		$this->register_style( self::ADMIN_HANDLE, 'admin' );
 	}
 
@@ -94,9 +83,8 @@ final class Assets implements Registrable {
 	 * Assets are registered once centrally, and enqueued in the modules that need them.
 	 */
 	public function register_editor_assets(): void {
-		// Register editor script and style.
+		// Register editor script.
 		$this->register_script( self::EDITOR_HANDLE, 'editor' );
-		$this->register_style( self::EDITOR_HANDLE, 'editor' );
 	}
 
 	/**
@@ -104,22 +92,5 @@ final class Assets implements Registrable {
 	 */
 	public function register_blocks(): void {
 		$this->register_block_manifest( $this->assets_dir . '/blocks', $this->assets_dir . '/blocks-manifest.php' );
-	}
-
-	/**
-	 * Add defer attribute to certain plugin bundle scripts to improve loading performance.
-	 *
-	 * @param string $tag    The script tag.
-	 * @param string $handle The script handle.
-	 *
-	 * @return string Modified script tag.
-	 */
-	public function defer_scripts( string $tag, string $handle ): string {
-		// Bail if we don't need to defer.
-		if ( ! in_array( $handle, self::DEFERRED_ASSETS, true ) || false !== strpos( $tag, ' defer' ) ) {
-			return $tag;
-		}
-
-		return str_replace( ' src', ' defer src', $tag );
 	}
 }

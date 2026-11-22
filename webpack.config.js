@@ -1,14 +1,7 @@
-/**
- * WordPress dependencies
- */
 const [
 	defaultScriptConfig,
 	defaultModuleConfig,
 ] = require( '@wordpress/scripts/config/webpack.config' );
-
-/**
- * External dependencies
- */
 const RemoveEmptyScriptsPlugin = require( 'webpack-remove-empty-scripts' );
 const path = require( 'path' );
 
@@ -67,10 +60,11 @@ const scriptConfig = {
 
 const moduleConfig = {
 	...defaultModuleConfig,
-	entry: {
-		...defaultModuleConfig.entry,
+	// WordPress stores the default entries in a function, which must be called.
+	entry: () => ( {
+		...defaultModuleConfig.entry(),
 		...scriptModuleEntries,
-	},
+	} ),
 };
 
 module.exports = [ scriptConfig, moduleConfig ];

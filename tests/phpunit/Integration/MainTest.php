@@ -33,7 +33,6 @@ class MainTest extends TestCase {
 	protected function tearDown(): void {
 		remove_all_actions( 'init' );
 		remove_all_actions( 'admin_enqueue_scripts' );
-		remove_all_filters( 'script_loader_tag' );
 		delete_option( 'plugin_skeleton_d_version' );
 
 		parent::tearDown();

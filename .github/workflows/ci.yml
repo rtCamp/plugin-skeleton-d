@@ -164,7 +164,7 @@ jobs:
 
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
-    needs: [detect, build-plugin-zip]
+    needs: detect
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpunit == 'true'
     uses: ./.github/workflows/reusable-phpunit-public.yml
     # uses: rtCamp/plugin-skeleton-d/.github/workflows/reusable-phpunit<-public>.yml@<version> # Use this in downstream repositories.
@@ -190,7 +190,7 @@ jobs:
 
   e2e:
     name: E2E Tests
-    needs: [detect, build-plugin-zip]
+    needs: detect
     # needs: phpstan
     if: needs.detect.outputs.php == 'true' || needs.detect.outputs.e2e == 'true' || needs.detect.outputs.js == 'true' || needs.detect.outputs.css == 'true'
     uses: ./.github/workflows/reusable-e2e-public.yml

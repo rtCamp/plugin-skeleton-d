@@ -30,7 +30,7 @@ wp_interactivity_state(
 ?>
 
 <div
-	<?php echo esc_attr( get_block_wrapper_attributes() ); ?>
+	<?php echo get_block_wrapper_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by core. ?>
 	data-wp-interactive="plugin-skeleton-d"
 	<?php echo wp_interactivity_data_wp_context( [ 'isOpen' => false ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	data-wp-watch="callbacks.logIsOpen"

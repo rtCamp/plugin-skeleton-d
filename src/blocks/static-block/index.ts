@@ -4,14 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 
-/**
- * WordPress dependencies
- */
 import { registerBlockType, type BlockConfiguration } from '@wordpress/blocks';
-
-/**
- * Internal dependencies
- */
 import Edit from './edit';
 import save from './save';
 import metadata from './block.json';
