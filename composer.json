@@ -15,7 +15,7 @@
 		"optimize-autoloader": true,
 		"sort-packages": true
 	},
-	"minimum-stability": "dev",
+	"minimum-stability": "alpha",
 	"prefer-stable": true,
 	"autoload": {
 		"psr-4": {
@@ -28,12 +28,6 @@
 			"rtCamp\\Plugin_Skeleton_D\\Tests\\": "tests/phpunit/"
 		}
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/rtCamp/coding-standards-d.git"
-		}
-	],
 	"require": {
 		"php": "^8.2"
 	},
@@ -46,7 +40,8 @@
 		"phpstan/phpstan-deprecation-rules": "^2.0.5",
 		"phpstan/phpstan-phpunit": "^2.1.2",
 		"phpunit/phpunit": "^11.5",
-		"rtcamp/coding-standards-d": "^0.1.1",
+		"rtcamp/wp-phpcs": "^1.0.1",
+		"phpcompatibility/phpcompatibility-wp": "3.0.0-alpha3 as 2.1.99",
 		"szepeviktor/phpstan-wordpress": "^2.0.4",
 		"wp-phpunit/wp-phpunit": "^7.1",
 		"yoast/phpunit-polyfills": "^4.0"
