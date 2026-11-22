@@ -39,6 +39,7 @@ const config: Config = {
 		'/node_modules/',
 		'/build/',
 		'/vendor/',
+		'/vendor-prefixed/',
 		'/tests/e2e/',
 		'/tests/phpunit/',
 	],

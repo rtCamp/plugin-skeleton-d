@@ -11,6 +11,7 @@ namespace rtCamp\Plugin_Skeleton_D\Tests\Integration\Core;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use rtCamp\Plugin_Skeleton_D\Core\Templates;
+use rtCamp\Plugin_Skeleton_D\Main;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 
 /**
@@ -19,25 +20,10 @@ use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 #[CoversClass( \rtCamp\Plugin_Skeleton_D\Core\Templates::class )]
 class TemplatesTest extends TestCase {
 	/**
-	 * Reset the Templates singleton instance.
-	 */
-	private function reset_templates_instance(): void {
-		$ref = new \ReflectionClass( Templates::class );
-
-		// Reset the instance.
-		$prop = $ref->getProperty( 'instance' );
-		$prop->setValue( null, null );
-
-		// Reset the cache.
-		$prop = $ref->getProperty( 'template_location_cache' );
-		$prop->setValue( null, [] );
-	}
-
-	/**
 	 * Clean up after each test.
 	 */
 	protected function tearDown(): void {
-		$this->reset_templates_instance();
+		Main::get_instance()->get_shared( Templates::class )->clear_cache();
 		remove_all_filters( 'plugin_skeleton_d/template_args' );
 		remove_all_filters( 'plugin_skeleton_d/located_template' );
 		remove_all_filters( 'plugin_skeleton_d/template_paths' );
@@ -47,23 +33,29 @@ class TemplatesTest extends TestCase {
 	}
 
 	/**
-	 * Test that static get_template_part returns false for nonexistent template.
+	 * Test that get_template_part outputs nothing for a missing template.
 	 */
-	public function test_static_get_template_part_returns_false_for_nonexistent(): void {
-		$this->reset_templates_instance();
+	public function test_get_template_part_outputs_nothing_when_missing(): void {
+		ob_start();
+		Templates::get_template_part( 'nonexistent' );
 
-		// Static method should return false when no template exists.
-		$static_result = Templates::get_template_part( 'nonexistent', null, [], false );
+		$this->assertSame( '', ob_get_clean() );
+	}
 
-		$this->assertFalse( $static_result );
+	/**
+	 * Test that the plugin's templates directory is searched.
+	 */
+	public function test_locates_plugin_templates(): void {
+		$this->assertSame(
+			PLUGIN_SKELETON_D_PATH . 'templates/admin-screen.php',
+			Main::get_instance()->get_shared( Templates::class )->locate( 'admin-screen' )
+		);
 	}
 
 	/**
 	 * Test that static get_template_part passes correct arguments.
 	 */
 	public function test_static_get_template_part_passes_correct_arguments(): void {
-		$this->reset_templates_instance();
-
 		$captured = [];
 		add_action(
 			'plugin_skeleton_d/get_template_part_test',
@@ -89,9 +81,8 @@ class TemplatesTest extends TestCase {
 	 * Test that get_template_part outputs content correctly.
 	 */
 	public function test_get_template_part_outputs_content(): void {
-		$this->reset_templates_instance();
 		// Create a temporary template file.
-		$temp_dir = sys_get_temp_dir() . '/test-templates';
+		$temp_dir = sys_get_temp_dir() . '/test-templates-' . uniqid();
 		mkdir( $temp_dir );
 		$template_path = $temp_dir . '/test-template.php';
 

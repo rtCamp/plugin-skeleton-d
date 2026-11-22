@@ -33,6 +33,7 @@ parameters:
 		analyse:
 			- tests/
 			- vendor/
+			- vendor-prefixed/
 		analyseAndScan:
 			- node_modules (?)
 	scanFiles:

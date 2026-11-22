@@ -11,7 +11,7 @@ namespace rtCamp\Plugin_Skeleton_D\Modules\Settings;
 
 use rtCamp\Plugin_Skeleton_D\Core\Assets;
 use rtCamp\Plugin_Skeleton_D\Core\Templates;
-use rtCamp\Plugin_Skeleton_D\Framework\Contracts\Interfaces\Registrable;
+use rtCamp\Plugin_Skeleton_D\Vendor\rtCamp\WPPrimitives\Contracts\Interfaces\Registrable;
 
 /**
  * Class - Admin_Screen

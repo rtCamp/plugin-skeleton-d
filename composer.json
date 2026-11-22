@@ -15,6 +15,19 @@
 		"optimize-autoloader": true,
 		"sort-packages": true
 	},
+	"extra": {
+		"strauss": {
+			"target_directory": "vendor-prefixed",
+			"namespace_prefix": "rtCamp\\Plugin_Skeleton_D\\Vendor\\",
+			"classmap_prefix": "Plugin_Skeleton_D_Vendor_",
+			"constant_prefix": "PLUGIN_SKELETON_D_VENDOR_",
+			"update_call_sites": false,
+			"delete_vendor_packages": true,
+			"packages": [
+				"rtcamp/wp-primitives"
+			]
+		}
+	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"autoload": {
@@ -35,7 +48,8 @@
 		}
 	],
 	"require": {
-		"php": "^8.2"
+		"php": "^8.2",
+		"rtcamp/wp-primitives": "^2.1"
 	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.2",
@@ -52,10 +66,23 @@
 		"yoast/phpunit-polyfills": "^4.0"
 	},
 	"scripts": {
+		"clean": "rm -rf vendor vendor-prefixed",
 		"format": "phpcbf",
 		"lint": "phpcs",
 		"phpstan": "phpstan analyse --memory-limit=1G",
 		"test": "vendor/bin/phpunit -c phpunit.xml.dist",
-		"test-multisite": "WP_MULTISITE=1 phpunit --exclude-group=ms-excluded"
+		"test-multisite": "WP_MULTISITE=1 phpunit --exclude-group=ms-excluded",
+		"prefix-namespaces": [
+			"sh -c 'test -d vendor-prefixed || mkdir vendor-prefixed'",
+			"sh -c 'test -f ./tests/_output/strauss.phar || curl -o ./tests/_output/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.31.1/strauss.phar'",
+			"@php ./tests/_output/strauss.phar",
+			"@composer dump-autoload"
+		],
+		"post-install-cmd": [
+			"@prefix-namespaces"
+		],
+		"post-update-cmd": [
+			"@prefix-namespaces"
+		]
 	}
 }

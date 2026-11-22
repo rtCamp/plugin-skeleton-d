@@ -24,6 +24,7 @@ Code contributions, bug reports, and feature requests are welcome! The following
     - [TypeScript](#typescript)
   - [Pre-commit Hooks](#pre-commit-hooks)
   - [WordPress Playground Previews](#wordpress-playground-previews)
+  - [Strauss - Composer Dependency Prefixing](#strauss---composer-library-namespace-prefixing)
 - [Running Tests](#running-tests)
   - [PHPUnit](#phpunit)
   - [Jest (JavaScript Unit Tests)](#jest-javascript-unit-tests)
@@ -60,7 +61,7 @@ Code contributions, bug reports, and feature requests are welcome! The following
 │   ├── DEVELOPMENT.md     # 👈 You are here.
 │   └── SECURITY.md
 │
-│   # Reusable framework library (shared across plugins).
+│   # What the plugin still needs on top of rtcamp/wp-primitives.
 │   # In local projects, changes should be kept to a minimum so they can be kept in sync with the scaffold.
 ├── framework/
 │   ├── ...
@@ -373,6 +374,14 @@ The [README.md](../README.md) and plugin preview use the [../blueprint.json](../
 
 Pull requests automatically generate a Playground preview from the build artifacts of the PR branch, using the [PR preview workflow](../.github/workflows/wp-playground-pr-preview.yml).
 
+### Strauss - Composer Library Namespace Prefixing
+
+The project uses [`BrianHenryIE/strauss`](https://github.com/BrianHenryIE/strauss/) to prefix bundled Composer libraries with a unique namespace, so they can't conflict with another plugin's copy. Import them from the prefixed namespace, for example `rtCamp\Plugin_Skeleton_D\Vendor\rtCamp\WPPrimitives\Contracts\Interfaces\Registrable`.
+
+The configuration is defined in [`composer.json`](../composer.json) under the `extra.strauss` key.
+
+Dependencies are auto-prefixed into the gitignored `vendor-prefixed/` directory when running `composer install` or `composer update`. If you need to manually regenerate, run `composer run clean` to remove the `vendor` and `vendor-prefixed` directories, then run `composer install` to reinstall and re-prefix the dependencies.
+
 ## Running Tests
 
 ### PHPUnit
@@ -489,4 +498,4 @@ Releases are automated with [Release Please](https://github.com/googleapis/relea
    - [`release-please-config.json`](../release-please-config.json)
    - [`.release-please-manifest.json`](../.release-please-manifest.json)
 3. Merge the release PR when you're ready to ship.
-4. Release Please creates the GitHub Release, which then triggers the [release workflow](../.github/workflows/release.yml) to build and upload the plugin zip asset.
+4. Release Please creates the GitHub Release, and the same [release workflow](../.github/workflows/release.yml) builds the plugin zip at the release tag and attaches it to that release through `cd-github-release.yml` from [wp-shared-workflows](https://github.com/rtCamp/wp-shared-workflows).
