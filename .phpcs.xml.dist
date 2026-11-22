@@ -55,10 +55,52 @@
 
 	<!-- Included rulesets -->
 	<!--
-		Enterprise best practices for WordPress.
-		https://github.com/rtCamp/coding-standards-d
+		rtCamp's strict WordPress standard.
+		https://github.com/rtCamp/wp-tooling/tree/main/composer-packages/phpcs
 	-->
-	<rule ref="rtCamp" />
+	<rule ref="rtCampWP">
+		<!-- PSR-4 class files are named after their class. -->
+		<exclude name="WordPress.Files.FileName" />
+	</rule>
+
+	<!--
+		@todo - Why are these left out of the rtCampWP ruleset?
+	-->
+	<rule ref="SlevomatCodingStandard.Classes.DisallowConstructorPropertyPromotion" />
+	<rule ref="SlevomatCodingStandard.Classes.DisallowLateStaticBindingForConstants" />
+	<rule ref="SlevomatCodingStandard.Exceptions.DisallowNonCapturingCatch" />
+	<rule ref="SlevomatCodingStandard.Functions.DisallowEmptyFunction" />
+	<rule ref="SlevomatCodingStandard.Functions.UnusedParameter" />
+	<rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation">
+		<properties>
+			<property name="ignoredAnnotationNames" type="array">
+				<element value="@phpstan-import-type" />
+				<element value="@phpstan-param" />
+				<element value="@phpstan-return" />
+				<element value="@phpstan-template" />
+				<element value="@phpstan-type" />
+				<element value="@phpstan-var" />
+			</property>
+		</properties>
+	</rule>
+	<rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine" />
+
+	<!-- @todo fix spacing upstream so we don't need to fix it here. -->
+	<rule ref="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces">
+		<properties>
+			<property name="linesCountAfterOpeningBrace" value="0" />
+		</properties>
+	</rule>
+	<rule ref="SlevomatCodingStandard.Classes.TraitUseSpacing">
+		<properties>
+			<property name="linesCountBeforeFirstUseWhenFirstInClass" value="0" />
+		</properties>
+	</rule>
+	<rule ref="Squiz.WhiteSpace.FunctionSpacing">
+		<properties>
+			<property name="spacingBeforeFirst" value="0" />
+		</properties>
+	</rule>
 
 	<!-- Exclude unnecessary and noisy rules from tests -->
 	<rule ref="Generic.Files.OneObjectStructurePerFile.MultipleFound">

@@ -291,7 +291,7 @@ npm run lint:js:fix
 
 #### PHP_CodeSniffer
 
-This project uses [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer/) to enforce WordPress Coding Standards. We use [rtCamp's coding-standards-d ruleset](https://github.com/rtCamp/coding-standards-d), which is tailored for modern WordPress development.
+This project uses [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer/) to enforce WordPress Coding Standards. We use the `rtCampWP` standard from [`rtcamp/wp-phpcs`](https://github.com/rtCamp/wp-tooling/tree/main/composer-packages/phpcs), with several stricter rules on top tailored for Modern WordPress development.
 
 Our specific ruleset is defined in the [`.phpcs.xml.dist`](../.phpcs.xml.dist) file.
 
