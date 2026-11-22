@@ -15,6 +15,6 @@ declare( strict_types = 1 );
 
 ?>
 
-<p <?php echo esc_attr( get_block_wrapper_attributes() ); ?>>
+<p <?php echo get_block_wrapper_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by core. ?>>
 	<?php esc_html_e( 'Dynamic Block Example – hello from a dynamic block!', 'plugin-skeleton-d' ); ?>
 </p>

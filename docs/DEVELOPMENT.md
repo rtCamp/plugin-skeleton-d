@@ -133,7 +133,6 @@ Code contributions, bug reports, and feature requests are welcome! The following
 │
 │   # Config files.
 ├── .browserslistrc               # Browserslist configuration.
-├── .distignore                   # Files to exclude from installation via Composer.
 ├── .editorconfig                 # Editor configuration.
 ├── .gitignore                    # Git ignore rules.
 ├── .gitattributes                # Git attributes.
@@ -169,10 +168,10 @@ Code contributions, bug reports, and feature requests are welcome! The following
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/): v24.15.0+ ([NVM](https://nvm.sh/) recommended)
+- [Node.js](https://nodejs.org/): v24.22.1+ or v26.12.1+ ([NVM](https://nvm.sh/) recommended)
 - npm: v11.14.1+
 - [Docker](https://www.docker.com/)
-- Optional: [Composer](https://getcomposer.org/) (if you prefer to run the Composer tools locally instead of using wp-env's built-in Composer)
+- [PHP](https://www.php.net/) 8.2+ and [Composer](https://getcomposer.org/): needed on the host for `npm run lint:php`, `lint:php:fix` and `lint:php:stan`. Installing dependencies and running tests can still use wp-env's built-in Composer.
 
 You can use Docker and the `wp-env` tool to set up a local development environment, instead of manually installing the specific testing versions of WordPress, PHP, and Composer. For more information, see the [wp-env documentation](https://developer.wordpress.org/block-editor/packages/packages-env/).
 
@@ -255,7 +254,7 @@ For more information on using `wp-env`, see the [wp-env documentation](https://d
 
 - `npm run start:js`: Starts the JS/CSS watcher (development mode).
 - `npm run build:dev`: Builds assets for development.
-- `npm run build:prod`: Builds assets for production and installs optimized PHP dependencies.
+- `npm run build:prod`: Builds assets for production.
 - `npm run clean`: Cleans generated assets.
 
 ## Code Contributions (Pull Requests)
@@ -466,7 +465,7 @@ To build the plugin for distribution, you can use the following commands:
 nvm use && npm ci
 
 # Only install production dependencies with Composer:
-npm run wp-env:cli -- install --optimize-autoloader --no-dev
+npm run wp-env:cli -- composer install --optimize-autoloader --no-dev
 
 # Create a production-ready build:
 npm run build:prod
@@ -486,7 +485,7 @@ Releases are automated with [Release Please](https://github.com/googleapis/relea
 
 1. Merge pull requests into `main` with **squash merge** and a Conventional Commit title.
 2. Release Please updates and maintains a release PR from `main` using:
-   - [`.github/workflows/release-please.yml`](../.github/workflows/release-please.yml)
+   - [`.github/workflows/release.yml`](../.github/workflows/release.yml)
    - [`release-please-config.json`](../release-please-config.json)
    - [`.release-please-manifest.json`](../.release-please-manifest.json)
 3. Merge the release PR when you're ready to ship.

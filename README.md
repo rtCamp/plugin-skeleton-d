@@ -48,6 +48,8 @@ See [./docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#directory-structure) for a detai
    - `plugin-skeleton-d` (slug)
    - `Plugin Skeleton D` (title)
    - `PLUGIN_SKELETON_D` (constant prefix)
+   - `Plugin_Skeleton_D` (PHP namespace and `@package`)
+   - `plugin_skeleton_d` (option, hook and function prefix)
    - `pluginSkeletonD` (camelCase reference)
    - `PluginSkeletonD` (PascalCase reference)
 3. Update plugin metadata in these config files:

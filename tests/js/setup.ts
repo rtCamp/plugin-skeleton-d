@@ -1,6 +1,3 @@
-/**
- * External dependencies
- */
 import '@testing-library/jest-dom';
 
 const mockUseBlockProps: jest.Mock & { save: jest.Mock } = Object.assign(

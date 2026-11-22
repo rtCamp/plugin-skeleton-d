@@ -1,11 +1,4 @@
-/**
- * WordPress dependencies
- */
 import { registerBlockType, type BlockConfiguration } from '@wordpress/blocks';
-
-/**
- * Internal dependencies
- */
 import Edit from './edit';
 import metadata from './block.json';
 

@@ -9,9 +9,6 @@
  * @see https://jestjs.io/docs/configuration
  */
 
-/**
- * External dependencies
- */
 import type { Config } from 'jest';
 
 const config: Config = {

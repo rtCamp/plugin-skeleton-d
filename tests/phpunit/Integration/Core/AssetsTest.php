@@ -19,6 +19,15 @@ use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
 #[CoversClass( \rtCamp\Plugin_Skeleton_D\Core\Assets::class )]
 class AssetsTest extends TestCase {
 	/**
+	 * {@inheritDoc}
+	 */
+	protected function setUp(): void {
+		parent::setUp();
+
+		unset( $GLOBALS['wp_scripts'], $GLOBALS['wp_styles'] );
+	}
+
+	/**
 	 * Ensure no errors are thrown when the Assets class is instantiated.
 	 */
 	public function test_assets_class_instantiation(): void {
@@ -38,25 +47,35 @@ class AssetsTest extends TestCase {
 	}
 
 	/**
-	 * Tests defer attribute is added to block editor script tags.
+	 * Tests the frontend and admin scripts are deferred.
 	 */
-	public function test_defer_attribute_added_to_block_editor_scripts(): void {
+	public function test_scripts_are_registered_with_defer_strategy(): void {
 		$assets = new Assets();
+		$assets->register_assets();
+		$assets->register_admin_assets();
 
-		// Simulate the script tag filter for a script handle that should be deferred.
-		// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
-		$script_tag = '<script src="test.js"></script>';
+		foreach ( [ Assets::FRONTEND_HANDLE, Assets::ADMIN_HANDLE ] as $handle ) {
+			$this->assertSame( 'defer', wp_scripts()->get_data( $handle, 'strategy' ), $handle );
+		}
+	}
 
-		// An unallowed handle should not be modified.
-		$this->assertSame( $script_tag, $assets->defer_scripts( $script_tag, 'unallowed-handle' ) );
+	/**
+	 * Tests every stylesheet is built and registered.
+	 */
+	public function test_styles_are_registered(): void {
+		$assets = new Assets();
+		$assets->register_assets();
+		$assets->register_admin_assets();
 
-		// Get a handle from the private DEFERRED_ASSETS constant using reflection.
-		$reflection     = new \ReflectionClass( Assets::class );
-		$defer_handles  = $reflection->getConstant( 'DEFERRED_ASSETS' );
-		$handle_to_test = $defer_handles[0];
+		$styles = [
+			Assets::FRONTEND_HANDLE      => 'frontend',
+			Assets::ADMIN_HANDLE         => 'admin',
+			Assets::GLOBAL_STYLES_HANDLE => 'global-styles',
+		];
 
-		// An allowed handle should have the defer attribute added.
-		$expected_tag = '<script defer src="test.js"></script>';
-		$this->assertSame( $expected_tag, $assets->defer_scripts( $script_tag, $handle_to_test ) );
+		foreach ( $styles as $handle => $filename ) {
+			$this->assertFileExists( PLUGIN_SKELETON_D_PATH . "build/{$filename}.css" );
+			$this->assertTrue( wp_style_is( $handle, 'registered' ), $handle );
+		}
 	}
 }
