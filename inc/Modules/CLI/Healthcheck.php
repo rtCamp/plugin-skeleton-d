@@ -10,14 +10,14 @@ declare( strict_types = 1 );
 
 namespace rtCamp\Plugin_Skeleton_D\Modules\CLI;
 
-use rtCamp\Plugin_Skeleton_D\Framework\Contracts\Interfaces\CLI_Command;
+use rtCamp\Plugin_Skeleton_D\Vendor\rtCamp\WPPrimitives\Contracts\Interfaces\CLICommand;
 
 /**
  * Class - Healthcheck
  *
  * Implements the `plugin-skeleton-d health-check` WP-CLI command.
  */
-final class Healthcheck implements CLI_Command {
+final class Healthcheck implements CLICommand {
 	/**
 	 * Get the command name.
 	 *

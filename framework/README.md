@@ -1,16 +1,16 @@
 # Plugin Skeleton D - Framework
 
-The core rtCamp plugin framework provides a set of reusable and composable, "Open-Code" PHP classes. These files work best when left as close to the original as possible, to make it easy to pull in updates from the main repository. However, they can be modified by plugins as needed.
+This directory holds what the plugin still needs on top of [`rtcamp/wp-primitives`](https://github.com/rtCamp/wp-primitives). Anything `wp-primitives` already provides is imported directly, from its prefixed namespace (`rtCamp\Plugin_Skeleton_D\Vendor\rtCamp\WPPrimitives`).
 
 ## Principles
 
-- **Reusability**: The framework is designed to be used across multiple plugins without modification. It should provide a solid foundation that can be extended or modified as needed by individual plugins.
-- **Composability**: Plugins can choose to modify only the parts of the framework they need to, allowing for a balance between maintainability and ownership.
+- **Import first**: if a primitive does the same job, use it directly and don't keep a copy here.
+- **Shim differences**: if the plugin needs something a primitive doesn't do, a class here extends the primitive and `inc/` uses that class. Keep the shim as thin as possible.
 
 > [!IMPORTANT]
-> Before making modifications to the framework, ask yourself if the change is something that would be useful to other plugins.
-> If _yes_, consider contributing the change back to the main repository so that all plugins can benefit from it.
-> If _no_, consider how to best implement the change inside your `inc/` directory without modifying the core framework files.
+> Before adding to the framework, ask yourself if the change would be useful to other plugins.
+> If _yes_, consider contributing it to `wp-primitives`, so that all plugins can benefit from it.
+> If _no_, consider how to best implement the change inside your `inc/` directory.
 
 ## Contents
 
@@ -18,28 +18,20 @@ The core rtCamp plugin framework provides a set of reusable and composable, "Ope
 framework/
 ├── README.md # 🎯 You are here.
 │
-│   # Contracts set expectations for how classes should be structured and interact with each other.
 ├── Contracts/
-│   ├── Abstracts/
-│   │   ├── Abstract_Post_Type.php
-│   │   ├── Abstract_REST_Controller.php
-│   │   └── Abstract_Taxonomy.php
-│   ├── Interfaces/
-│   │   ├── CLI_Command.php # WordPress CLI command classes.
-│   │   └── Registrable.php # Classes that hook into WordPress with actions/filters.
-│   └── Traits/
-│       └── Singleton.php   # Singleton antipattern.
+│   └── Abstracts/
+│       ├── Abstract_Post_Type.php
+│       ├── Abstract_REST_Controller.php # AbstractRESTController with the plugin's route namespace.
+│       └── Abstract_Taxonomy.php
 │
-│   # Core framework traits and utility classes are designed to be composable and overloadable.
-├── AssetLoaderTrait.php    # Trait for loading assets (scripts/styles/blocks).
-├── AutoloaderTrait.php     # Trait for Composer autoloader.
-├── Encryptor.php           # Simple encryption/decryption utility class.
-└── TemplateLoaderTrait.php # Trait for (over-)loading plugin template parts
+├── AssetLoaderTrait.php # Trait for loading assets (scripts/styles/blocks).
+├── AutoloaderTrait.php  # Trait for Composer autoloader.
+└── Encryptor.php        # Simple encryption/decryption utility class.
 ```
 
 ## Testing
 
-Tests for the framework are located in [`tests/phpunit/Framework`](../tests/phpunit/Framework). They should have complete unit test coverage and should not contain any plugin-specific tests or dependencies.
+Tests for the framework are located in [`tests/phpunit/Framework`](../tests/phpunit/Framework). They should not contain any plugin-specific tests or dependencies.
 
 ```bash
 # Optional: restart wp-env with coverage enabled

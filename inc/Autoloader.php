@@ -33,9 +33,12 @@ final class Autoloader {
 			return true;
 		}
 
-		$autoloader = PLUGIN_SKELETON_D_PATH . 'vendor/autoload.php';
+		// Load prefixed dependencies first (Strauss-generated).
+		if ( ! self::require_autoloader( PLUGIN_SKELETON_D_PATH . 'vendor-prefixed/autoload.php' ) ) {
+			return false;
+		}
 
-		return self::require_autoloader( $autoloader );
+		return self::require_autoloader( PLUGIN_SKELETON_D_PATH . 'vendor/autoload.php' );
 	}
 
 	/**

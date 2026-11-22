@@ -10,8 +10,11 @@ declare( strict_types = 1 );
 namespace rtCamp\Plugin_Skeleton_D\Tests\Integration;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use rtCamp\Plugin_Skeleton_D\Autoloader;
 use rtCamp\Plugin_Skeleton_D\Tests\TestCase;
+use rtCamp\Plugin_Skeleton_D\Vendor\rtCamp\WPPrimitives\Container;
 
 /**
  * Class - AutoloaderTest
@@ -31,6 +34,8 @@ class AutoloaderTest extends TestCase {
 	/**
 	 * Tests that autoload returns true when PLUGIN_SKELETON_D_AUTOLOAD is false.
 	 */
+	#[RunInSeparateProcess]
+	#[PreserveGlobalState( false )]
 	public function test_autoload_returns_true_when_autoload_disabled(): void {
 		define( 'PLUGIN_SKELETON_D_AUTOLOAD', false );
 		$this->assertTrue( Autoloader::autoload() );
@@ -48,13 +53,11 @@ class AutoloaderTest extends TestCase {
 	}
 
 	/**
-	 * Tests that autoload uses the correct path constant.
+	 * Tests that autoload loads the prefixed dependencies.
 	 */
-	public function test_autoload_uses_correct_path(): void {
-		// Verify the autoloader path is constructed correctly.
-		$expected_path = PLUGIN_SKELETON_D_PATH . 'vendor/autoload.php';
-		$this->assertStringEndsWith( 'vendor/autoload.php', $expected_path );
+	public function test_autoload_loads_prefixed_dependencies(): void {
 		$this->assertTrue( Autoloader::autoload() );
+		$this->assertTrue( class_exists( Container::class ) );
 	}
 
 	/**

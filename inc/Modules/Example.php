@@ -11,32 +11,21 @@ declare( strict_types = 1 );
 
 namespace rtCamp\Plugin_Skeleton_D\Modules;
 
-use rtCamp\Plugin_Skeleton_D\Framework\Contracts\Interfaces\Registrable;
+use rtCamp\Plugin_Skeleton_D\Vendor\rtCamp\WPPrimitives\Contracts\Abstracts\AbstractModule;
 
 /**
  * Class - Example
  */
-final class Example implements Registrable {
-	/**
-	 * Registrable classes for this module.
-	 *
-	 * @var class-string<\rtCamp\Plugin_Skeleton_D\Framework\Contracts\Interfaces\Registrable>[]
-	 */
-	private const REGISTRABLE_CLASSES = [
-		Example\Example_Post_Type::class,
-		Example\Example_Taxonomy::class,
-		Example\Example_Post_Type_Meta::class,
-		Example\Example_REST_Controller::class,
-	];
-
+final class Example extends AbstractModule {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register_hooks(): void {
-		foreach ( self::REGISTRABLE_CLASSES as $class_name ) {
-			$instance = new $class_name();
-
-			$instance->register_hooks();
-		}
+	protected function get_classes(): array {
+		return [
+			Example\Example_Post_Type::class,
+			Example\Example_Taxonomy::class,
+			Example\Example_Post_Type_Meta::class,
+			Example\Example_REST_Controller::class,
+		];
 	}
 }

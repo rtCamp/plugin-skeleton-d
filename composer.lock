@@ -4,8 +4,77 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9696f9426baef6c4b95b53bac9a08463",
-    "packages": [],
+    "content-hash": "d01ed657cae28a96a9d004ecef7e9182",
+    "packages": [
+        {
+            "name": "rtcamp/wp-primitives",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rtCamp/wp-primitives.git",
+                "reference": "b76b24f78afd91c9a566907fb8a7fb1a52c54208"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rtCamp/wp-primitives/zipball/b76b24f78afd91c9a566907fb8a7fb1a52c54208",
+                "reference": "b76b24f78afd91c9a566907fb8a7fb1a52c54208",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2"
+            },
+            "require-dev": {
+                "automattic/vipwpcs": "^3.0",
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "phpcompatibility/phpcompatibility-wp": "^2.1",
+                "phpstan/phpstan": "^2.0",
+                "phpunit/phpunit": "^9.6",
+                "squizlabs/php_codesniffer": "^3.10",
+                "szepeviktor/phpstan-wordpress": "^2.0",
+                "wp-coding-standards/wpcs": "^3.1",
+                "wp-phpunit/wp-phpunit": "^6.9 || ^7.0",
+                "yoast/phpunit-polyfills": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "rtCamp\\WPPrimitives\\": "inc/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "rtCamp",
+                    "email": "support@rtcamp.com",
+                    "homepage": "https://rtcamp.com"
+                }
+            ],
+            "description": "Contracts, loaders and utilities for building WordPress plugins and themes on a shared, tested base.",
+            "homepage": "https://github.com/rtCamp/wp-primitives",
+            "keywords": [
+                "framework",
+                "library",
+                "rtcamp",
+                "wordpress",
+                "wordpress-plugin",
+                "wordpress-theme"
+            ],
+            "support": {
+                "docs": "https://opensource.rtcamp.com/wp-primitives/",
+                "issues": "https://github.com/rtCamp/wp-primitives/issues",
+                "source": "https://github.com/rtCamp/wp-primitives"
+            },
+            "time": "2026-10-01T23:06:57+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "automattic/vipwpcs",

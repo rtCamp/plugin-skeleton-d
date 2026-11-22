@@ -9,22 +9,24 @@ declare( strict_types = 1 );
 
 namespace rtCamp\Plugin_Skeleton_D;
 
-use rtCamp\Plugin_Skeleton_D\Framework\Contracts\Traits\Singleton;
+use rtCamp\Plugin_Skeleton_D\Vendor\rtCamp\WPPrimitives\Contracts\Traits\Loader;
+use rtCamp\Plugin_Skeleton_D\Vendor\rtCamp\WPPrimitives\Contracts\Traits\Singleton;
 
 /**
  * Class - Main
  */
 final class Main {
 	use Singleton;
+	use Loader;
 
 	/**
-	 * Registrable classes are entrypoints that "hook" into WordPress.
-	 * They should implement the Registrable interface.
+	 * Classes loaded on startup.
 	 *
-	 * @var class-string<\rtCamp\Plugin_Skeleton_D\Framework\Contracts\Interfaces\Registrable>[]
+	 * @var class-string<\rtCamp\Plugin_Skeleton_D\Vendor\rtCamp\WPPrimitives\Contracts\Interfaces\Registrable|\rtCamp\Plugin_Skeleton_D\Vendor\rtCamp\WPPrimitives\Contracts\Interfaces\Shareable>[]
 	 */
-	private const REGISTRABLE_CLASSES = [
+	private const CLASSES = [
 		Core\Assets::class,
+		Core\Templates::class,
 		Modules\CLI::class,
 		Modules\Example::class,
 		Modules\Settings\Admin_Screen::class,
@@ -48,26 +50,13 @@ final class Main {
 	 */
 	private function setup(): void {
 		// Load the plugin classes.
-		$this->load();
+		$this->load( self::CLASSES );
 
 		// Register activation and deactivation hooks.
 		register_activation_hook( PLUGIN_SKELETON_D_FILE, [ self::class, 'activate' ] );
 		register_deactivation_hook( PLUGIN_SKELETON_D_FILE, [ self::class, 'deactivate' ] );
 
 		// Do other stuff here like dep-checking, telemetry, etc.
-	}
-
-	/**
-	 * Load the plugin classes.
-	 */
-	private function load(): void {
-		foreach ( self::REGISTRABLE_CLASSES as $class_name ) {
-			$instance = new $class_name();
-
-			$instance->register_hooks();
-		}
-
-		// Do other generalizable stuff here.
 	}
 
 	/**

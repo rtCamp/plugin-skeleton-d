@@ -25,6 +25,7 @@
 	"exclude": [
 		"**/build/*",
 		"vendor/*",
+		"vendor-prefixed/*",
 		"node_modules/*",
 		"tests/_output",
 		"eslint.config.mjs"

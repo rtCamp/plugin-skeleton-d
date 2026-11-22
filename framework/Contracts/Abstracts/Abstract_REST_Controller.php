@@ -2,7 +2,7 @@
 /**
  * Abstract REST controller class.
  *
- * Includes the shared namespace, version and hook registration.
+ * Class to be extended by all REST controllers in the plugin. It keeps the plugin's route namespace on top of wp-primitives' AbstractRESTController.
  *
  * @package rtCamp\Plugin_Skeleton_D\Framework\Contracts\Abstracts
  */
@@ -11,13 +11,12 @@ declare( strict_types = 1 );
 
 namespace rtCamp\Plugin_Skeleton_D\Framework\Contracts\Abstracts;
 
-use WP_REST_Controller;
-use rtCamp\Plugin_Skeleton_D\Framework\Contracts\Interfaces\Registrable;
+use rtCamp\Plugin_Skeleton_D\Vendor\rtCamp\WPPrimitives\Contracts\Abstracts\AbstractRESTController;
 
 /**
  * Class - Abstract_REST_Controller
  */
-abstract class Abstract_REST_Controller extends WP_REST_Controller implements Registrable {
+abstract class Abstract_REST_Controller extends AbstractRESTController {
 	/**
 	 * Route namespace for the REST API routes.
 	 *
@@ -26,31 +25,4 @@ abstract class Abstract_REST_Controller extends WP_REST_Controller implements Re
 	 * @var non-falsy-string
 	 */
 	protected $namespace = 'plugin-skeleton-d/v';
-
-	/**
-	 * Version number for the REST API routes.
-	 *
-	 * @var non-falsy-string
-	 */
-	protected string $version = '1';
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function register_hooks(): void {
-		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * We throw an exception here to force the child class to implement this method.
-	 *
-	 * @throws \Exception If method not implemented.
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public function register_routes(): void {
-		throw new \Exception( __FUNCTION__ . ' Method not implemented.' );
-	}
 }

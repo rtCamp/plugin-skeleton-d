@@ -9,7 +9,7 @@ declare(strict_types = 1);
 
 namespace rtCamp\Plugin_Skeleton_D\Modules\Settings;
 
-use rtCamp\Plugin_Skeleton_D\Framework\Contracts\Interfaces\Registrable;
+use rtCamp\Plugin_Skeleton_D\Vendor\rtCamp\WPPrimitives\Contracts\Interfaces\Registrable;
 
 /**
  * Class - Settings

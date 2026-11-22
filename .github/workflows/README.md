@@ -75,7 +75,7 @@ Triggers on PRs. Validates [Conventional Commit](https://www.conventionalcommits
 
 Triggers on push to `main`. Uses [release-please](https://github.com/googleapis/release-please) to automate releases based on conventional commits.
 
-When a release is created, it builds the plugin at the release tag via `reusable-build-public.yml` (switch to `reusable-build.yml` for private runners) and uploads the zip artifact to the GitHub release.
+When a release is created, it builds the plugin at the release tag via `reusable-build-public.yml` (switch to `reusable-build.yml` for private runners) and attaches the zip artifact to the GitHub release with [`cd-github-release.yml`](https://github.com/rtCamp/wp-shared-workflows/blob/main/.github/workflows/cd-github-release.yml) from wp-shared-workflows.
 
 ## Configuration
 
